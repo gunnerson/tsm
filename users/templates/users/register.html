@@ -1,0 +1,14 @@
+{% extends "invent/base.html" %}
+
+{% block content %}
+
+  <form method="post" action="{% url 'users:register' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <br>
+  <br>
+  <button name="submit" class="btn">Register</button>
+  <input type="hidden" name="next" value="{% url 'invent:index' %}" />
+  </form>
+
+{% endblock content %}

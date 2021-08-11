@@ -1,0 +1,317 @@
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #336699;
+  text-decoration: inherit;
+}
+
+body {
+  font-family: Nunito,sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #585757;
+  background-color: white;
+}
+
+img {
+  max-width: 100%;
+  object-fit: cover;
+}
+
+nav {
+  background-color: #336699;
+}
+
+svg rect:hover {
+  /*cursor: pointer;*/
+}
+
+svg .ready {
+  fill: green;
+}
+
+svg .production {
+  fill: purple!important;
+}
+
+svg .out_of_order {
+  fill: red!important;
+}
+svg .maintenance {
+  fill: orange!important;
+}
+svg .awaiting_parts {
+  fill: blue!important;
+}
+
+svg .pmdue {
+  fill: #6A6A6A!important;
+}
+
+svg .pm {
+  fill: black!important;
+}
+
+
+svg tspan {
+  fill: white!important;
+  font-size: 6px;
+  /*cursor: pointer;*/
+}
+
+svg text {
+  text-align: center;
+  width: 75%;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.breadcrumb {
+  background-color:inherit;
+}
+
+.breadcrumb-item {
+  color: #336699;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+  padding-right: 0.3rem;
+  color: inherit;
+  content: ">";
+}
+
+.btn-rahco {
+  color: white;
+  background-color: #336699;
+  border-color: #2e6da4;
+}
+
+.btn-rahco:hover {
+  color: white;
+  background-color: #164979;
+}
+
+.btn-pnclk {
+  color: white;
+  background-color: green;
+  width: 200px;
+  height: 50px;
+  border-radius: 10px;
+  font-size: 1.5rem;
+}
+
+.btn-pnclk:hover {
+  color: white;
+  background-color: green;
+}
+
+.clickable-row:hover {
+  color: #336699;
+  text-decoration: inherit;
+  cursor: pointer;
+}
+
+.container-fluid {
+  padding-left: 0!important;
+}
+
+.content-page {
+  padding-top: 20px;
+  margin-left: 200px;
+  padding-left: 30px;
+}
+
+.error input, .error select {
+    border: 2px red solid;
+}
+
+.left-side-menu {
+  width: 180px;
+  height:100%;
+  padding-top: 110px;
+  margin-top: 0;
+  background: #fafbfe;
+  /*background-image: linear-gradient(to right, white, #fafbfe);*/
+  border-right-style: double;
+  border-width: 1px;
+  border-color: rgb(180, 180, 180, 0.2);
+}
+
+.left-side-menu ul {
+  padding-left: 25px;
+}
+
+.nav-link {
+  font-size: 1.2rem;
+  white-space: nowrap;
+}
+
+.nav navbar-right {
+}
+
+.order-status {
+  font-weight: bold;
+  color: black;
+  text-shadow: 2px 2px 5px yellow;
+}
+
+.page-title-box .page-title {
+  font-size: 1.3rem !important;
+}
+
+.repair {
+  background-color:#6A686B;
+  color: white;
+}
+
+.side-menu-link {
+  font-size: 1.3rem;
+  color: inherit;
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  cursor: pointer;
+  text-decoration: none !important;
+}
+
+.side-menu-link:hover {
+  color: #336699 !important;
+}
+
+.svgmap {
+  height:100%;
+  width:100%
+}
+
+.supervisor {
+  background-color:#E8E8E8;
+}
+
+.text-title {
+    color: inherit;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+.tooltip-inner {
+  white-space:pre-wrap;
+  background-color: #FFFACD;
+  color: black;
+  text-align: left;
+  border: 1px solid #ccc!important;
+  border-radius: 5px;
+}
+
+.tooltip.show {
+  opacity: 1.0!important;
+  filter: alpha(opacity=100);
+}
+
+tr {
+  margin-bottom: -1px;
+}
+
+tr:nth-child(odd) {
+  background-color: #fafbfe;
+}
+
+
+.prsch input[type=text] {
+  width: 100%;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  margin-bottom: -1px;
+}
+
+.errorlist {
+  display: block;
+  width: 100%;
+  margin-top: .25rem;
+  font-size: 80%;
+  color: #dc3545;
+  font-weight: 900;
+  line-height: 1.5;
+  padding-inline-start: 5px;
+}
+
+.inputtable {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: inherit;
+  text-align: center;
+}
+
+.calendar {
+  width: 98%;
+  margin: auto;
+  font-size: 18px;
+}
+
+.calendar tr, .calendar td {
+  border: 1px solid black;
+}
+
+.calendar th {
+  padding: 10px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.calendar td {
+  width: 200px;
+  height: 150px;
+  padding: 20px 0px 0px 5px;
+}
+
+.month {
+  font-size: 25px;
+}
+
+.date {
+  font-size: 16px;
+}
+
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.btn-cal {
+  outline: none;
+  color: black;
+  background-color: transparent;
+  box-shadow: 0 0 0 0;
+}
+
+.clearfix {
+  margin: 15px;
+}
+
+.prsched {
+  background-color:#585757 !important;
+}
+
+.prschedtb {
+  text-align:center;
+  margin-bottom: 0rem;
+}

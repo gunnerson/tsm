@@ -1,0 +1,53 @@
+{% extends "invent/base.html" %}
+
+<script>
+  {% block jquery %}
+
+    $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    });
+
+  {% endblock %}
+</script>
+
+{% block left-menu%}
+
+  <ul>
+    <li>
+      <a href="" onClick="window.location.replace(document.referrer);return false;" class="side-menu-link" role="button">Back</a>
+    </li>
+    <li>
+      <a href="{% url 'invent:create_truck' %}" class="side-menu-link" role="button">+ New truck</a>
+    </li>
+  </ul>
+
+{% endblock left-menu %}
+
+{% block page-title %}
+
+  <div class="page-title-right">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a href="{% url 'invent:index' %}">Home</a></li>
+        <li class="breadcrumb-item active">Trucks</li>
+    </ol>
+  </div>
+  <h4 class="page-title">Trucks</h4>
+
+{% endblock page-title %}
+
+{% block content %}
+
+  <div class="container-fluid justify-content-start ml-1 mt-4">
+    <table>
+      {% for object in object_list %}
+        <tr class='clickable-row row border' data-href="{% url 'invent:truck_detail' object.id %}">
+          <th class="col-2 border-right text-nowrap text-truncate">
+              {{ object.fleet_number }}
+          </th>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+{% endblock content %}
+
