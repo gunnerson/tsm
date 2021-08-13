@@ -1,8 +1,6 @@
 from django.db import models
 from django.urls import reverse
 
-from contacts.models import Company
-
 
 class Truck(models.Model):
     VOLVO = 'VL'
@@ -32,7 +30,7 @@ class Truck(models.Model):
         (VOLVO, 'Volvo'),
     ]
     fleet_number = models.CharField(max_length=5, null=True)
-    company =  models.ForeignKey(Company,
+    company =  models.ForeignKey('contacts.Company',
                            on_delete=models.SET_NULL,
                            null=True,
                            )
@@ -87,7 +85,7 @@ class Trailer(models.Model):
         (WABASH, 'Wabash'),
     ]
     fleet_number = models.CharField(max_length=5, null=True)
-    company =  models.ForeignKey(Company,
+    company =  models.ForeignKey('contacts.Company',
                                on_delete=models.SET_NULL,
                                null=True,
                                )
@@ -114,4 +112,4 @@ class Trailer(models.Model):
             self.lic_plate = self.lic_plate.upper()
         if self.vin is not None:
             self.vin = self.vin.upper()
-        super(Truck, self).save(*args, **kwargs)
+        super(Trailer, self).save(*args, **kwargs)

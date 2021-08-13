@@ -22,15 +22,19 @@
 {% endblock page-title %}
 
 {% block content %}
-  <div class="grid" style="grid-template-columns: repeat(5, 1fr);">
+  <div class="grid" style="grid-template-columns: repeat(7, 1fr);">
     <span><strong>Fleet number</strong></span>
     <span><strong>Company</strong></span>
+    <span><strong>Driver</strong></span>
+    <span><strong>Truck</strong></span>
     <span><strong>License Plate</strong></span>
     <span><strong>Make</strong></span>
     <span><strong>Year</strong></span>
     {% for object in object_list %}
       <a href="{% url 'invent:update_trailer' object.id %}">{{ object.fleet_number }}</a>
       <a href="{% url 'invent:update_trailer' object.id %}">{{ object.company }}</a>
+      <a href="{% url 'invent:update_trailer' object.id %}">{{ object.driver }}</a>
+      <a href="{% if object.driver.truck.id != '' %}{% url 'invent:update_truck' object.driver.truck.id %}{% else %}{% url 'invent:update_trailer' object.id %}{% endif %}">{{ object.driver.truck }}</a>
       <a href="{% url 'invent:update_trailer' object.id %}">{{ object.lic_plate }}</a>
       <a href="{% url 'invent:update_trailer' object.id %}">{{ object.get_make_display }}</a>
       <a href="{% url 'invent:update_trailer' object.id %}">{{ object.year_made }}</a>

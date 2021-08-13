@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -24,6 +24,23 @@ class TruckUpdateView(LoginRequiredMixin, UpdateView):
     model = Truck
     form_class = TruckForm
     template_name_suffix = '_update'
+
+    def get_initial(self):
+        initial = super(TruckUpdateView, self).get_initial()
+        try:
+            initial['driver'] = self.object.driver
+        except Truck.driver.RelatedObjectDoesNotExist:
+            pass
+        return initial
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        driver = form.cleaned_data['driver']
+        driver.truck = self.object
+        driver.save(update_fields=['truck'])
+        self.object.save()
+        return redirect(self.object.get_absolute_url())
+
 
 
 class TrailerCreateView(LoginRequiredMixin, CreateView):

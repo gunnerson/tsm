@@ -2,6 +2,7 @@ from django import forms
 from datetime import date
 
 from .models import Truck, Trailer
+from contacts.models import Driver
 
 
 def year_choices():
@@ -14,7 +15,10 @@ class TruckForm(forms.ModelForm):
         initial=date.today().year,
         label='Year',
     )
-
+    driver = forms.ModelChoiceField(
+        queryset=Driver.objects.all(),
+        required=False,
+    )
     class Meta:
         model = Truck
         fields = '__all__'

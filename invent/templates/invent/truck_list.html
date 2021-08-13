@@ -22,20 +22,18 @@
 {% endblock page-title %}
 
 {% block content %}
-  <div class="grid" style="grid-template-columns: repeat(7, 1fr);">
+  <div class="grid" style="grid-template-columns: repeat(6, 1fr);">
     <span><strong>Fleet number</strong></span>
     <span><strong>Company</strong></span>
-    <span><strong>License Plate</strong></span>
-    <span><strong>Make</strong></span>
-    <span><strong>Mileage</strong></span>
+    <span><strong>Driver</strong></span>
+    <span><strong>Trailer</strong></span>
     <span><strong>Registration</strong></span>
     <span><strong>Insurance</strong></span>
     {% for object in object_list %}
       <a href="{% url 'invent:update_truck' object.id %}">{{ object.fleet_number }}</a>
       <a href="{% url 'invent:update_truck' object.id %}">{{ object.company }}</a>
-      <a href="{% url 'invent:update_truck' object.id %}">{{ object.lic_plate }}</a>
-      <a href="{% url 'invent:update_truck' object.id %}">{{ object.get_make_display }}</a>
-      <a href="{% url 'invent:update_truck' object.id %}">{{ object.mileage }}</a>
+      <a href="{% url 'invent:update_truck' object.id %}">{{ object.driver }}</a>
+      <a href="{% if object.driver.trailer.id != '' %}{% url 'invent:update_trailer' object.driver.trailer.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver.trailer }}</a>
       <a href="{% url 'invent:update_truck' object.id %}">{{ object.reg_exp }}</a>
       <a href="{% url 'invent:update_truck' object.id %}">{{ object.ins_exp }}</a>
     {% endfor %}
