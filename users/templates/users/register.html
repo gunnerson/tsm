@@ -1,12 +1,27 @@
 {% extends "invent/base.html" %}
 
+{% block page-title %}
+  <p>Register an account</p>
+{% endblock %}
+
 {% block content %}
 
   <form method="post" action="{% url 'users:register' %}">
   {% csrf_token %}
-  {{ form.as_p }}
-  <br>
-  <br>
+  <table>
+    <tr>
+        <td>Username:</td>
+        <td style="padding-left: 10px;"><input type="text" name="username" maxlength="150" autocapitalize="none" autocomplete="username" autofocus="" required="" id="id_username" class="form_field"></td>
+    </tr>
+    <tr>
+        <td>Password:</td>
+        <td style="padding-left: 10px; padding-top: 10px;"><input type="password" name="password1" autocomplete="new-password" required="" id="id_password1" class="form_field"></td>
+    </tr>
+    <tr>
+      <td>Repeat password:</td>
+      <td style="padding-left: 10px; padding-top: 10px;"><input type="password" name="password2" autocomplete="new-password" required="" id="id_password2" class="form_field"></td>
+  </tr>
+  </table>
   <button name="submit" class="btn">Register</button>
   <input type="hidden" name="next" value="{% url 'invent:index' %}" />
   </form>

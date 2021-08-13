@@ -3,24 +3,27 @@
 {% block left-menu%}
   <ul>
     <li>
-      <a href="{% url 'invent:list_trucks' %}" role="button">Back</a>
+      <a href="{% url 'invent:list_trailers' %}" role="button">Back</a>
+    </li>
+    <li>
+      <button type="submit" form="data_form">Save changes</a>
     </li>
   </ul>
 {% endblock left-menu %}
 
 {% block page-title %}
-  <p>Add new truck record</p>
+  <p>Update trailer record</p>
   <div class="address-line">
     <ol>
       <li><a href="{% url 'invent:index' %}">Home</a> > </li>
-      <li><a href="{% url 'invent:list_trucks' %}">Trucks</a> > </li>
-      <li>New Truck</li>
+      <li><a href="{% url 'invent:list_trailers' %}">Trailers</a> > </li>
+      <li>Update trailer</li>
     </ol>
   </div>
 {% endblock page-title %}
 
 {% block content %}
-  <form method='post'>
+  <form method='post' id="data_form">
     {% csrf_token %}
     {% for field in form %}
       <div>
@@ -28,7 +31,6 @@
         {{ field.errors }}
       </div>
     {% endfor %}
-    <button name="submit" role="button" class="btn">Add truck</button>
   </form>
 {% endblock content %}
 

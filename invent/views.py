@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Truck
-from .forms import TruckCreateForm, TruckUpdateForm
+from .models import Truck, Trailer
+from .forms import TruckForm, TrailerForm
 
 
 def index(request):
@@ -13,18 +13,29 @@ def index(request):
 
 class TruckCreateView(LoginRequiredMixin, CreateView):
     model = Truck
-    form_class = TruckCreateForm
+    form_class = TruckForm
 
 
-class TruckListView(ListView):
-    model = Truck
-
-
-class TruckDetailView(DetailView):
+class TruckListView(LoginRequiredMixin, ListView):
     model = Truck
 
 
 class TruckUpdateView(LoginRequiredMixin, UpdateView):
     model = Truck
-    form_class = TruckUpdateForm
+    form_class = TruckForm
+    template_name_suffix = '_update'
 
+
+class TrailerCreateView(LoginRequiredMixin, CreateView):
+    model = Trailer
+    form_class = TrailerForm
+
+
+class TrailerListView(LoginRequiredMixin, ListView):
+    model = Trailer
+
+
+class TrailerUpdateView(LoginRequiredMixin, UpdateView):
+    model = Trailer
+    form_class = TrailerForm
+    template_name_suffix = '_update'

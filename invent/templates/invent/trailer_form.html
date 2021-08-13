@@ -3,18 +3,18 @@
 {% block left-menu%}
   <ul>
     <li>
-      <a href="{% url 'invent:list_trucks' %}" role="button">Back</a>
+      <a href="{% url 'invent:list_trailers' %}" role="button">Back</a>
     </li>
   </ul>
 {% endblock left-menu %}
 
 {% block page-title %}
-  <p>Add new truck record</p>
+  <p>Add new trailer record</p>
   <div class="address-line">
     <ol>
       <li><a href="{% url 'invent:index' %}">Home</a> > </li>
-      <li><a href="{% url 'invent:list_trucks' %}">Trucks</a> > </li>
-      <li>New Truck</li>
+      <li><a href="{% url 'invent:list_trailers' %}">Trailers</a> > </li>
+      <li>New Trailer</li>
     </ol>
   </div>
 {% endblock page-title %}
@@ -28,7 +28,7 @@
         {{ field.errors }}
       </div>
     {% endfor %}
-    <button name="submit" role="button" class="btn">Add truck</button>
+    <button name="submit" role="button" class="btn">Add trailer</button>
   </form>
 {% endblock content %}
 

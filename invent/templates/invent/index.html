@@ -1,24 +1,24 @@
 {% extends "invent/base.html" %}
 
 <script>
-  {% block jquery %}
+  {% block js %}
 
-    $("#sidebarBlock").hide();
-    $("#pagetitleBlock").hide();
+    document.getElementById("left-content").style.display = "none";
+    document.getElementById("address-panel").style.display = "none";
 
   {% endblock %}
 </script>
 
 {% block content %}
 
-  <div class='jumbotron'>
-    <h2>Welcome to Truck Shop Manager</h2>
-  </div>
-  {% if user.is_authenticated == False %}
-    <h2>
-      <a href="{% url 'users:register' %}">Register an account</a> to get
-      access
-    </h2>
+  <h2>Welcome to Truck Shop Manager
+    {% if user.is_authenticated == False %}
+    <br>
+    <br>
+    To get access
+    <a href="{% url 'users:register' %}" style="color: inherit;">Register an account</a> or
+    <a href="{% url 'users:login' %}" style="color: inherit;">Log in</a>
+  </h2>
   {% endif %}
 
 {% endblock content %}

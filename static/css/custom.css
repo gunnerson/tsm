@@ -8,76 +8,218 @@
     font-family: 'Noto Serif', serif;
 }
 
+html, body {
+    height: 100%;
+    color:#3b3b3b;
+}
+
 #wrapper {        
-    height: 100%;    
+    height: 100%;
     width: 100%;
-    /* overflow: hidden; */
-    background-color: #fafbfe;
+    background-color: #ebebeb;
     display: block;
 }    
 
 #header {
     padding: 5px 5px;
-    background-color: #336699;
+    background-color: #fdfdfd;
     display: flex;
     justify-content: space-between;    
-    color: white;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 3;
+    border-bottom: 1px solid;
+    border-color: #00000025;
 }
 
 #header a {
-    color: white;
+    color: inherit;
     font-size: 1.5rem;
     text-decoration: none;
 }
 
+#header-left {
+    padding-left: 50px;
+}
 
-#header-left {    
-    margin-left: 10px;
+#header-right {
+    padding-right: 20px;
 }
 
 #header-left li {    
-    margin-left: 10px;
+    margin-left: 30px;
+    padding: .5rem 1rem;
 }
 
-#header-right li {
-    margin-right: 10px;
+#header-left li:hover {
+    border: 1px solid;
+    border-color: #00000025;
+    border-bottom: none;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
 }
 
 #header li {
     display: inline;    
 }
 
+#header .active {
+    background-color: #ebebeb;
+    border: 1px solid;
+    border-color: #00000025;
+    border-bottom: none;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
 #header ul {
     list-style-type: none;
 }
 
+#header-right li {
+    margin-right: 10px;
+}
+
+#header-right a {
+    font-size: 1rem;
+    color: inherit;
+}
+
 #container {
-    display: flex;
-    justify-content: flex-start;     
-    height: 100%; 
+    display: block;
+    position: relative;
+    top: 43px;
+    background-color: inherit;
+    height: 100%;
 }
 
 #left-content {
-    background-color: #0734fd;
-    width: fit-content;
-    padding: 10px;   
+    display: inline-block;
+    z-index: 1;
+    width: 180px;
+    position: fixed;
+    padding: 20px;
+    padding-top: 40px;
+    top: 43px;
     bottom: 0;
+    border-right: 1px solid #00000025;
+    background-color: inherit;
+}
+
+#left-content ul {
+    list-style-type: none;
+}
+
+#left-content li {
+    padding-bottom: 10px !important;
+}
+
+#left-content a {
+    list-style-type: none;
+    color: inherit;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+#left-content button {
+    border: none;
+    font-size: 1.2rem;
+    color: inherit;
+}
+
+#left-content button:hover {
+    cursor: pointer;
 }
 
 #right-content {
-    flex-grow: 1;
+    display: inline;
+    /* position: static; */
 }
 
 #address-panel {
-    background-color: #00ff4c;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    padding: 5px 5px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom-style: solid;
+    border-width: 1px;
+    border-color: #00000025;
+    background-color: #ebebeb;
+}
+
+#address-panel p {
+    padding-left: 200px;
+    font-style: italic;
 }
 
 #address-panel li {
-    list-style-type: none; 
+    font-size: 0.8rem;
+    display: inline;
+    list-style-type: none;
+    color: inherit;
 }
 
+#address-panel a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+#address-panel .address-line {
+    padding-right: 20px;
+}
+
+
 #main-content {
-    background-color: #ffae00;
+    padding-top: 50px !important;
+    margin-left: 180px;
+    padding: 20px;
+    background-color: #fdfdfd;
+    height: 100%;
+}
+
+.form_field {
+    margin: 10px 10px;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+}
+
+.btn {
+    margin-top: 10px;
+    padding: 3px 10px;
+    font-size: 1.1rem;
+}
+
+.btn:hover {
+    padding: 3px 10px;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.grid {
+    display: grid;
+}
+
+.grid a{
+    padding: 8px 4px;
+    border-bottom: 1px solid #ced4da;
+    color: inherit;
+    text-decoration: none;
+}
+
+.errorlist {
+    color: red;
+    list-style-type: none;
+    display: inline;
 }

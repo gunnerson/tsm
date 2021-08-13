@@ -4,20 +4,26 @@ from .views import (
     index,
     TruckCreateView,
     TruckListView,
-    TruckDetailView,
     TruckUpdateView,
+    TrailerCreateView,
+    TrailerListView,
+    TrailerUpdateView,
 )
 
 app_name = "invent"
 
 urlpatterns = [
     path('', index, name='index'),
-    path('inventory/trucks/create/', TruckCreateView.as_view(),
+    path('trucks/create/', TruckCreateView.as_view(),
          name='create_truck'),
-    path('inventory/trucks/list/', TruckListView.as_view(),
+    path('trucks/list/', TruckListView.as_view(),
          name='list_trucks'),
-    path('inventory/trucks/detail/<int:pk>', TruckDetailView.as_view(),
-         name='truck_detail'),
-    path('inventory/trucks/update/<int:pk>', TruckUpdateView.as_view(),
+    path('trucks/update/<int:pk>', TruckUpdateView.as_view(),
          name='update_truck'),
+    path('trailers/create/', TrailerCreateView.as_view(),
+         name='create_trailer'),
+    path('trailers/list/', TrailerListView.as_view(),
+         name='list_trailers'),
+    path('trailers/update/<int:pk>', TrailerUpdateView.as_view(),
+         name='update_trailer'),
 ]

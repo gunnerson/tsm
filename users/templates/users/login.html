@@ -1,21 +1,25 @@
 {% extends "invent/base.html" %}
-{% load bootstrap4 %}
 
-{% block header %}
-  <h2>Log in to your account.</h2>
-{% endblock header %}
+{% block page-title %}
+  <p>Log in to your account</p>
+{% endblock %}
 
 {% block content %}
 
-<div class="col-4">
-  <form method="post" action="{% url 'users:login' %}" class="form">
+<div >
+  <form method="post" action="{% url 'users:login' %}">
     {% csrf_token %}
-    {% bootstrap_form form %}
-
-    {% buttons %}
-      <button name="submit" class="btn">Log in</button>
-    {% endbuttons %}
-
+    <table>
+      <tr>
+          <td>{{ form.username.label_tag }}</td>
+          <td style="padding-left: 10px;"><input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="off" maxlength="150" required="" id="id_username" class="form_field"></td>
+      </tr>
+      <tr>
+          <td>{{ form.password.label_tag }}</td>
+          <td style="padding-left: 10px; padding-top: 10px;"><input type="password" name="password" autocomplete="off" required="" id="id_password" class="form_field"></td>
+      </tr>
+    </table>
+    <button name="submit" class="btn">Log in</button>
     <input type="hidden" name="next" value="{% url 'invent:index' %}" />
   </form>
 </div>

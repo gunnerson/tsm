@@ -1,53 +1,44 @@
 {% extends "invent/base.html" %}
 
-<script>
-  {% block jquery %}
-
-    $(".clickable-row").click(function() {
-        window.location = $(this).data("href");
-    });
-
-  {% endblock %}
-</script>
-
 {% block left-menu%}
-
   <ul>
     <li>
-      <a href="" onClick="window.location.replace(document.referrer);return false;" class="side-menu-link" role="button">Back</a>
+      <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
     </li>
     <li>
-      <a href="{% url 'invent:create_truck' %}" class="side-menu-link" role="button">+ New truck</a>
+      <a href="{% url 'invent:create_truck' %}" role="button">+ New truck</a>
     </li>
   </ul>
-
 {% endblock left-menu %}
 
 {% block page-title %}
-
-  <div class="page-title-right">
-    <ol class="breadcrumb m-0">
-        <li class="breadcrumb-item"><a href="{% url 'invent:index' %}">Home</a></li>
-        <li class="breadcrumb-item active">Trucks</li>
+  <p>List of truck records</p>
+  <div class="address-line">
+    <ol>
+        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
+        <li>Trucks</li>
     </ol>
   </div>
-  <h4 class="page-title">Trucks</h4>
-
 {% endblock page-title %}
 
 {% block content %}
-
-  <div class="container-fluid justify-content-start ml-1 mt-4">
-    <table>
-      {% for object in object_list %}
-        <tr class='clickable-row row border' data-href="{% url 'invent:truck_detail' object.id %}">
-          <th class="col-2 border-right text-nowrap text-truncate">
-              {{ object.fleet_number }}
-          </th>
-        </tr>
-      {% endfor %}
-    </table>
+  <div class="grid" style="grid-template-columns: repeat(7, 1fr);">
+    <span><strong>Fleet number</strong></span>
+    <span><strong>Company</strong></span>
+    <span><strong>License Plate</strong></span>
+    <span><strong>Make</strong></span>
+    <span><strong>Mileage</strong></span>
+    <span><strong>Registration</strong></span>
+    <span><strong>Insurance</strong></span>
+    {% for object in object_list %}
+      <a href="{% url 'invent:update_truck' object.id %}">{{ object.fleet_number }}</a>
+      <a href="{% url 'invent:update_truck' object.id %}">{{ object.company }}</a>
+      <a href="{% url 'invent:update_truck' object.id %}">{{ object.lic_plate }}</a>
+      <a href="{% url 'invent:update_truck' object.id %}">{{ object.get_make_display }}</a>
+      <a href="{% url 'invent:update_truck' object.id %}">{{ object.mileage }}</a>
+      <a href="{% url 'invent:update_truck' object.id %}">{{ object.reg_exp }}</a>
+      <a href="{% url 'invent:update_truck' object.id %}">{{ object.ins_exp }}</a>
+    {% endfor %}
   </div>
-
 {% endblock content %}
 
