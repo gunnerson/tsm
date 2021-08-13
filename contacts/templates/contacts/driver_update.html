@@ -3,7 +3,7 @@
 {% block left-menu%}
   <ul>
     <li>
-      <a href="{% url 'invent:list_trailers' %}" role="button">Back</a>
+      <a href="{% url 'contacts:list_drivers' %}" role="button">Back</a>
     </li>
     <li>
       <button type="submit" form="data_form">+ Save changes</a>
@@ -12,12 +12,12 @@
 {% endblock left-menu %}
 
 {% block page-title %}
-  <p>Update trailer record</p>
+  <p>Update driver record</p>
   <div class="address-line">
     <ol>
       <li><a href="{% url 'invent:index' %}">Home</a> > </li>
-      <li><a href="{% url 'invent:list_trailers' %}">Trailers</a> > </li>
-      <li>Update trailer</li>
+      <li><a href="{% url 'contacts:list_drivers' %}">Drivers</a> > </li>
+      <li>Update driver</li>
     </ol>
   </div>
 {% endblock page-title %}

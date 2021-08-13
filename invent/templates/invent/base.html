@@ -26,6 +26,12 @@
             <li id="navItem2">
               <a href="{% url 'invent:list_trailers' %}">Trailers</a>
             </li>
+            <li id="navItem3">
+              <a href="{% url 'contacts:list_drivers' %}">Drivers</a>
+            </li>
+            <li id="navItem4">
+              <a href="{% url 'contacts:list_companies' %}">Companies</a>
+            </li>
           </ul>
         </div>
         <div id="header-right">
@@ -67,12 +73,14 @@
 
       docReady(function() {
         var section = window.location.toString().replace(/^http?:\/\//, '').split('/')[1];
-        if (section == "trucks" ) {
+        if (section == "trucks") {
           document.getElementById("navItem1").classList.add('active');
-        } else if (section == "trailers" ) {
+        } else if (section == "trailers") {
           document.getElementById("navItem2").classList.add('active');
-        } else if (section == "drivers" ) {
+        } else if (section == "drivers") {
           document.getElementById("navItem3").classList.add('active');
+        } else if (section == "companies") {
+          document.getElementById("navItem4").classList.add('active');
         };
         {% block js %}{% endblock %}
       });

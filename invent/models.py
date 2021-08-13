@@ -13,6 +13,10 @@ class Truck(models.Model):
     PACCAR = 'PC'
     DETROIT = 'DT'
     CATERPILLAR = 'CT'
+    DELIVERY = 'DL'
+    IDLE = 'ID'
+    SHOP = 'SH'
+    INACTIVE = 'IA'
     MAKE = [
         (FREIGHTLINER, 'Freighliner'),
         (INTERNATIONAL, 'International'),
@@ -29,7 +33,13 @@ class Truck(models.Model):
         (PACCAR, 'Paccar'),
         (VOLVO, 'Volvo'),
     ]
-    fleet_number = models.CharField(max_length=5, null=True)
+    STATUS = [
+        (DELIVERY, 'On delivery'),
+        (IDLE, 'Idle'),
+        (SHOP, 'In the shop'),
+        (INACTIVE, 'Inactive'),
+    ]
+    fleet_number = models.IntegerField(null=True)
     company =  models.ForeignKey('contacts.Company',
                            on_delete=models.SET_NULL,
                            null=True,
@@ -44,9 +54,20 @@ class Truck(models.Model):
     year_made = models.IntegerField(
         null=True,
         blank=True,
+        verbose_name='Year',
     )
-    vin = models.CharField(max_length=17, null=True, blank=True)
-    lic_plate = models.CharField(max_length=7, null=True, blank=True)
+    vin = models.CharField(
+        max_length=17,
+        null=True,
+        blank=True,
+        verbose_name='VIN',
+    )
+    lic_plate = models.CharField(
+        max_length=7,
+        null=True,
+        blank=True,
+        verbose_name='License plate',
+    )
     mileage = models.IntegerField(null=True, blank=True)
     engine = models.CharField(
         max_length=2,
@@ -56,18 +77,39 @@ class Truck(models.Model):
     )
     engine_model = models.CharField(max_length=12, null=True, blank=True)
     engine_number = models.CharField(max_length=13, null=True, blank=True)
-    reg_exp = models.DateField(null=True, blank=True)
-    ins_exp = models.DateField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    reg_exp = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Registraion expiration date',
+    )
+    ins_exp = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Insurance expiration date',
+    )
+    status = models.CharField(
+        max_length=2,
+        choices=STATUS,
+        default='ID',
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['fleet_number', 'company'],
+                name='unique_truck',
+                )
+            ]
 
     def __str__(self):
-        return str(self.fleet_number)
+        return str(self.company) + ' #' + str(self.fleet_number)
 
     def get_absolute_url(self):
         return reverse('invent:update_truck', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
-        self.fleet_number = self.fleet_number.upper()
         if self.lic_plate is not None:
             self.lic_plate = self.lic_plate.upper()
         if self.vin is not None:
@@ -79,35 +121,72 @@ class Trailer(models.Model):
     HYUNDAI = 'HY'
     UTILITY = 'UT'
     WABASH = 'WB'
+    DELIVERY = 'DL'
+    IDLE = 'ID'
+    SHOP = 'SH'
+    INACTIVE = 'IA'
     MAKE = [
         (HYUNDAI, 'Hyundai'),
         (UTILITY, 'Utility'),
         (WABASH, 'Wabash'),
     ]
-    fleet_number = models.CharField(max_length=5, null=True)
+    STATUS = [
+        (DELIVERY, 'On delivery'),
+        (IDLE, 'Idle'),
+        (SHOP, 'In the shop'),
+        (INACTIVE, 'Inactive'),
+    ]
+    fleet_number = models.IntegerField(null=True)
     company =  models.ForeignKey('contacts.Company',
                                on_delete=models.SET_NULL,
                                null=True,
                                )
-    lic_plate = models.CharField(max_length=7, null=True, blank=True)
+    lic_plate = models.CharField(
+        max_length=7,
+        null=True,
+        blank=True,
+        verbose_name='License plate',
+    )
     make = models.CharField(
         max_length=2,
         choices=MAKE,
         null=True,
         blank=True,
     )
-    year_made = models.IntegerField(null=True, blank=True)
-    vin = models.CharField(max_length=17, null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    year_made = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name='Year',
+    )
+    vin = models.CharField(
+        max_length=17,
+        null=True,
+        blank=True,
+        verbose_name='VIN',
+    )
+    status = models.CharField(
+        max_length=2,
+        choices=STATUS,
+        default='ID',
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['fleet_number', 'company'],
+                name='unique_trailer',
+                )
+            ]
 
     def __str__(self):
-        return str(self.fleet_number)
+        return str(self.company) + ' #' + str(self.fleet_number)
 
     def get_absolute_url(self):
         return reverse('invent:update_trailer', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
-        self.fleet_number = self.fleet_number.upper()
         if self.lic_plate is not None:
             self.lic_plate = self.lic_plate.upper()
         if self.vin is not None:

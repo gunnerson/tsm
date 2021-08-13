@@ -1,0 +1,32 @@
+{% extends "invent/base.html" %}
+
+{% block left-menu%}
+  <ul>
+    <li>
+      <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
+    </li>
+    <li>
+      <a href="{% url 'contacts:create_company' %}" role="button">+ New Company</a>
+    </li>
+  </ul>
+{% endblock left-menu %}
+
+{% block page-title %}
+  <p>List of company records</p>
+  <div class="address-line">
+    <ol>
+        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
+        <li>Companies</li>
+    </ol>
+  </div>
+{% endblock page-title %}
+
+{% block content %}
+  <div class="grid" style="grid-template-columns: repeat(1, 1fr);">
+    <span><strong>Name</strong></span>
+    {% for object in object_list %}
+      <a href="{% url 'contacts:update_company' object.id %}">{{ object }}</a>
+    {% endfor %}
+  </div>
+{% endblock content %}
+

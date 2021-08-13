@@ -6,14 +6,20 @@ from contacts.models import Driver
 
 
 def year_choices():
-    return [(r, r) for r in range(1990, date.today().year + 1)]
+    choices = []
+    default = ('', '----')
+    choices.append(default)
+    for r in range(1990, date.today().year + 1):
+        c = (r, r)
+        choices.append(c)
+    return choices
 
 
 class TruckForm(forms.ModelForm):
     year_made = forms.ChoiceField(
         choices=year_choices,
-        initial=date.today().year,
         label='Year',
+        required=False,
     )
     driver = forms.ModelChoiceField(
         queryset=Driver.objects.all(),
@@ -22,27 +28,20 @@ class TruckForm(forms.ModelForm):
     class Meta:
         model = Truck
         fields = '__all__'
-        labels = {
-            'fleet_number': 'Fleet number',
-            'lic_plate': 'License plate',
-            'make': 'Make',
-            'model': 'Model',
-            'vin': 'VIN',
-            'mileage': 'Mileage',
-            'engine': 'Engine manufacturer',
-            'engine_model': 'Engine model',
-            'engine_number': 'Model',
-            'reg_exp': 'Registration expiration date',
-            'ins_exp': 'Insurance expiration date',
-            'is_active': 'Active',
-        }
         widgets = {
             'reg_exp': forms.DateInput(attrs={'type': 'date'}),
             'ins_exp': forms.DateInput(attrs={'type': 'date'}),
         }
 
     def __init__(self, *args, **kwargs):
+        self.is_update = kwargs.pop('is_update')
         super().__init__(*args, **kwargs)
+        if self.is_update:
+            self.fields['fleet_number'].disabled = True
+            self.fields['company'].disabled = True
+        else:
+            self.fields["driver"].widget = forms.HiddenInput()
+            self.fields["driver"].label = ''
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})
 
@@ -50,22 +49,22 @@ class TruckForm(forms.ModelForm):
 class TrailerForm(forms.ModelForm):
     year_made = forms.ChoiceField(
         choices=year_choices,
-        initial=date.today().year,
+        required=False,
         label='Year',
     )
-
+    driver = forms.ModelChoiceField(
+        queryset=Driver.objects.all(),
+        required=False,
+    )
     class Meta:
         model = Trailer
         fields = '__all__'
-        labels = {
-            'fleet_number': 'Fleet number',
-            'lic_plate': 'License plate',
-            'make': 'Manufacturer',
-            'vin': 'VIN',
-            'is_active': 'Active',
-        }
 
     def __init__(self, *args, **kwargs):
+        self.is_update = kwargs.pop('is_update')
         super().__init__(*args, **kwargs)
+        if self.is_update:
+            self.fields['fleet_number'].disabled = True
+            self.fields['company'].disabled = True
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})

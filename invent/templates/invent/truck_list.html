@@ -22,20 +22,22 @@
 {% endblock page-title %}
 
 {% block content %}
-  <div class="grid" style="grid-template-columns: repeat(6, 1fr);">
+  <div class="grid" style="grid-template-columns: repeat(7, 1fr);">
     <span><strong>Fleet number</strong></span>
     <span><strong>Company</strong></span>
     <span><strong>Driver</strong></span>
     <span><strong>Trailer</strong></span>
+    <span><strong>Status</strong></span>
     <span><strong>Registration</strong></span>
     <span><strong>Insurance</strong></span>
     {% for object in object_list %}
       <a href="{% url 'invent:update_truck' object.id %}">{{ object.fleet_number }}</a>
-      <a href="{% url 'invent:update_truck' object.id %}">{{ object.company }}</a>
-      <a href="{% url 'invent:update_truck' object.id %}">{{ object.driver }}</a>
-      <a href="{% if object.driver.trailer.id != '' %}{% url 'invent:update_trailer' object.driver.trailer.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver.trailer }}</a>
-      <a href="{% url 'invent:update_truck' object.id %}">{{ object.reg_exp }}</a>
-      <a href="{% url 'invent:update_truck' object.id %}">{{ object.ins_exp }}</a>
+      <a href="{% if object.company.id != '' and object.company is not None %}{% url 'contacts:update_company' object.company.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.company|default_if_none:"" }}</a>
+      <a href="{% if object.driver.id != '' and object.driver is not None %}{% url 'contacts:update_driver' object.driver.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver }}</a>
+      <a href="{% if object.driver.trailer.id != '' and object.driver.trailer is not None %}{% url 'invent:update_trailer' object.driver.trailer.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver.trailer|default_if_none:"" }}</a>
+      <a href="{% url 'invent:update_truck' object.id %}">{{ object.get_status_display }}</a>
+      <a href="{% url 'invent:update_truck' object.id %}">{{ object.reg_exp|default_if_none:"" }}</a>
+      <a href="{% url 'invent:update_truck' object.id %}">{{ object.ins_exp|default_if_none:"" }}</a>
     {% endfor %}
   </div>
 {% endblock content %}

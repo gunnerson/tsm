@@ -1,0 +1,36 @@
+{% extends "invent/base.html" %}
+
+{% block left-menu%}
+  <ul>
+    <li>
+      <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
+    </li>
+    <li>
+      <a href="{% url 'contacts:create_driver' %}" role="button">+ New driver</a>
+    </li>
+  </ul>
+{% endblock left-menu %}
+
+{% block page-title %}
+  <p>List of driver records</p>
+  <div class="address-line">
+    <ol>
+        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
+        <li>Drivers</li>
+    </ol>
+  </div>
+{% endblock page-title %}
+
+{% block content %}
+  <div class="grid" style="grid-template-columns: repeat(3, 1fr);">
+    <span><strong>Name</strong></span>
+    <span><strong>Truck</strong></span>
+    <span><strong>Trailer</strong></span>
+    {% for object in object_list %}
+      <a href="{% url 'contacts:update_driver' object.id %}">{{ object }}</a>
+      <a href="{% if object.truck.id != '' and object.truck is not None %}{% url 'invent:update_truck' object.truck.id %}{% else %}{% url 'contacts:update_driver' object.id %}{% endif %}">{{ object.truck|default_if_none:"" }}</a>
+      <a href="{% if object.trailer.id != '' and object.trailer is not None %}{% url 'invent:update_trailer' object.trailer.id %}{% else %}{% url 'contacts:update_driver' object.id %}{% endif %}">{{ object.trailer|default_if_none:"" }}</a>
+    {% endfor %}
+  </div>
+{% endblock content %}
+

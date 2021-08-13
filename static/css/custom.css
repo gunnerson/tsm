@@ -98,7 +98,7 @@ html, body {
 #left-content {
     display: inline-block;
     z-index: 1;
-    width: 180px;
+    width: 200px;
     position: fixed;
     padding: 20px;
     padding-top: 40px;
@@ -152,7 +152,7 @@ html, body {
 }
 
 #address-panel p {
-    padding-left: 200px;
+    padding-left: 220px;
     font-style: italic;
 }
 
@@ -176,7 +176,7 @@ html, body {
 
 #main-content {
     padding-top: 50px !important;
-    margin-left: 180px;
+    margin-left: 200px;
     padding: 20px;
     background-color: #fdfdfd;
     height: 100%;
@@ -223,3 +223,4 @@ html, body {
     list-style-type: none;
     display: inline;
 }
+
