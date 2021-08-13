@@ -74,8 +74,6 @@ class DriverUpdateView(UserPassesTestMixin, UpdateView):
         return redirect(self.object.get_absolute_url())
 
 
-
-
 class CompanyCreateView(UserPassesTestMixin, CreateView):
     model = Company
     form_class = CompanyForm

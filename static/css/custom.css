@@ -224,3 +224,6 @@ html, body {
     display: inline;
 }
 
+.choice_taken {
+    color: red;
+}
