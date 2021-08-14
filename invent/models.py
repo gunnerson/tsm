@@ -39,44 +39,40 @@ class Truck(models.Model):
         (SHOP, 'In the shop'),
         (INACTIVE, 'Inactive'),
     ]
-    fleet_number = models.IntegerField(null=True)
-    company =  models.ForeignKey('contacts.Company',
-                           on_delete=models.SET_NULL,
-                           null=True,
-                           )
+    fleet_number = models.CharField(max_length=8, null=True,)
+    company = models.ForeignKey('contacts.Company',
+                                on_delete=models.SET_NULL,
+                                null=True,
+                                )
     make = models.CharField(
         max_length=2,
         choices=MAKE,
-        null=True,
         blank=True,
     )
-    model = models.CharField(max_length=12, null=True, blank=True)
-    year_made = models.IntegerField(
+    model = models.CharField(max_length=12, blank=True)
+    year_made = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
         verbose_name='Year',
     )
     vin = models.CharField(
         max_length=17,
-        null=True,
         blank=True,
         verbose_name='VIN',
     )
     lic_plate = models.CharField(
         max_length=7,
-        null=True,
         blank=True,
         verbose_name='License plate',
     )
-    mileage = models.IntegerField(null=True, blank=True)
+    mileage = models.PositiveIntegerField(null=True, blank=True)
     engine = models.CharField(
         max_length=2,
         choices=ENGINE,
-        null=True,
         blank=True,
     )
-    engine_model = models.CharField(max_length=12, null=True, blank=True)
-    engine_number = models.CharField(max_length=13, null=True, blank=True)
+    engine_model = models.CharField(max_length=12, blank=True)
+    engine_number = models.CharField(max_length=13, blank=True)
     reg_exp = models.DateField(
         null=True,
         blank=True,
@@ -91,7 +87,6 @@ class Truck(models.Model):
         max_length=2,
         choices=STATUS,
         default='ID',
-        null=True,
         blank=True,
     )
 
@@ -100,8 +95,8 @@ class Truck(models.Model):
             models.UniqueConstraint(
                 fields=['fleet_number', 'company'],
                 name='unique_truck',
-                )
-            ]
+            )
+        ]
 
     def __str__(self):
         return str(self.company) + ' #' + str(self.fleet_number)
@@ -136,31 +131,28 @@ class Trailer(models.Model):
         (SHOP, 'In the shop'),
         (INACTIVE, 'Inactive'),
     ]
-    fleet_number = models.IntegerField(null=True)
-    company =  models.ForeignKey('contacts.Company',
-                               on_delete=models.SET_NULL,
-                               null=True,
-                               )
+    fleet_number = models.CharField(max_length=8, null=True)
+    company = models.ForeignKey('contacts.Company',
+                                on_delete=models.SET_NULL,
+                                null=True,
+                                )
     lic_plate = models.CharField(
         max_length=7,
-        null=True,
         blank=True,
         verbose_name='License plate',
     )
     make = models.CharField(
         max_length=2,
         choices=MAKE,
-        null=True,
         blank=True,
     )
-    year_made = models.IntegerField(
+    year_made = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
         verbose_name='Year',
     )
     vin = models.CharField(
         max_length=17,
-        null=True,
         blank=True,
         verbose_name='VIN',
     )
@@ -168,7 +160,6 @@ class Trailer(models.Model):
         max_length=2,
         choices=STATUS,
         default='ID',
-        null=True,
         blank=True,
     )
 
@@ -177,8 +168,8 @@ class Trailer(models.Model):
             models.UniqueConstraint(
                 fields=['fleet_number', 'company'],
                 name='unique_trailer',
-                )
-            ]
+            )
+        ]
 
     def __str__(self):
         return str(self.company) + ' #' + str(self.fleet_number)

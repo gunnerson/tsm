@@ -3,8 +3,8 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 
-from .models import Driver, Company
-from .forms import DriverForm, CompanyForm
+from .models import Driver, Company, PasswordGroup
+from .forms import DriverForm, CompanyForm, PasswordGroupForm
 from invent.models import Truck, Trailer
 from invent.utils import has_group
 
@@ -97,3 +97,10 @@ class CompanyUpdateView(UserPassesTestMixin, UpdateView):
     def test_func(self):
         return (has_group(self.request.user, 'writer'))
 
+
+class PasswordGroupCreateView(UserPassesTestMixin, CreateView):
+    model = PasswordGroup
+    form_class = PasswordGroupForm
+
+    def test_func(self):
+        return (has_group(self.request.user, 'writer'))

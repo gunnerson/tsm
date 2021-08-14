@@ -38,6 +38,7 @@ class TruckListView(UserPassesTestMixin, ListView):
     def test_func(self):
         return (has_group(self.request.user, 'viewer'))
 
+
 class TruckUpdateView(UserPassesTestMixin, UpdateView):
     model = Truck
     form_class = TruckForm
@@ -70,7 +71,6 @@ class TruckUpdateView(UserPassesTestMixin, UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs.update(is_update=True)
         return kwargs
-
 
 
 class TrailerCreateView(UserPassesTestMixin, CreateView):

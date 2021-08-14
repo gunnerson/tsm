@@ -7,6 +7,7 @@ from .views import (
     CompanyCreateView,
     CompanyListView,
     CompanyUpdateView,
+    PasswordGroupCreateView,
 )
 
 app_name = "contacts"
@@ -24,4 +25,8 @@ urlpatterns = [
          name='list_companies'),
     path('companies/update/<int:pk>', CompanyUpdateView.as_view(),
          name='update_company'),
+    path('passwords/group/create/', PasswordGroupCreateView.as_view(),
+         name='create_password_group'),
+    path('passwords/list/', DriverListView.as_view(),
+         name='list_passwords'),
 ]

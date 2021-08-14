@@ -25,6 +25,7 @@ class TruckForm(forms.ModelForm):
         queryset=Driver.objects.all(),
         required=False,
     )
+
     class Meta:
         model = Truck
         fields = '__all__'
@@ -56,6 +57,7 @@ class TrailerForm(forms.ModelForm):
         queryset=Driver.objects.all(),
         required=False,
     )
+
     class Meta:
         model = Trailer
         fields = '__all__'
