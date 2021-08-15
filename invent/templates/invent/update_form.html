@@ -2,9 +2,11 @@
 
 {% block left-menu%}
   <ul>
-    <li>
-      <a href="{% url 'invent:list_trailers' %}" role="button">Back</a>
-    </li>
+    {% if url_left_1_a %}
+      <li>
+        <a href="{% url url_left_1_a %}" role="button">{{ url_left_1_t }}</a>
+      </li>
+    {% endif %}
     <li>
       <button type="submit" form="data_form">+ Save changes</a>
     </li>
@@ -12,12 +14,12 @@
 {% endblock left-menu %}
 
 {% block page-title %}
-  <p>Update trailer record</p>
+  <p>Update {{ lower_name }} record</p>
   <div class="address-line">
     <ol>
       <li><a href="{% url 'invent:index' %}">Home</a> > </li>
-      <li><a href="{% url 'invent:list_trailers' %}">Trailers</a> > </li>
-      <li>Update trailer</li>
+      <li><a href="{% url url_left_1_a %}">{{ upper_name }}s</a> > </li>
+      <li>Update {{ lower_name }}</li>
     </ol>
   </div>
 {% endblock page-title %}

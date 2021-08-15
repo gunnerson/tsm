@@ -16,7 +16,7 @@ def year_choices():
 
 
 class TruckForm(forms.ModelForm):
-    year_made = forms.ChoiceField(
+    year = forms.ChoiceField(
         choices=year_choices,
         label='Year',
         required=False,
@@ -30,8 +30,9 @@ class TruckForm(forms.ModelForm):
         model = Truck
         fields = '__all__'
         widgets = {
-            'reg_exp': forms.DateInput(attrs={'type': 'date'}),
-            'ins_exp': forms.DateInput(attrs={'type': 'date'}),
+            'registration': forms.DateInput(attrs={'type': 'date'}),
+            'insurance': forms.DateInput(attrs={'type': 'date'}),
+            'inspection': forms.DateInput(attrs={'type': 'date'}),
         }
 
     def __init__(self, *args, **kwargs):

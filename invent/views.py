@@ -5,7 +5,9 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 
 from .models import Truck, Trailer
 from .forms import TruckForm, TrailerForm
-from .utils import has_group
+from .utils import has_group, not_empty
+from users.utils import gen_field_ver_name
+from users.models import ListColShow
 
 
 def index(request):
@@ -31,12 +33,34 @@ class TruckCreateView(UserPassesTestMixin, CreateView):
         self.object.save()
         return redirect(self.object.get_absolute_url())
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['upper_name'] = "Truck"
+        context['lower_name'] = "truck"
+        context['url_left_1_a'] = "invent:list_trucks"
+        context['url_left_1_t'] = "Back"
+        return context
+
 
 class TruckListView(UserPassesTestMixin, ListView):
     model = Truck
 
     def test_func(self):
         return (has_group(self.request.user, 'viewer'))
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        qs = ListColShow.objects.filter(
+            profile=self.request.user.profile,
+            list_name=str(self.model._meta.verbose_name).capitalize(),
+        )
+        field_names = []
+        for q in qs:
+            if q.show:
+                field_names.append(q.field_name)
+        context['field_names'] = field_names
+        context['grid_cols'] = len(field_names)
+        return context
 
 
 class TruckUpdateView(UserPassesTestMixin, UpdateView):
@@ -62,8 +86,8 @@ class TruckUpdateView(UserPassesTestMixin, UpdateView):
         if driver is not None:
             driver.truck = self.object
             driver.save(update_fields=['truck'])
-        if self.object.year_made == '':
-            self.object.year_made = None
+        if self.object.year == '':
+            self.object.year = None
         self.object.save()
         return redirect(self.object.get_absolute_url())
 
@@ -71,6 +95,14 @@ class TruckUpdateView(UserPassesTestMixin, UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs.update(is_update=True)
         return kwargs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['upper_name'] = "Truck"
+        context['lower_name'] = "truck"
+        context['url_left_1_a'] = "invent:list_trucks"
+        context['url_left_1_t'] = "Back"
+        return context
 
 
 class TrailerCreateView(UserPassesTestMixin, CreateView):
@@ -92,12 +124,28 @@ class TrailerCreateView(UserPassesTestMixin, CreateView):
         self.object.save()
         return redirect(self.object.get_absolute_url())
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['upper_name'] = "Trailer"
+        context['lower_name'] = "trailer"
+        context['url_left_1_a'] = "invent:list_trailers"
+        context['url_left_1_t'] = "Back"
+        return context
+
 
 class TrailerListView(UserPassesTestMixin, ListView):
     model = Trailer
 
     def test_func(self):
         return (has_group(self.request.user, 'viewer'))
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        col_count = 6
+        table_style = 'grid-template-columns: repeat(' + \
+            str(col_count) + ', 1fr)'
+        context['table_style'] = table_style
+        return context
 
 
 class TrailerUpdateView(UserPassesTestMixin, UpdateView):
@@ -132,3 +180,11 @@ class TrailerUpdateView(UserPassesTestMixin, UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs.update(is_update=True)
         return kwargs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['upper_name'] = "Trailer"
+        context['lower_name'] = "trailer"
+        context['url_left_1_a'] = "invent:list_trailers"
+        context['url_left_1_t'] = "Back"
+        return context

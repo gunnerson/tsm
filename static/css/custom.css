@@ -227,3 +227,16 @@ html, body {
 .choice_taken {
     color: red;
 }
+
+.colBox:hover {
+    cursor: pointer;
+}
+
+.move_button {
+    width: 40px;
+}
+
+.move_button:hover {
+    width: 40px;
+    cursor: pointer;
+}

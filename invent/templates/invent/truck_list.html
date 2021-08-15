@@ -22,22 +22,104 @@
 {% endblock page-title %}
 
 {% block content %}
-  <div class="grid" style="grid-template-columns: repeat(7, 1fr);">
-    <span><strong>Fleet number</strong></span>
-    <span><strong>Company</strong></span>
-    <span><strong>Driver</strong></span>
-    <span><strong>Trailer</strong></span>
-    <span><strong>Status</strong></span>
-    <span><strong>Registration</strong></span>
-    <span><strong>Insurance</strong></span>
+  <div class="grid" style="grid-template-columns: repeat({{ grid_cols }}, 1fr);">
+    {% if 'Fleet number' in field_names %}
+      <span><strong>Fleet number</strong></span>
+    {% endif %}
+    {% if 'Company' in field_names %}
+      <span><strong>Company</strong></span>
+    {% endif %}
+    {% if 'Driver' in field_names %}
+      <span><strong>Driver</strong></span>
+    {% endif %}
+    {% if 'Trailer' in field_names %}
+      <span><strong>Trailer</strong></span>
+    {% endif %}
+    {% if 'Make' in field_names %}
+      <span><strong>Make</strong></span>
+    {% endif %}
+    {% if 'Model' in field_names %}
+      <span><strong>Model</strong></span>
+    {% endif %}
+    {% if 'Year' in field_names %}
+      <span><strong>Year</strong></span>
+    {% endif %}
+    {% if 'License plate' in field_names %}
+      <span><strong>License plate</strong></span>
+    {% endif %}
+    {% if 'Mileage' in field_names %}
+      <span><strong>Mileage</strong></span>
+    {% endif %}
+    {% if 'Vin' in field_names %}
+      <span><strong>Vin</strong></span>
+    {% endif %}
+    {% if 'Engine' in field_names %}
+      <span><strong>Engine</strong></span>
+    {% endif %}
+    {% if 'Engine number' in field_names %}
+      <span><strong>Engine number</strong></span>
+    {% endif %}
+    {% if 'Registration' in field_names %}
+      <span><strong>Registration</strong></span>
+    {% endif %}
+    {% if 'Insurance' in field_names %}
+      <span><strong>Insurance</strong></span>
+    {% endif %}
+    {% if 'Inspection' in field_names %}
+      <span><strong>Inspection</strong></span>
+    {% endif %}
+    {% if 'Status' in field_names %}
+      <span><strong>Status</strong></span>
+    {% endif %}
     {% for object in object_list %}
-      <a href="{% url 'invent:update_truck' object.id %}">{{ object.fleet_number }}</a>
-      <a href="{% if object.company.id != '' and object.company is not None %}{% url 'contacts:update_company' object.company.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.company|default_if_none:"" }}</a>
-      <a href="{% if object.driver.id != '' and object.driver is not None %}{% url 'contacts:update_driver' object.driver.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver }}</a>
-      <a href="{% if object.driver.trailer.id != '' and object.driver.trailer is not None %}{% url 'invent:update_trailer' object.driver.trailer.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver.trailer|default_if_none:"" }}</a>
-      <a href="{% url 'invent:update_truck' object.id %}">{{ object.get_status_display }}</a>
-      <a href="{% url 'invent:update_truck' object.id %}">{{ object.reg_exp|default_if_none:"" }}</a>
-      <a href="{% url 'invent:update_truck' object.id %}">{{ object.ins_exp|default_if_none:"" }}</a>
+      {% if 'Fleet number' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.fleet_number }}</a>
+      {% endif %}
+      {% if 'Company' in field_names %}
+        <a href="{% if object.company.id != '' and object.company is not None %}{% url 'contacts:update_company' object.company.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.company|default_if_none:"" }}</a>
+      {% endif %}
+      {% if 'Driver' in field_names %}
+        <a href="{% if object.driver.id != '' and object.driver is not None %}{% url 'contacts:update_driver' object.driver.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver }}</a>
+      {% endif %}
+      {% if 'Trailer' in field_names %}
+        <a href="{% if object.driver.trailer.id != '' and object.driver.trailer is not None %}{% url 'invent:update_trailer' object.driver.trailer.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver.trailer|default_if_none:"" }}</a>
+      {% endif %}
+      {% if 'Make' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.get_make_display }}</a>
+      {% endif %}
+      {% if 'Model' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.model }}</a>
+      {% endif %}
+      {% if 'Year' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.year }}</a>
+      {% endif %}
+      {% if 'License plate' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.license_plate }}</a>
+      {% endif %}
+      {% if 'Mileage' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.mileage|default_if_none:"" }}</a>
+      {% endif %}
+      {% if 'Vin' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.vin }}</a>
+      {% endif %}
+      {% if 'Engine' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.get_engine_display }}</a>
+      {% endif %}
+      {% if 'Engine number' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.engine_number }}</a>
+      {% endif %}
+      {% if 'Registration' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.registration|default_if_none:"" }}</a>
+      {% endif %}
+      {% if 'Insurance' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.insurance|default_if_none:"" }}</a>
+      {% endif %}
+      {% if 'Inspection' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.inspection|default_if_none:"" }}</a>
+      {% endif %}
+      {% if 'Status' in field_names %}
+        <a href="{% url 'invent:update_truck' object.id %}">{{ object.get_status_display }}</a>
+      {% endif %}
     {% endfor %}
   </div>
 {% endblock content %}

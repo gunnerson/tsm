@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
 
+from .utils import not_empty
+
 
 class Truck(models.Model):
     VOLVO = 'VL'
@@ -50,20 +52,17 @@ class Truck(models.Model):
         blank=True,
     )
     model = models.CharField(max_length=12, blank=True)
-    year_made = models.PositiveSmallIntegerField(
+    year = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
-        verbose_name='Year',
     )
     vin = models.CharField(
         max_length=17,
         blank=True,
-        verbose_name='VIN',
     )
-    lic_plate = models.CharField(
+    license_plate = models.CharField(
         max_length=7,
         blank=True,
-        verbose_name='License plate',
     )
     mileage = models.PositiveIntegerField(null=True, blank=True)
     engine = models.CharField(
@@ -71,23 +70,23 @@ class Truck(models.Model):
         choices=ENGINE,
         blank=True,
     )
-    engine_model = models.CharField(max_length=12, blank=True)
     engine_number = models.CharField(max_length=13, blank=True)
-    reg_exp = models.DateField(
+    registration = models.DateField(
         null=True,
         blank=True,
-        verbose_name='Registraion expiration date',
     )
-    ins_exp = models.DateField(
+    insurance = models.DateField(
         null=True,
         blank=True,
-        verbose_name='Insurance expiration date',
+    )
+    inspection = models.DateField(
+        null=True,
+        blank=True,
     )
     status = models.CharField(
         max_length=2,
         choices=STATUS,
         default='ID',
-        blank=True,
     )
 
     class Meta:
@@ -105,9 +104,9 @@ class Truck(models.Model):
         return reverse('invent:update_truck', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
-        if self.lic_plate is not None:
-            self.lic_plate = self.lic_plate.upper()
-        if self.vin is not None:
+        if not_empty(self.license_plate):
+            self.license_plate = self.license_plate.upper()
+        if not_empty(self.vin):
             self.vin = self.vin.upper()
         super(Truck, self).save(*args, **kwargs)
 
@@ -136,25 +135,22 @@ class Trailer(models.Model):
                                 on_delete=models.SET_NULL,
                                 null=True,
                                 )
-    lic_plate = models.CharField(
+    license_plate = models.CharField(
         max_length=7,
         blank=True,
-        verbose_name='License plate',
     )
     make = models.CharField(
         max_length=2,
         choices=MAKE,
         blank=True,
     )
-    year_made = models.PositiveSmallIntegerField(
+    year = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
-        verbose_name='Year',
     )
     vin = models.CharField(
         max_length=17,
         blank=True,
-        verbose_name='VIN',
     )
     status = models.CharField(
         max_length=2,
@@ -178,8 +174,8 @@ class Trailer(models.Model):
         return reverse('invent:update_trailer', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
-        if self.lic_plate is not None:
-            self.lic_plate = self.lic_plate.upper()
-        if self.vin is not None:
+        if not_empty(self.license_plate):
+            self.license_plate = self.license_plate.upper()
+        if not_empty(self.vin):
             self.vin = self.vin.upper()
         super(Trailer, self).save(*args, **kwargs)

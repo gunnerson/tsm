@@ -1,0 +1,47 @@
+{% extends "invent/base.html" %}
+
+{% comment %}
+<script>
+  {% block js %}
+    const colBoxes = document.querySelectorAll('.colBox');
+    for (colBox of colBoxes){
+      colBox.addEventListener('change', function(e){
+        document.getElementById('checkform').submit();
+      });
+    };
+  {% endblock js %}
+</script>
+{% endcomment %}
+
+{% block left-menu%}
+  <ul>
+    <li>
+      <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
+    </li>
+    <li>
+      <button type="submit" form="data_form" name="changed" value="on">+ Save changes</button>
+    </li>
+  </ul>
+{% endblock left-menu %}
+
+
+{% block page-title %}
+  <p>Select fields to show on list page</p>
+{% endblock page-title %}
+
+{% block content %}
+  <form method="GET" id="data_form">
+    {% for object in object_list %}
+      <p>
+        {{ object.list_name }} |
+        {{ object.field_name }}
+        <input type="checkbox" name={{ object.id }} class="colBox form_field" id={{ object.id }} {% if object.show %}checked{% endif %}>
+        {% comment %}
+        <button type="submit" form="data_form" class="move_button" name="move_up" value="{{ object.id }}">up</button>
+        <button type="submit" form="data_form" class="move_button" name="move_down" value="{{ object.id }}">down</button>
+        {% endcomment %}
+      </p>
+    {% endfor %}
+  </form>
+
+{% endblock content %}
