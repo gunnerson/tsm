@@ -31,8 +31,8 @@
     {% if 'Fleet number' in field_names %}
       <span><strong>Fleet number</strong></span>
     {% endif %}
-    {% if 'Company' in field_names %}
-      <span><strong>Company</strong></span>
+    {% if 'Owner' in field_names %}
+      <span><strong>Owner</strong></span>
     {% endif %}
     {% if 'Driver' in field_names %}
       <span><strong>Driver</strong></span>
@@ -86,8 +86,8 @@
       {% if 'Fleet number' in field_names %}
         <a href="{% url 'invent:update_truck' object.id %}">{{ object.fleet_number }}</a>
       {% endif %}
-      {% if 'Company' in field_names %}
-        <a href="{% if object.company.id != '' and object.company is not None %}{% url 'contacts:update_company' object.company.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.company|default_if_none:"" }}</a>
+      {% if 'Owner' in field_names %}
+        <a href="{% if object.owner.id != '' and object.owner is not None %}{% url 'contacts:update_company' object.owner.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.owner|default_if_none:"" }}</a>
       {% endif %}
       {% if 'Driver' in field_names %}
         <a href="{% if object.driver.id != '' and object.driver is not None %}{% url 'contacts:update_driver' object.driver.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver }}</a>
@@ -99,7 +99,7 @@
         <p>{{ object.get_make_display }}</p>
       {% endif %}
       {% if 'Year' in field_names %}
-        <p>{{ object.year }}</p>
+        <p>{{ object.year|default_if_none:"" }}</p>
       {% endif %}
       {% if 'State' in field_names %}
         <p>{{ object.state }}</p>
@@ -108,7 +108,7 @@
         <p>{{ object.license_plate }}</p>
       {% endif %}
       {% if 'Value' in field_names %}
-        <p>{{ object.value }}</p>
+        <p>{{ object.value|default_if_none:"" }}</p>
       {% endif %}
       {% if 'Mileage' in field_names %}
         <p>{{ object.mileage|default_if_none:"" }}</p>
@@ -129,7 +129,7 @@
         <p>{{ object.insurance|default_if_none:"" }}</p>
       {% endif %}
       {% if 'Insurer' in field_names %}
-        <p>{{ object.insurer }}</p>
+        <p>{{ object.insurer|default_if_none:"" }}</p>
       {% endif %}
       {% if 'Inspection' in field_names %}
         <p>{{ object.inspection|default_if_none:"" }}</p>

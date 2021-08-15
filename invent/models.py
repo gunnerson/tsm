@@ -54,7 +54,8 @@ class Truck(models.Model):
         max_length=17,
         null=True,
         blank=True,
-        validators=[alphanumeric]
+        validators=[alphanumeric],
+        verbose_name='VIN',
     )
     license_plate = models.CharField(
         max_length=8,
@@ -102,14 +103,61 @@ class Truck(models.Model):
         choices=status_choices(),
         default='ID',
     )
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['account', 'vin'],
-                name='unique_truck',
-            )
-        ]
+    gps = models.BooleanField(null=True, blank=True, verbose_name='GPS')
+    prepass = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        verbose_name='PrePass',
+    )
+    ipass = models.CharField(
+        max_length=14,
+        null=True,
+        blank=True,
+        verbose_name='I-Pass',
+    )
+    ifta = models.CharField(
+        max_length=12,
+        null=True,
+        blank=True,
+        verbose_name='IFTA',
+    )
+    ny_permit = models.CharField(
+        max_length=6,
+        null=True,
+        blank=True,
+        verbose_name='NY',
+    )
+    ky_permit = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name='KY',
+    )
+    nm_permit = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name='NM',
+    )
+    or_permit = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name='OR',
+    )
+    eld = models.CharField(
+        max_length=18,
+        null=True,
+        blank=True,
+        verbose_name='ELD',
+    )
+    start_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Started',
+    )
+    end_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Terminated',
+    )
 
     def __str__(self):
         return self.fleet_number
@@ -160,14 +208,6 @@ class Trailer(models.Model):
         default='ID',
         blank=True,
     )
-
-    # class Meta:
-    #     constraints = [
-    #         models.UniqueConstraint(
-    #             fields=['fleet_number', 'company'],
-    #             name='unique_trailer',
-    #         )
-    #     ]
 
     def __str__(self):
         return str(self.company) + ' #' + str(self.fleet_number)

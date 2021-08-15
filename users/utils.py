@@ -18,7 +18,8 @@ def not_empty(param):
 
 
 def gen_field_ver_name(str):
-    return str.replace("_", " ").capitalize()
+    new_str = str[0].capitalize() + str[1:]
+    return new_str.replace("_", " ")
 
 
 def gen_list_ver_name(str):
