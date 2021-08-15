@@ -5,8 +5,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 
 from .models import Truck, Trailer
 from .forms import TruckForm, TrailerForm
-from .utils import has_group, not_empty
-from users.utils import gen_field_ver_name
+from users.utils import has_access, not_empty, gen_field_ver_name
 from users.models import ListColShow
 
 
@@ -19,7 +18,7 @@ class TruckCreateView(UserPassesTestMixin, CreateView):
     form_class = TruckForm
 
     def test_func(self):
-        return (has_group(self.request.user, 'writer'))
+        return has_access(self.request.user, 'write')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -28,8 +27,9 @@ class TruckCreateView(UserPassesTestMixin, CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        if self.object.year_made == '':
-            self.object.year_made = None
+        if self.object.year == '':
+            self.object.year = None
+        self.object.account = self.request.user.profile.account
         self.object.save()
         return redirect(self.object.get_absolute_url())
 
@@ -46,7 +46,7 @@ class TruckListView(UserPassesTestMixin, ListView):
     model = Truck
 
     def test_func(self):
-        return (has_group(self.request.user, 'viewer'))
+        return has_access(self.request.user, 'read')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -60,6 +60,7 @@ class TruckListView(UserPassesTestMixin, ListView):
                 field_names.append(q.field_name)
         context['field_names'] = field_names
         context['grid_cols'] = len(field_names)
+        print(field_names)
         return context
 
 
@@ -69,7 +70,7 @@ class TruckUpdateView(UserPassesTestMixin, UpdateView):
     template_name_suffix = '_update'
 
     def test_func(self):
-        return (has_group(self.request.user, 'writer'))
+        return has_access(self.request.user, 'write')
 
     def get_initial(self):
         initial = super(TruckUpdateView, self).get_initial()
@@ -110,7 +111,7 @@ class TrailerCreateView(UserPassesTestMixin, CreateView):
     form_class = TrailerForm
 
     def test_func(self):
-        return (has_group(self.request.user, 'writer'))
+        return has_access(self.request.user, 'write')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -121,6 +122,7 @@ class TrailerCreateView(UserPassesTestMixin, CreateView):
         self.object = form.save(commit=False)
         if self.object.year_made == '':
             self.object.year_made = None
+        self.object.account = self.request.user.profile.account
         self.object.save()
         return redirect(self.object.get_absolute_url())
 
@@ -137,7 +139,7 @@ class TrailerListView(UserPassesTestMixin, ListView):
     model = Trailer
 
     def test_func(self):
-        return (has_group(self.request.user, 'viewer'))
+        return has_access(self.request.user, 'read')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -154,7 +156,7 @@ class TrailerUpdateView(UserPassesTestMixin, UpdateView):
     template_name_suffix = '_update'
 
     def test_func(self):
-        return (has_group(self.request.user, 'writer'))
+        return has_access(self.request.user, 'write')
 
     def get_initial(self):
         initial = super(TrailerUpdateView, self).get_initial()

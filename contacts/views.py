@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from .models import Driver, Company, PasswordGroup
 from .forms import DriverForm, CompanyForm, PasswordGroupForm
 from invent.models import Truck, Trailer
-from invent.utils import has_group
+from users.utils import has_access
 
 
 class DriverCreateView(UserPassesTestMixin, CreateView):
@@ -14,19 +14,24 @@ class DriverCreateView(UserPassesTestMixin, CreateView):
     form_class = DriverForm
 
     def test_func(self):
-        return (has_group(self.request.user, 'writer'))
+        return has_access(self.request.user, 'read')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update(is_update=False)
         return kwargs
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.account = self.request.user.profile.account
+        self.object.save()
+        return redirect(self.object.get_absolute_url())
 
 class DriverListView(UserPassesTestMixin, ListView):
     model = Driver
 
     def test_func(self):
-        return (has_group(self.request.user, 'viewer'))
+        return has_access(self.request.user, 'read')
 
 
 class DriverUpdateView(UserPassesTestMixin, UpdateView):
@@ -35,7 +40,7 @@ class DriverUpdateView(UserPassesTestMixin, UpdateView):
     template_name_suffix = '_update'
 
     def test_func(self):
-        return (has_group(self.request.user, 'writer'))
+        return has_access(self.request.user, 'write')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -79,14 +84,20 @@ class CompanyCreateView(UserPassesTestMixin, CreateView):
     form_class = CompanyForm
 
     def test_func(self):
-        return (has_group(self.request.user, 'writer'))
+        return has_access(self.request.user, 'write')
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.account = self.request.user.profile.account
+        self.object.save()
+        return redirect(self.object.get_absolute_url())
 
 
 class CompanyListView(UserPassesTestMixin, ListView):
     model = Company
 
     def test_func(self):
-        return (has_group(self.request.user, 'viewer'))
+        return has_access(self.request.user, 'read')
 
 
 class CompanyUpdateView(UserPassesTestMixin, UpdateView):
@@ -95,7 +106,7 @@ class CompanyUpdateView(UserPassesTestMixin, UpdateView):
     template_name_suffix = '_update'
 
     def test_func(self):
-        return (has_group(self.request.user, 'writer'))
+        return has_access(self.request.user, 'write')
 
 
 class PasswordGroupCreateView(UserPassesTestMixin, CreateView):
@@ -103,4 +114,10 @@ class PasswordGroupCreateView(UserPassesTestMixin, CreateView):
     form_class = PasswordGroupForm
 
     def test_func(self):
-        return (has_group(self.request.user, 'writer'))
+        return has_access(self.request.user, 'write')
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.account = self.request.user.profile.account
+        self.object.save()
+        return redirect(self.object.get_absolute_url())

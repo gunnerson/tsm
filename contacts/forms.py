@@ -46,7 +46,7 @@ class DriverForm(forms.ModelForm):
 
     class Meta:
         model = Driver
-        exclude = ('truck', 'trailer', )
+        exclude = ('truck', 'trailer', 'account',)
 
     def __init__(self, *args, **kwargs):
         self.is_update = kwargs.pop('is_update')
@@ -63,7 +63,7 @@ class DriverForm(forms.ModelForm):
 class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
-        fields = '__all__'
+        exclude = ('account',)
         widgets = {'comments': forms.Textarea(attrs={'cols': 80})}
 
     def __init__(self, *args, **kwargs):
@@ -75,7 +75,7 @@ class CompanyForm(forms.ModelForm):
 class PasswordGroupForm(forms.ModelForm):
     class Meta:
         model = PasswordGroup
-        fields = '__all__'
+        exclude = ('account',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

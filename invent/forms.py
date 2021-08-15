@@ -1,34 +1,29 @@
 from django import forms
 from datetime import date
+from django.db.models import Q
 
 from .models import Truck, Trailer
+from contacts.models import Company
 from contacts.models import Driver
 
 
-def year_choices():
-    choices = []
-    default = ('', '----')
-    choices.append(default)
-    for r in range(1990, date.today().year + 1):
-        c = (r, r)
-        choices.append(c)
-    return choices
-
-
 class TruckForm(forms.ModelForm):
-    year = forms.ChoiceField(
-        choices=year_choices,
-        label='Year',
-        required=False,
-    )
     driver = forms.ModelChoiceField(
         queryset=Driver.objects.all(),
+        required=False,
+    )
+    owner = forms.ModelChoiceField(
+        queryset=Company.objects.filter(Q(group='OU') | Q(group='LO')),
+        required=False,
+    )
+    insurer = forms.ModelChoiceField(
+        queryset=Company.objects.filter(group='IN'),
         required=False,
     )
 
     class Meta:
         model = Truck
-        fields = '__all__'
+        exclude = ('account',)
         widgets = {
             'registration': forms.DateInput(attrs={'type': 'date'}),
             'insurance': forms.DateInput(attrs={'type': 'date'}),
@@ -40,7 +35,6 @@ class TruckForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.is_update:
             self.fields['fleet_number'].disabled = True
-            self.fields['company'].disabled = True
         else:
             self.fields["driver"].widget = forms.HiddenInput()
             self.fields["driver"].label = ''
@@ -49,11 +43,6 @@ class TruckForm(forms.ModelForm):
 
 
 class TrailerForm(forms.ModelForm):
-    year_made = forms.ChoiceField(
-        choices=year_choices,
-        required=False,
-        label='Year',
-    )
     driver = forms.ModelChoiceField(
         queryset=Driver.objects.all(),
         required=False,
@@ -61,13 +50,12 @@ class TrailerForm(forms.ModelForm):
 
     class Meta:
         model = Trailer
-        fields = '__all__'
+        exclude = ('account',)
 
     def __init__(self, *args, **kwargs):
         self.is_update = kwargs.pop('is_update')
         super().__init__(*args, **kwargs)
         if self.is_update:
             self.fields['fleet_number'].disabled = True
-            self.fields['company'].disabled = True
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})

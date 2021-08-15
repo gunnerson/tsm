@@ -1,6 +1,20 @@
 from django.http import HttpResponse
 
-from invent.models import Truck, Trailer
+
+def has_group(user, group_name):
+    return user.groups.filter(name=group_name).exists()
+
+
+def account_active(user):
+    return user.profile.account.is_active()
+
+
+def has_access(user, group_name):
+    return has_group(user, group_name) and account_active(user)
+
+
+def not_empty(param):
+    return param != '' and param is not None
 
 
 def gen_field_ver_name(str):
@@ -12,13 +26,14 @@ def gen_list_ver_name(str):
 
 
 def generate_listcolshow(request, model):
+    from invent.models import Truck, Trailer
     from django.db import IntegrityError
     from .models import ListColShow
     user = request.user
     list_name = gen_list_ver_name(str(model._meta))
     fields = model._meta.get_fields()
     for f in fields:
-        if f.name != 'id':
+        if f.name not in ('id', 'account'):
             try:
                 ListColShow(
                     profile=user.profile,

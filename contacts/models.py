@@ -3,9 +3,22 @@ from django.urls import reverse
 from django.core.validators import RegexValidator
 
 from invent.models import Truck, Trailer
+from users.models import Account
+from invent.choices import company_group_choices
 
 
 class Company(models.Model):
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        null=True,
+    )
+    group = models.CharField(
+        max_length=2,
+        choices=company_group_choices(),
+        default='GN',
+        blank=True,
+    )
     name = models.CharField(max_length=20, unique=True)
     comments = models.TextField(blank=True)
 
@@ -20,6 +33,11 @@ class Company(models.Model):
 
 
 class Driver(models.Model):
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        null=True,
+    )
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     truck = models.OneToOneField(
@@ -51,6 +69,11 @@ class Driver(models.Model):
 
 
 class PasswordGroup(models.Model):
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        null=True,
+    )
     name = models.CharField(max_length=24, unique=True)
     comments = models.TextField()
     address = models.URLField(null=True)
@@ -60,6 +83,11 @@ class PasswordGroup(models.Model):
 
 
 class PasswordAccount(models.Model):
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        null=True,
+    )
     group = models.ForeignKey(
         PasswordGroup,
         on_delete=models.CASCADE,

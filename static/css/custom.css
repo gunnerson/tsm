@@ -211,11 +211,17 @@ html, body {
     display: grid;
 }
 
-.grid a{
+.grid a {
     padding: 8px 4px;
     border-bottom: 1px solid #ced4da;
     color: inherit;
     text-decoration: none;
+}
+
+.grid p {
+    padding: 8px 4px;
+    border-bottom: 1px solid #ced4da;
+    color: inherit;
 }
 
 .errorlist {

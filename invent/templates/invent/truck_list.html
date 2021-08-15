@@ -1,5 +1,10 @@
 {% extends "invent/base.html" %}
 
+<script>
+  {% block js %}
+  {% endblock js %}
+</script>
+
 {% block left-menu%}
   <ul>
     <li>
@@ -38,14 +43,17 @@
     {% if 'Make' in field_names %}
       <span><strong>Make</strong></span>
     {% endif %}
-    {% if 'Model' in field_names %}
-      <span><strong>Model</strong></span>
-    {% endif %}
     {% if 'Year' in field_names %}
       <span><strong>Year</strong></span>
     {% endif %}
+    {% if 'State' in field_names %}
+      <span><strong>State</strong></span>
+    {% endif %}
     {% if 'License plate' in field_names %}
       <span><strong>License plate</strong></span>
+    {% endif %}
+    {% if 'Value' in field_names %}
+      <span><strong>Value</strong></span>
     {% endif %}
     {% if 'Mileage' in field_names %}
       <span><strong>Mileage</strong></span>
@@ -64,6 +72,9 @@
     {% endif %}
     {% if 'Insurance' in field_names %}
       <span><strong>Insurance</strong></span>
+    {% endif %}
+    {% if 'Insurer' in field_names %}
+      <span><strong>Insurer</strong></span>
     {% endif %}
     {% if 'Inspection' in field_names %}
       <span><strong>Inspection</strong></span>
@@ -85,40 +96,46 @@
         <a href="{% if object.driver.trailer.id != '' and object.driver.trailer is not None %}{% url 'invent:update_trailer' object.driver.trailer.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver.trailer|default_if_none:"" }}</a>
       {% endif %}
       {% if 'Make' in field_names %}
-        <a href="{% url 'invent:update_truck' object.id %}">{{ object.get_make_display }}</a>
-      {% endif %}
-      {% if 'Model' in field_names %}
-        <a href="{% url 'invent:update_truck' object.id %}">{{ object.model }}</a>
+        <p>{{ object.get_make_display }}</p>
       {% endif %}
       {% if 'Year' in field_names %}
-        <a href="{% url 'invent:update_truck' object.id %}">{{ object.year }}</a>
+        <p>{{ object.year }}</p>
+      {% endif %}
+      {% if 'State' in field_names %}
+        <p>{{ object.state }}</p>
       {% endif %}
       {% if 'License plate' in field_names %}
-        <a href="{% url 'invent:update_truck' object.id %}">{{ object.license_plate }}</a>
+        <p>{{ object.license_plate }}</p>
+      {% endif %}
+      {% if 'Value' in field_names %}
+        <p>{{ object.value }}</p>
       {% endif %}
       {% if 'Mileage' in field_names %}
-        <a href="{% url 'invent:update_truck' object.id %}">{{ object.mileage|default_if_none:"" }}</a>
+        <p>{{ object.mileage|default_if_none:"" }}</p>
       {% endif %}
       {% if 'Vin' in field_names %}
-        <a href="{% url 'invent:update_truck' object.id %}">{{ object.vin }}</a>
+        <p>{{ object.vin|default_if_none:"" }}</p>
       {% endif %}
       {% if 'Engine' in field_names %}
-        <a href="{% url 'invent:update_truck' object.id %}">{{ object.get_engine_display }}</a>
+        <p>{{ object.get_engine_display }}</p>
       {% endif %}
       {% if 'Engine number' in field_names %}
-        <a href="{% url 'invent:update_truck' object.id %}">{{ object.engine_number }}</a>
+        <p>{{ object.engine_number }}</p>
       {% endif %}
       {% if 'Registration' in field_names %}
-        <a href="{% url 'invent:update_truck' object.id %}">{{ object.registration|default_if_none:"" }}</a>
+        <p>{{ object.registration|default_if_none:"" }}</p>
       {% endif %}
       {% if 'Insurance' in field_names %}
-        <a href="{% url 'invent:update_truck' object.id %}">{{ object.insurance|default_if_none:"" }}</a>
+        <p>{{ object.insurance|default_if_none:"" }}</p>
+      {% endif %}
+      {% if 'Insurer' in field_names %}
+        <p>{{ object.insurer }}</p>
       {% endif %}
       {% if 'Inspection' in field_names %}
-        <a href="{% url 'invent:update_truck' object.id %}">{{ object.inspection|default_if_none:"" }}</a>
+        <p>{{ object.inspection|default_if_none:"" }}</p>
       {% endif %}
       {% if 'Status' in field_names %}
-        <a href="{% url 'invent:update_truck' object.id %}">{{ object.get_status_display }}</a>
+        <p>{{ object.get_status_display }}</p>
       {% endif %}
     {% endfor %}
   </div>

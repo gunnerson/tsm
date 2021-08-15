@@ -1,12 +1,32 @@
 from django.db import models
+from datetime import date
 from django.contrib.auth.models import User
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
+    account = models.ForeignKey(
+        'Account',
+        on_delete=models.SET_NULL,
+        null=True
+    )
 
     def __str__(self):
         return str(self.user.username)
+
+
+class Account(models.Model):
+    name = models.CharField(max_length=24)
+    expiration_date = models.DateField(
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+    def is_active(self):
+        return self.expiration_date >= date.today()
 
 
 class ListColShow(models.Model):

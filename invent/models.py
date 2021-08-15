@@ -1,76 +1,82 @@
 from django.db import models
 from django.urls import reverse
+from django.core.validators import RegexValidator
 
-from .utils import not_empty
+from users.utils import not_empty
+from users.models import Account
+from .choices import(truck_make_choices,
+                     engine_choices,
+                     status_choices,
+                     trailer_make_choices,
+                     year_choices,
+                     us_states_choices)
+
+
+alphanumeric = RegexValidator(
+    r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
 
 
 class Truck(models.Model):
-    VOLVO = 'VL'
-    FREIGHTLINER = 'FL'
-    KENWORTH = 'KW'
-    PETERBILT = 'PB'
-    INTERNATIONAL = 'IN'
-    WESTERN = 'WS'
-    CUMMINS = 'CM'
-    PACCAR = 'PC'
-    DETROIT = 'DT'
-    CATERPILLAR = 'CT'
-    DELIVERY = 'DL'
-    IDLE = 'ID'
-    SHOP = 'SH'
-    INACTIVE = 'IA'
-    MAKE = [
-        (FREIGHTLINER, 'Freighliner'),
-        (INTERNATIONAL, 'International'),
-        (KENWORTH, 'Kenworth'),
-        (PETERBILT, 'Peterbilt'),
-        (VOLVO, 'Volvo'),
-        (WESTERN, 'Western Star'),
-    ]
-    ENGINE = [
-        (CATERPILLAR, 'Caterpillar'),
-        (CUMMINS, 'Cummins'),
-        (DETROIT, 'Detroit'),
-        (INTERNATIONAL, 'International'),
-        (PACCAR, 'Paccar'),
-        (VOLVO, 'Volvo'),
-    ]
-    STATUS = [
-        (DELIVERY, 'On delivery'),
-        (IDLE, 'Idle'),
-        (SHOP, 'In the shop'),
-        (INACTIVE, 'Inactive'),
-    ]
-    fleet_number = models.CharField(max_length=8, null=True,)
-    company = models.ForeignKey('contacts.Company',
-                                on_delete=models.SET_NULL,
-                                null=True,
-                                )
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        null=True,
+    )
+    fleet_number = models.CharField(
+        max_length=8,
+        null=True,
+        validators=[alphanumeric],
+    )
+    owner = models.ForeignKey(
+        'contacts.Company',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='owned_trucks',
+        db_column='owner_id',
+    )
     make = models.CharField(
         max_length=2,
-        choices=MAKE,
+        choices=truck_make_choices(),
         blank=True,
     )
-    model = models.CharField(max_length=12, blank=True)
     year = models.PositiveSmallIntegerField(
         null=True,
+        blank=True,
+        choices=year_choices(),
+    )
+    state = models.CharField(
+        max_length=2,
+        choices=us_states_choices(),
         blank=True,
     )
     vin = models.CharField(
         max_length=17,
+        null=True,
         blank=True,
+        validators=[alphanumeric]
     )
     license_plate = models.CharField(
-        max_length=7,
+        max_length=8,
         blank=True,
+        validators=[alphanumeric]
     )
     mileage = models.PositiveIntegerField(null=True, blank=True)
     engine = models.CharField(
         max_length=2,
-        choices=ENGINE,
+        choices=engine_choices(),
         blank=True,
     )
-    engine_number = models.CharField(max_length=13, blank=True)
+    engine_number = models.CharField(
+        max_length=13,
+        blank=True,
+        validators=[alphanumeric])
+    value = models.DecimalField(
+        max_digits=9,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
     registration = models.DateField(
         null=True,
         blank=True,
@@ -79,26 +85,34 @@ class Truck(models.Model):
         null=True,
         blank=True,
     )
+    insurer = models.ForeignKey(
+        'contacts.Company',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='insured_trucks',
+        db_column='insurer_id',
+    )
     inspection = models.DateField(
         null=True,
         blank=True,
     )
     status = models.CharField(
         max_length=2,
-        choices=STATUS,
+        choices=status_choices(),
         default='ID',
     )
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['fleet_number', 'company'],
+                fields=['account', 'vin'],
                 name='unique_truck',
             )
         ]
 
     def __str__(self):
-        return str(self.company) + ' #' + str(self.fleet_number)
+        return self.fleet_number
 
     def get_absolute_url(self):
         return reverse('invent:update_truck', args=[str(self.id)])
@@ -112,24 +126,11 @@ class Truck(models.Model):
 
 
 class Trailer(models.Model):
-    HYUNDAI = 'HY'
-    UTILITY = 'UT'
-    WABASH = 'WB'
-    DELIVERY = 'DL'
-    IDLE = 'ID'
-    SHOP = 'SH'
-    INACTIVE = 'IA'
-    MAKE = [
-        (HYUNDAI, 'Hyundai'),
-        (UTILITY, 'Utility'),
-        (WABASH, 'Wabash'),
-    ]
-    STATUS = [
-        (DELIVERY, 'On delivery'),
-        (IDLE, 'Idle'),
-        (SHOP, 'In the shop'),
-        (INACTIVE, 'Inactive'),
-    ]
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        null=True,
+    )
     fleet_number = models.CharField(max_length=8, null=True)
     company = models.ForeignKey('contacts.Company',
                                 on_delete=models.SET_NULL,
@@ -141,12 +142,13 @@ class Trailer(models.Model):
     )
     make = models.CharField(
         max_length=2,
-        choices=MAKE,
+        choices=trailer_make_choices(),
         blank=True,
     )
     year = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
+        choices=year_choices(),
     )
     vin = models.CharField(
         max_length=17,
@@ -154,18 +156,18 @@ class Trailer(models.Model):
     )
     status = models.CharField(
         max_length=2,
-        choices=STATUS,
+        choices=status_choices(),
         default='ID',
         blank=True,
     )
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['fleet_number', 'company'],
-                name='unique_trailer',
-            )
-        ]
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(
+    #             fields=['fleet_number', 'company'],
+    #             name='unique_trailer',
+    #         )
+    #     ]
 
     def __str__(self):
         return str(self.company) + ' #' + str(self.fleet_number)
