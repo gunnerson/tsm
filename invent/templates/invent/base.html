@@ -49,6 +49,9 @@
       <div id="left-content">
         {% block left-menu %}{% endblock left-menu %}
       </div>
+      <div id="left-content-hide">
+        <button id="left-content-hide-button" type="button"><</button>
+      </div>
       <div id="address-panel">
         {% block page-title %}{% endblock page-title %}
       </div>
@@ -78,8 +81,18 @@
         } else if (section == "companies") {
           document.getElementById("navItem4").classList.add('active');
         };
+
+        document.getElementById("left-content-hide-button").addEventListener('click', function() {
+          document.getElementById("main-content").style.marginLeft = "0px";
+          document.getElementById("left-content").style.display = "none";
+          document.getElementById("address-panel").style.left = "0px";
+          document.getElementById("left-content-hide-button").style.display = "none";
+        }, false);
+
         {% block js %}{% endblock %}
       });
+
+
 
     </script>
 
