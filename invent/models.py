@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.core.validators import RegexValidator
 
 from users.utils import not_empty
+from .utils import db_search
 from users.models import Account
 from .choices import(truck_make_choices,
                      engine_choices,
@@ -14,6 +15,26 @@ from .choices import(truck_make_choices,
 
 alphanumeric = RegexValidator(
     r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
+
+
+class TruckSearch(models.Manager):
+    def search(self, query):
+        qs = self.get_queryset()
+        if not_empty(query):
+            qs = db_search(qs, query, 'B',
+                           'fleet_number',
+                           'owner',
+                           'make',
+                           'state',
+                           'vin',
+                           'license_plate',
+                           'prepass',
+                           'ipass',
+                           'ifta',
+                           'ny_permit',
+                           'eld',
+                           )
+        return qs
 
 
 class Truck(models.Model):
@@ -158,6 +179,8 @@ class Truck(models.Model):
         blank=True,
         verbose_name='Terminated',
     )
+
+    objects = TruckSearch()
 
     def __str__(self):
         return self.fleet_number

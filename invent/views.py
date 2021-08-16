@@ -48,6 +48,16 @@ class TruckListView(UserPassesTestMixin, ListView):
     def test_func(self):
         return has_access(self.request.user, 'read')
 
+    def get_queryset(self):
+        request = self.request
+        account = request.user.profile.account
+        qs = Truck.objects.all()
+        query = request.GET.get('query', None)
+        if not_empty(query):
+            qs = Truck.objects.search(query)
+        # qs = qs.filter(account=account)
+        return qs
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         qs = ListColShow.objects.filter(

@@ -1,7 +1,13 @@
 {% extends "invent/base.html" %}
+{% load static %}
 
 <script>
   {% block js %}
+
+  document.getElementById("search-button").addEventListener('click', function() {
+    document.getElementById('search-form').submit();
+  }, false);
+
   {% endblock js %}
 </script>
 
@@ -17,7 +23,15 @@
 {% endblock left-menu %}
 
 {% block page-title %}
-  <p>List of truck records</p>
+  <div class="page-title">
+    <span>List of truck records</span>
+    <form method="GET" id="search-form">
+      <button type="submit" class="search-button" id="search-button">
+        <img src="{% static 'img/search.png' %}">
+      </button>
+      <input class="search-input" type="search" placeholder="Search" name="query" value="{{ query|default:'' }}">
+    </form>
+  </div>
   <div class="address-line">
     <ol>
         <li><a href="{% url 'invent:index' %}">Home</a> > </li>

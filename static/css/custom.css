@@ -173,13 +173,17 @@ html, body {
   left: 199px;
   padding: 5px 5px;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
+  align-content: center;
   border-bottom: 1px solid var(--border-color);
   background-color: var(--content-bg-color);
   overflow: hidden;
 }
 
-#address-panel p {
+.page-title {
+  display: flex;
+  flex-direction: row;
   padding-left: 20px;
   font-style: italic;
 }
@@ -305,4 +309,39 @@ html, body {
 .listview-table a{
   text-decoration: none;
   color: inherit;
+}
+
+#search-form{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 50px;
+}
+
+.search-input {
+  position: relative;
+  left: -30px;
+  padding-left: 36px;
+  border-radius:22px;
+  width: 20rem;
+  height: 22px;
+  border-width: 0;
+}
+
+.search-input:focus {
+  border: none;
+  outline: none;
+}
+
+.search-button {
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.search-button img{
+  position: relative;
+  top: 2px;
+  height: 22px;
+  z-index: 1;
 }

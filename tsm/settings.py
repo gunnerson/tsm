@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
 
     # Third party apps
 
@@ -82,22 +83,22 @@ WSGI_APPLICATION = 'tsm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'tsm',
-#         'USER': os.environ.get('TSM_DB_USER'),
-#         'PASSWORD': os.environ.get('TSM_DB_PASSWORD'),
-#         'HOST': 'localhost',
-#         'PORT': '', }
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'tsm',
+        'USER': os.environ.get('MYBAD_DB_USER'),
+        'PASSWORD': os.environ.get('MYBAD_DB_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '', }
+}
 
 
 # Password validation
