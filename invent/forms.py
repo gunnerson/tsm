@@ -28,6 +28,8 @@ class TruckForm(forms.ModelForm):
             'registration': forms.DateInput(attrs={'type': 'date'}),
             'insurance': forms.DateInput(attrs={'type': 'date'}),
             'inspection': forms.DateInput(attrs={'type': 'date'}),
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
     def __init__(self, *args, **kwargs):

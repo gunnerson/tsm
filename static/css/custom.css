@@ -87,22 +87,14 @@ html, body {
     color: inherit;
 }
 
-#container {
-    display: block;
-    position: relative;
-    top: 43px;
-    background-color: inherit;
-    height: 100%;
-}
-
 #left-content {
     display: inline-block;
     z-index: 1;
     width: 200px;
     position: fixed;
+    top: 43px;
     padding: 20px;
     padding-top: 40px;
-    top: 43px;
     bottom: 0;
     border-right: 1px solid #00000025;
     background-color: inherit;
@@ -133,13 +125,9 @@ html, body {
     cursor: pointer;
 }
 
-#right-content {
-    display: inline;
-    /* position: static; */
-}
-
 #address-panel {
     position: fixed;
+    top: 44px;
     z-index: 1;
     width: 100%;
     padding: 5px 5px;
@@ -175,11 +163,13 @@ html, body {
 
 
 #main-content {
-    padding-top: 50px !important;
     margin-left: 200px;
+    margin-top: 77px;
     padding: 20px;
     background-color: #fdfdfd;
     height: 100%;
+    position: relative;
+    z-index: 0;
 }
 
 .form_field {
@@ -246,4 +236,38 @@ html, body {
 .move_button:hover {
     width: 40px;
     cursor: pointer;
+}
+
+
+.listview-table {
+    border-spacing: 0;
+    padding: 0;
+    font-size: 1rem;
+}
+
+.listview-table thead th{
+    position: sticky;
+    top: 77px;
+    background-color: #ebebeb;
+    text-align: center;
+    padding: 2px 5px;
+}
+
+.listview-table td {
+    text-align: center;
+    padding: 2px 5px;
+}
+
+
+.listview-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.listview-table td:not(:last-child) {
+    border-right : 1px solid #ced4da;
+}
+
+.listview-table a{
+    text-decoration: none;
+    color: inherit;
 }

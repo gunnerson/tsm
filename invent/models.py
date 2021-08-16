@@ -210,7 +210,7 @@ class Trailer(models.Model):
     )
 
     def __str__(self):
-        return str(self.company) + ' #' + str(self.fleet_number)
+        return self.fleet_number
 
     def get_absolute_url(self):
         return reverse('invent:update_trailer', args=[str(self.id)])
