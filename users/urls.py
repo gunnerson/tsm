@@ -15,7 +15,10 @@ urlpatterns = [
     path('password/', views.change_password, name="change_password"),
     path('generate_profile/', generate_profile, name="generate_profile"),
     path('generate_profile/', generate_profile, name="generate_profile"),
-    path('settings/list_columns', views.ListColShowListView.as_view(
-          template_name='users/listcolshow.html'),
-         name="listcolshow"),
+    path('settings/<int:pk>', views.PreferenceListUpdateView.as_view(
+        template_name='users/preferences.html'),
+        name="preferences"),
+    path('settings/table_columns', views.ListColShowListView.as_view(
+        template_name='users/listcolshow.html'),
+        name="listcolshow"),
 ]

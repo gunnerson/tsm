@@ -58,9 +58,15 @@ class TruckListView(UserPassesTestMixin, ListView):
         for q in qs:
             if q.show:
                 field_names.append(q.field_name)
+        font_size = self.request.user.profile.preferencelist.trucks_font
+        if font_size == 'S':
+            font_class = 'font-small'
+        elif font_size == 'L':
+            font_class = 'font-large'
+        else:
+            font_class = 'font-medium'
         context['field_names'] = field_names
-        context['grid_cols'] = len(field_names)
-        print(field_names)
+        context['font_class'] = font_class
         return context
 
 

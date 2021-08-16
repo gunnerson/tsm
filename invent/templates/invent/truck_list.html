@@ -27,7 +27,7 @@
 {% endblock page-title %}
 
 {% block content %}
-  <table class="listview-table">
+  <table class="listview-table {{ font_class }}">
     <thead>
       <tr>
         {% if 'Fleet number' in field_names %}
@@ -135,7 +135,7 @@
             <td><a href="{% if object.driver.trailer.id != '' and object.driver.trailer is not None %}{% url 'invent:update_trailer' object.driver.trailer.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver.trailer|default_if_none:"" }}</a></td>
           {% endif %}
           {% if 'Make' in field_names %}
-            <td><p>{{ object.get_make_display }}</p></td>
+            <td><p>{{ object.make }}</p></td>
           {% endif %}
           {% if 'Year' in field_names %}
             <td><p>{{ object.year|default_if_none:"" }}</p></td>
@@ -177,37 +177,37 @@
             <td><p>{{ object.get_status_display }}</p></td>
           {% endif %}
           {% if 'GPS' in field_names %}
-            <td><p>{{ object.gps }}</p></td>
+            <td>{% if object.gps is not None %}<input type="checkbox" {% if object.gps %}checked{% endif %} onclick="return false;">{% endif %}</td>
           {% endif %}
           {% if 'PrePass' in field_names %}
-            <td><p>{{ object.prepass }}</p></td>
+            <td><p>{{ object.prepass|default_if_none:"" }}</p></td>
           {% endif %}
           {% if 'I-Pass' in field_names %}
-            <td><p>{{ object.ipass }}</p></td>
+            <td><p>{{ object.ipass|default_if_none:"" }}</p></td>
           {% endif %}
           {% if 'IFTA' in field_names %}
-            <td><p>{{ object.ifta }}</p></td>
+            <td><p>{{ object.ifta|default_if_none:"" }}</p></td>
           {% endif %}
           {% if 'NY' in field_names %}
-            <td><p>{{ object.ny_permit }}</p></td>
+            <td><p>{{ object.ny_permit|default_if_none:"" }}</p></td>
           {% endif %}
           {% if 'KY' in field_names %}
-            <td><p>{{ object.ky_permit }}</p></td>
+            <td>{% if object.ky_permit is not None %}<input type="checkbox" {% if object.ky_permit %}checked{% endif %} onclick="return false;">{% endif %}</td>
           {% endif %}
           {% if 'NM' in field_names %}
-            <td><p>{{ object.nm_permit }}</p></td>
+            <td>{% if object.nm_permit is not None %}<input type="checkbox" {% if object.nm_permit %}checked{% endif %} onclick="return false;">{% endif %}</td>
           {% endif %}
           {% if 'OR' in field_names %}
-            <td><p>{{ object.or_permit }}</p></td>
+            <td>{% if object.or_permit is not None %}<input type="checkbox" {% if object.or_permit %}checked{% endif %} onclick="return false;">{% endif %}</td>
           {% endif %}
           {% if 'ELD' in field_names %}
-            <td><p>{{ object.eld }}</p></td>
+            <td><p>{{ object.eld|default_if_none:"" }}</p></td>
           {% endif %}
           {% if 'Started' in field_names %}
-            <td><p>{{ object.start_date }}</p></td>
+            <td><p>{{ object.start_date|default_if_none:"" }}</p></td>
           {% endif %}
           {% if 'Terminated' in field_names %}
-            <td><p>{{ object.end_date }}</p></td>
+            <td><p>{{ object.end_date|default_if_none:"" }}</p></td>
           {% endif %}
         </tr>
       {% endfor %}

@@ -55,10 +55,19 @@ def engine_choices():
 
 def status_choices():
     choices = [
-        ('DL', 'On delivery'),
+        ('DL', 'Trip'),
         ('ID', 'Idle'),
-        ('SH', 'In the shop'),
-        ('IA', 'Inactive'),
+        ('SH', 'Shop'),
+        ('IA', 'Sold'),
+    ]
+    return choices
+
+
+def size_choices():
+    choices = [
+        ('S', 'Small'),
+        ('M', 'Medium'),
+        ('L', 'Large'),
     ]
     return choices
 

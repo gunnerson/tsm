@@ -6,8 +6,10 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
+from django.views.generic.edit import UpdateView
 
-from .models import ListColShow, Profile
+from .models import ListColShow, Profile, PreferenceList
+from .forms import PreferenceListForm
 from .utils import generate_profile
 
 def change_password(request):
@@ -59,6 +61,11 @@ def register(request):
 
     context = {'form': form}
     return render(request, 'users/register.html', context)
+
+
+class PreferenceListUpdateView(LoginRequiredMixin, UpdateView):
+    model = PreferenceList
+    form_class = PreferenceListForm
 
 
 class ListColShowListView(LoginRequiredMixin, ListView):

@@ -37,7 +37,7 @@
         <div id="header-right">
           <ul>
             {% if user.is_authenticated %}
-              <li>Hello, <a href="{% url 'users:listcolshow' %}">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user }}{% endif %}. &nbsp</a></li>
+              <li>Hello, <a href="{% url 'users:preferences' user.profile.preferencelist.id %}">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user }}{% endif %}. &nbsp</a></li>
               <li><a href="{% url 'users:logout' %}">Log out</a></li>
             {% else %}
               <li><a href="{% url 'users:register' %}">Register &nbsp</a></li>
@@ -50,7 +50,8 @@
         {% block left-menu %}{% endblock left-menu %}
       </div>
       <div id="left-content-hide">
-        <button id="left-content-hide-button" type="button"><</button>
+        <button id="left-content-hide-button" class="left-content-hide" type="button"><</button>
+        <button id="left-content-show-button" class="left-content-hide" type="button" style="display: none;">></button>
       </div>
       <div id="address-panel">
         {% block page-title %}{% endblock page-title %}
@@ -83,10 +84,19 @@
         };
 
         document.getElementById("left-content-hide-button").addEventListener('click', function() {
-          document.getElementById("main-content").style.marginLeft = "0px";
+          document.getElementById("main-content").style.marginLeft = "10px";
           document.getElementById("left-content").style.display = "none";
           document.getElementById("address-panel").style.left = "0px";
           document.getElementById("left-content-hide-button").style.display = "none";
+          document.getElementById("left-content-show-button").style.display = "inline-block";
+        }, false);
+
+        document.getElementById("left-content-show-button").addEventListener('click', function() {
+          document.getElementById("main-content").style.marginLeft = "200px";
+          document.getElementById("left-content").style.display = "inline-block";
+          document.getElementById("address-panel").style.left = "199px";
+          document.getElementById("left-content-show-button").style.display = "none";
+          document.getElementById("left-content-hide-button").style.display = "inline-block";
         }, false);
 
         {% block js %}{% endblock %}

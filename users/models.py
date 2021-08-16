@@ -1,6 +1,8 @@
 from django.db import models
 from datetime import date
+from django.urls import reverse
 from django.contrib.auth.models import User
+from invent.choices import size_choices
 
 
 class Profile(models.Model):
@@ -47,3 +49,19 @@ class ListColShow(models.Model):
             ),
         ]
         ordering = ['profile', '-list_name', 'id']
+
+
+class PreferenceList(models.Model):
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    trucks_font = models.CharField(
+        max_length=1,
+        choices=size_choices(),
+        default='M',
+        verbose_name='Trucks List Font Size'
+    )
+
+    def __str__(self):
+        return str(self.profile)
+
+    def get_absolute_url(self):
+        return reverse('users:preferences', args=[str(self.id)])
