@@ -21,11 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l1d$ac&oh%lqt7jo@^^f$qu3&d_bxzst#pc0w74b5r(uc#bw4r'
-# SECRET_KEY = os.environ.get('TSM_SECRET_KEY')
+SECRET_KEY = os.environ.get('TSM_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ.get('DJANGO_DEBUG') == 'true':
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', ]
 
@@ -94,8 +96,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'tsm',
-        'USER': os.environ.get('MYBAD_DB_USER'),
-        'PASSWORD': os.environ.get('MYBAD_DB_PASSWORD'),
+        'USER': os.environ.get('POSTGRES_DB_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_DB_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '', }
 }
