@@ -1,10 +1,14 @@
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from django.core.validators import RegexValidator
 
 from invent.models import Truck, Trailer
 from users.models import Account
 from invent.choices import company_group_choices
+
+
+phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
 
 
 class Company(models.Model):
@@ -42,17 +46,23 @@ class Driver(models.Model):
     last_name = models.CharField(max_length=20)
     truck = models.OneToOneField(
         Truck,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
     )
     trailer = models.OneToOneField(
         Trailer,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
     )
-    phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to=Q(group='OU') | Q(group='LO'),
+    )
     phone_number = models.CharField(
         validators=[phone_number_regex],
         max_length=16,
@@ -76,7 +86,7 @@ class PasswordGroup(models.Model):
     )
     name = models.CharField(max_length=24, unique=True)
     comments = models.TextField()
-    address = models.URLField(null=True)
+    url = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return str(self.name)

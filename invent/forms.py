@@ -1,26 +1,14 @@
 from django import forms
 from datetime import date
-from django.db.models import Q
+# from django.core.validators import RegexValidator
 
 from .models import Truck, Trailer
-from contacts.models import Company
-from contacts.models import Driver
+
+# alphanumeric = RegexValidator(
+#     r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
 
 
 class TruckForm(forms.ModelForm):
-    driver = forms.ModelChoiceField(
-        queryset=Driver.objects.all(),
-        required=False,
-    )
-    owner = forms.ModelChoiceField(
-        queryset=Company.objects.filter(Q(group='OU') | Q(group='LO')),
-        required=False,
-    )
-    insurer = forms.ModelChoiceField(
-        queryset=Company.objects.filter(group='IN'),
-        required=False,
-    )
-
     class Meta:
         model = Truck
         exclude = ('account',)
@@ -33,31 +21,56 @@ class TruckForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        self.is_update = kwargs.pop('is_update')
+        try:
+            self.is_view = kwargs.pop('is_view')
+        except KeyError:
+            self.is_view = False
         super().__init__(*args, **kwargs)
-        if self.is_update:
-            self.fields['fleet_number'].disabled = True
+        if self.is_view:
+            for f in self.fields:
+                self.fields[f].widget.attrs.update({'class': 'form_field'})
         else:
-            self.fields["driver"].widget = forms.HiddenInput()
-            self.fields["driver"].label = ''
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'form_field'})
+            for f in self.fields:
+                self.fields[f].widget.attrs.update({'class': 'formset_field'})
 
 
 class TrailerForm(forms.ModelForm):
-    driver = forms.ModelChoiceField(
-        queryset=Driver.objects.all(),
-        required=False,
-    )
-
     class Meta:
         model = Trailer
-        exclude = ('account',)
+        exclude = ('account', )
+        widgets = {
+            'registration': forms.DateInput(attrs={'type': 'date'}),
+            'insurance': forms.DateInput(attrs={'type': 'date'}),
+            'inspection': forms.DateInput(attrs={'type': 'date'}),
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+        }
 
     def __init__(self, *args, **kwargs):
-        self.is_update = kwargs.pop('is_update')
+        try:
+            self.is_view = kwargs.pop('is_view')
+        except KeyError:
+            self.is_view = False
         super().__init__(*args, **kwargs)
-        if self.is_update:
-            self.fields['fleet_number'].disabled = True
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'form_field'})
+        if self.is_view:
+            for f in self.fields:
+                self.fields[f].widget.attrs.update({'class': 'form_field'})
+        else:
+            for f in self.fields:
+                self.fields[f].widget.attrs.update({'class': 'formset_field'})
+
+
+class BaseTruckFormSet(forms.BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
+        account = self.request.user.profile.account
+        self.queryset = Truck.objects.filter(account=account)
+
+
+class BaseTrailerFormSet(forms.BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
+        account = self.request.user.profile.account
+        self.queryset = Trailer.objects.filter(account=account)

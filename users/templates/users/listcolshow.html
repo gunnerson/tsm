@@ -33,8 +33,7 @@
   <form method="GET" id="data_form">
     {% for object in object_list %}
       <p>
-        {{ object.list_name }} |
-        {{ object.field_name }}
+        {{ object }}
         <input type="checkbox" name={{ object.id }} class="colBox form_field" id={{ object.id }} {% if object.show %}checked{% endif %}>
         {% comment %}
         <button type="submit" form="data_form" class="move_button" name="move_up" value="{{ object.id }}">up</button>

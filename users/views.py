@@ -12,6 +12,7 @@ from .models import ListColShow, Profile, PreferenceList
 from .forms import PreferenceListForm
 from .utils import generate_profile
 
+
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -48,9 +49,9 @@ def register(request):
             dls = ListColShow.objects.filter(profile=admin)
             for l in ls:
                 d = dls.get(
-                    list_name = l.list_name,
-                    field_name = l.field_name,
-                    )
+                    list_name=l.list_name,
+                    field_name=l.field_name,
+                )
                 l.show = d.show
                 l.save(update_fields=['show'])
             # Log the user in and then redirect to home page.

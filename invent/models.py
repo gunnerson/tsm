@@ -1,16 +1,19 @@
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from django.core.validators import RegexValidator
 
 from users.utils import not_empty
 from .utils import db_search
 from users.models import Account
-from .choices import(truck_make_choices,
-                     engine_choices,
-                     status_choices,
-                     trailer_make_choices,
-                     year_choices,
-                     us_states_choices)
+from .choices import(
+    truck_make_choices,
+    engine_choices,
+    status_choices,
+    trailer_make_choices,
+    year_choices,
+    us_states_choices
+)
 
 
 alphanumeric = RegexValidator(
@@ -22,18 +25,7 @@ class TruckSearch(models.Manager):
         qs = self.get_queryset()
         if not_empty(query):
             qs = db_search(qs, query, 'B',
-                           'fleet_number',
-                           'owner',
-                           'make',
-                           'state',
-                           'vin',
-                           'license_plate',
-                           'prepass',
-                           'ipass',
-                           'ifta',
-                           'ny_permit',
-                           'eld',
-                           )
+                           'fleet_number', 'vin', 'license_plate')
         return qs
 
 
@@ -48,6 +40,37 @@ class Truck(models.Model):
         null=True,
         validators=[alphanumeric],
     )
+    vin = models.CharField(
+        max_length=17,
+        null=True,
+        blank=True,
+        verbose_name='VIN',
+    )
+    year = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        choices=year_choices(),
+    )
+    make = models.CharField(
+        max_length=2,
+        choices=truck_make_choices(),
+        blank=True,
+    )
+    license_plate = models.CharField(
+        max_length=8,
+        blank=True,
+        validators=[alphanumeric]
+    )
+    state = models.CharField(
+        max_length=2,
+        choices=us_states_choices(),
+        blank=True,
+    )
+    status = models.CharField(
+        max_length=2,
+        choices=status_choices(),
+        default='ID',
+    )
     owner = models.ForeignKey(
         'contacts.Company',
         on_delete=models.SET_NULL,
@@ -55,54 +78,9 @@ class Truck(models.Model):
         blank=True,
         related_name='owned_trucks',
         db_column='owner_id',
-    )
-    make = models.CharField(
-        max_length=2,
-        choices=truck_make_choices(),
-        blank=True,
-    )
-    year = models.PositiveSmallIntegerField(
-        null=True,
-        blank=True,
-        choices=year_choices(),
-    )
-    state = models.CharField(
-        max_length=2,
-        choices=us_states_choices(),
-        blank=True,
-    )
-    vin = models.CharField(
-        max_length=17,
-        null=True,
-        blank=True,
-        validators=[alphanumeric],
-        verbose_name='VIN',
-    )
-    license_plate = models.CharField(
-        max_length=8,
-        blank=True,
-        validators=[alphanumeric]
+        limit_choices_to=Q(group='OU') | Q(group='LO'),
     )
     mileage = models.PositiveIntegerField(null=True, blank=True)
-    engine = models.CharField(
-        max_length=2,
-        choices=engine_choices(),
-        blank=True,
-    )
-    engine_number = models.CharField(
-        max_length=13,
-        blank=True,
-        validators=[alphanumeric])
-    value = models.DecimalField(
-        max_digits=9,
-        decimal_places=2,
-        null=True,
-        blank=True
-    )
-    registration = models.DateField(
-        null=True,
-        blank=True,
-    )
     insurance = models.DateField(
         null=True,
         blank=True,
@@ -112,19 +90,35 @@ class Truck(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='insured_trucks',
+        related_name='insured_trailers',
         db_column='insurer_id',
+        limit_choices_to={'group': 'IN'},
+    )
+    value = models.DecimalField(
+        max_digits=9,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+    engine = models.CharField(
+        max_length=2,
+        choices=engine_choices(),
+        blank=True,
+    )
+    engine_number = models.CharField(
+        max_length=13,
+        blank=True,
+        validators=[alphanumeric]
+    )
+    registration = models.DateField(
+        null=True,
+        blank=True,
     )
     inspection = models.DateField(
         null=True,
         blank=True,
     )
-    status = models.CharField(
-        max_length=2,
-        choices=status_choices(),
-        default='ID',
-    )
-    gps = models.BooleanField(null=True, blank=True, verbose_name='GPS')
+    gps = models.BooleanField(verbose_name='GPS', default=False)
     prepass = models.PositiveIntegerField(
         null=True,
         blank=True,
@@ -148,21 +142,9 @@ class Truck(models.Model):
         blank=True,
         verbose_name='NY',
     )
-    ky_permit = models.BooleanField(
-        null=True,
-        blank=True,
-        verbose_name='KY',
-    )
-    nm_permit = models.BooleanField(
-        null=True,
-        blank=True,
-        verbose_name='NM',
-    )
-    or_permit = models.BooleanField(
-        null=True,
-        blank=True,
-        verbose_name='OR',
-    )
+    ky_permit = models.BooleanField(verbose_name='KY', default=False)
+    nm_permit = models.BooleanField(verbose_name='NM', default=False)
+    or_permit = models.BooleanField(verbose_name='OR', default=False)
     eld = models.CharField(
         max_length=18,
         null=True,
@@ -181,6 +163,11 @@ class Truck(models.Model):
     )
 
     objects = TruckSearch()
+    # Create index:
+    # ALTER TABLE invent_truck
+    #     ADD COLUMN textsearchable_index_col tsvector
+    #                GENERATED ALWAYS AS (to_tsvector('english', coalesce(fleet_number, '') || ' ' || coalesce(license_plate, '') || ' ' || coalesce(vin, ''))) STORED;
+    # CREATE INDEX trucksearch_idx ON invent_truck USING GIN (textsearchable_index_col);
 
     def __str__(self):
         return self.fleet_number
@@ -203,17 +190,8 @@ class Trailer(models.Model):
         null=True,
     )
     fleet_number = models.CharField(max_length=8, null=True)
-    company = models.ForeignKey('contacts.Company',
-                                on_delete=models.SET_NULL,
-                                null=True,
-                                )
-    license_plate = models.CharField(
-        max_length=7,
-        blank=True,
-    )
-    make = models.CharField(
-        max_length=2,
-        choices=trailer_make_choices(),
+    vin = models.CharField(
+        max_length=17,
         blank=True,
     )
     year = models.PositiveSmallIntegerField(
@@ -221,8 +199,9 @@ class Trailer(models.Model):
         blank=True,
         choices=year_choices(),
     )
-    vin = models.CharField(
-        max_length=17,
+    make = models.CharField(
+        max_length=2,
+        choices=trailer_make_choices(),
         blank=True,
     )
     status = models.CharField(
@@ -231,9 +210,55 @@ class Trailer(models.Model):
         default='ID',
         blank=True,
     )
+    license_plate = models.CharField(
+        max_length=8,
+        blank=True,
+    )
+    company = models.ForeignKey('contacts.Company',
+                                on_delete=models.SET_NULL,
+                                null=True,
+                                )
+    value = models.DecimalField(
+        max_digits=9,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+    insurance = models.DateField(
+        null=True,
+        blank=True,
+    )
+    insurer = models.ForeignKey(
+        'contacts.Company',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='insured_trucks',
+        db_column='insurer_id',
+        limit_choices_to={'group': 'IN'},
+    )
+    registration = models.DateField(
+        null=True,
+        blank=True,
+    )
+    inspection = models.DateField(
+        null=True,
+        blank=True,
+    )
+    gps = models.BooleanField(verbose_name='GPS', default=False)
+    start_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Started',
+    )
+    end_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Terminated',
+    )
 
     def __str__(self):
-        return self.fleet_number
+        return str(self.fleet_number)
 
     def get_absolute_url(self):
         return reverse('invent:update_trailer', args=[str(self.id)])

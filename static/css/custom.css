@@ -285,12 +285,12 @@ html, body {
   top: 77px;
   background-color: var(--content-bg-color);
   text-align: center;
-  padding: 2px 5px;
+  padding: 1px 5px;
 }
 
 .listview-table td {
   text-align: center;
-  padding: 2px 5px;
+  padding: 1px 1px;
 }
 
 
@@ -302,6 +302,10 @@ html, body {
   background-color: var(--table-row-odd-bg-color);
 }
 
+.formset_field tr td:last-child {
+  background-color: var(--main-bg-color);
+}
+
 .listview-table td:not(:last-child) {
   border-right: 1px solid var(--border-color);
 }
@@ -309,6 +313,19 @@ html, body {
 .listview-table a{
   text-decoration: none;
   color: inherit;
+}
+
+.listview-table tr td:first-child {
+  position: sticky;
+  left: 10px;
+  background-color: inherit;
+}
+
+.listview-table tr th:first-child {
+  position: sticky;
+  left: 10px;
+  background-color: var(--content-bg-color);
+  z-index: 1;
 }
 
 #search-form{
@@ -345,3 +362,4 @@ html, body {
   height: 22px;
   z-index: 1;
 }
+

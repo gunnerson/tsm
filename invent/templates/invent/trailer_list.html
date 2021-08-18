@@ -8,6 +8,9 @@
     <li>
       <a href="{% url 'invent:create_trailer' %}" role="button">+ New trailer</a>
     </li>
+    <li>
+      <button type="submit" form="data_form">+ Save changes</a>
+    </li>
   </ul>
 {% endblock left-menu %}
 
@@ -22,21 +25,27 @@
 {% endblock page-title %}
 
 {% block content %}
-  <div class="grid" style='{{ table_style }}'>
-    <span><strong>Fleet number</strong></span>
-    <span><strong>Company</strong></span>
-    <span><strong>Driver</strong></span>
-    <span><strong>Truck</strong></span>
-    <span><strong>Make</strong></span>
-    <span><strong>Year</strong></span>
-    {% for object in object_list %}
-      <a href="{% url 'invent:update_trailer' object.id %}">{{ object.fleet_number }}</a>
-      <a href="{% if object.company.id != '' and object.company is not None %}{% url 'contacts:update_company' object.company.id %}{% else %}{% url 'invent:update_trailer' object.id %}{% endif %}">{{ object.company|default_if_none:"" }}</a>
-      <a href="{% if object.driver.id != '' and object.driver is not None %}{% url 'contacts:update_driver' object.driver.id %}{% else %}{% url 'invent:update_trailer' object.id %}{% endif %}">{{ object.driver }}</a>
-      <a href="{% if object.driver.truck.id != '' and object.driver.truck is not None %}{% url 'invent:update_truck' object.driver.truck.id %}{% else %}{% url 'invent:update_trailer' object.id %}{% endif %}">{{ object.driver.truck|default_if_none:"" }}</a>
-      <a href="{% url 'invent:update_trailer' object.id %}">{{ object.get_make_display|default_if_none:"" }}</a>
-      <a href="{% url 'invent:update_trailer' object.id %}">{{ object.year_made|default_if_none:"" }}</a>
-    {% endfor %}
-  </div>
+  <form method='post' id="data_form">
+    {% csrf_token %}
+    {{ trailer_formset.management_form }}
+    <table class="listview-table {{ font_class }}">
+      <thead>
+        <tr>
+          {% for field in trailer_verbose_field_names %}
+            <th> {{ field }} </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for form in trailer_formset %}
+          <tr>
+            {% for field in form %}
+              <td> {{ field }} </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </form>
 {% endblock content %}
 

@@ -2,7 +2,10 @@ from django.db import models
 from datetime import date
 from django.urls import reverse
 from django.contrib.auth.models import User
+
+from .utils import gen_list_ver_name, gen_field_ver_name
 from invent.choices import size_choices
+
 
 
 class Profile(models.Model):
@@ -38,7 +41,8 @@ class ListColShow(models.Model):
     show = models.BooleanField(default=True)
 
     def __str__(self):
-        return str(self.profile) + '_' + self.list_name + '_' + self.field_name
+        return gen_list_ver_name(self.list_name) + ' | ' + \
+            gen_field_ver_name(self.field_name)
 
     class Meta:
         verbose_name_plural = 'ListColShows'

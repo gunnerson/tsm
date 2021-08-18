@@ -21,15 +21,18 @@
         <div id="header-left">
           <ul>
             <li id="navItem1">
-              <a href="{% url 'invent:list_trucks' %}">Trucks</a>
+              <a href="{% url 'invent:summary' %}">Summary</a>
             </li>
             <li id="navItem2">
-              <a href="{% url 'invent:list_trailers' %}">Trailers</a>
+              <a href="{% url 'invent:list_trucks' %}">Trucks</a>
             </li>
             <li id="navItem3">
-              <a href="{% url 'contacts:list_drivers' %}">Drivers</a>
+              <a href="{% url 'invent:list_trailers' %}">Trailers</a>
             </li>
             <li id="navItem4">
+              <a href="{% url 'contacts:list_drivers' %}">Drivers</a>
+            </li>
+            <li id="navItem5">
               <a href="{% url 'contacts:list_companies' %}">Companies</a>
             </li>
           </ul>
@@ -73,14 +76,16 @@
 
       docReady(function() {
         var section = window.location.toString().replace(/^http?:\/\//, '').split('/')[1];
-        if (section == "trucks") {
+        if (section == "summary") {
           document.getElementById("navItem1").classList.add('active');
-        } else if (section == "trailers") {
+        } else if (section == "trucks") {
           document.getElementById("navItem2").classList.add('active');
-        } else if (section == "drivers") {
+        } else if (section == "trailers") {
           document.getElementById("navItem3").classList.add('active');
-        } else if (section == "companies") {
+        } else if (section == "drivers") {
           document.getElementById("navItem4").classList.add('active');
+        } else if (section == "companies") {
+          document.getElementById("navItem5").classList.add('active');
         };
 
         document.getElementById("left-content-hide-button").addEventListener('click', function() {

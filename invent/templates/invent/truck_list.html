@@ -1,16 +1,6 @@
 {% extends "invent/base.html" %}
 {% load static %}
 
-<script>
-  {% block js %}
-
-  document.getElementById("search-button").addEventListener('click', function() {
-    document.getElementById('search-form').submit();
-  }, false);
-
-  {% endblock js %}
-</script>
-
 {% block left-menu%}
   <ul>
     <li>
@@ -19,18 +9,15 @@
     <li>
       <a href="{% url 'invent:create_truck' %}" role="button">+ New truck</a>
     </li>
+    <li>
+      <button type="submit" form="data_form">+ Save changes</a>
+    </li>
   </ul>
 {% endblock left-menu %}
 
 {% block page-title %}
   <div class="page-title">
     <span>List of truck records</span>
-    <form method="GET" id="search-form">
-      <button type="submit" class="search-button" id="search-button">
-        <img src="{% static 'img/search.png' %}">
-      </button>
-      <input class="search-input" type="search" placeholder="Search" name="query" value="{{ query|default:'' }}">
-    </form>
   </div>
   <div class="address-line">
     <ol>
@@ -41,191 +28,27 @@
 {% endblock page-title %}
 
 {% block content %}
-  <table class="listview-table {{ font_class }}">
-    <thead>
-      <tr>
-        {% if 'Fleet number' in field_names %}
-          <th>Fleet number</th>
-        {% endif %}
-        {% if 'Owner' in field_names %}
-          <th>Owner</th>
-        {% endif %}
-        {% if 'Driver' in field_names %}
-          <th>Driver</th>
-        {% endif %}
-        {% if 'Trailer' in field_names %}
-          <th>Trailer</th>
-        {% endif %}
-        {% if 'Make' in field_names %}
-          <th>Make</th>
-        {% endif %}
-        {% if 'Year' in field_names %}
-          <th>Year</th>
-        {% endif %}
-        {% if 'State' in field_names %}
-          <th>State</th>
-        {% endif %}
-        {% if 'License plate' in field_names %}
-          <th>License plate</th>
-        {% endif %}
-        {% if 'Value' in field_names %}
-          <th>Value</th>
-        {% endif %}
-        {% if 'Mileage' in field_names %}
-          <th>Mileage</th>
-        {% endif %}
-        {% if 'VIN' in field_names %}
-          <th>Vin</th>
-        {% endif %}
-        {% if 'Engine' in field_names %}
-          <th>Engine</th>
-        {% endif %}
-        {% if 'Engine number' in field_names %}
-          <th>Engine number</th>
-        {% endif %}
-        {% if 'Registration' in field_names %}
-          <th>Registration</th>
-        {% endif %}
-        {% if 'Insurance' in field_names %}
-          <th>Insurance</th>
-        {% endif %}
-        {% if 'Insurer' in field_names %}
-          <th>Insurer</th>
-        {% endif %}
-        {% if 'Inspection' in field_names %}
-          <th>Inspection</th>
-        {% endif %}
-        {% if 'Status' in field_names %}
-          <th>Status</th>
-        {% endif %}
-        {% if 'GPS' in field_names %}
-          <th>GPS</th>
-        {% endif %}
-        {% if 'PrePass' in field_names %}
-          <th>PrePass</th>
-        {% endif %}
-        {% if 'I-Pass' in field_names %}
-          <th>I-Pass</th>
-        {% endif %}
-        {% if 'IFTA' in field_names %}
-          <th>IFTA</th>
-        {% endif %}
-        {% if 'NY' in field_names %}
-          <th>NY</th>
-        {% endif %}
-        {% if 'KY' in field_names %}
-          <th>KY</th>
-        {% endif %}
-        {% if 'NM' in field_names %}
-          <th>NM</th>
-        {% endif %}
-        {% if 'OR' in field_names %}
-          <th>OR</th>
-        {% endif %}
-        {% if 'ELD' in field_names %}
-          <th>ELD</th>
-        {% endif %}
-        {% if 'Started' in field_names %}
-          <th>Started</th>
-        {% endif %}
-        {% if 'Terminated' in field_names %}
-          <th>Terminated</th>
-        {% endif %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for object in object_list %}
+  <form method='post' id="data_form">
+    {% csrf_token %}
+    {{ truck_formset.management_form }}
+    <table class="listview-table {{ font_class }}">
+      <thead>
         <tr>
-          {% if 'Fleet number' in field_names %}
-            <td><a href="{% url 'invent:update_truck' object.id %}">{{ object.fleet_number }}</a></td>
-          {% endif %}
-          {% if 'Owner' in field_names %}
-            <td><a href="{% if object.owner.id != '' and object.owner is not None %}{% url 'contacts:update_company' object.owner.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.owner|default_if_none:"" }}</a></td>
-          {% endif %}
-          {% if 'Driver' in field_names %}
-            <td><a href="{% if object.driver.id != '' and object.driver is not None %}{% url 'contacts:update_driver' object.driver.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver }}</a></td>
-          {% endif %}
-          {% if 'Trailer' in field_names %}
-            <td><a href="{% if object.driver.trailer.id != '' and object.driver.trailer is not None %}{% url 'invent:update_trailer' object.driver.trailer.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver.trailer|default_if_none:"" }}</a></td>
-          {% endif %}
-          {% if 'Make' in field_names %}
-            <td><p>{{ object.make }}</p></td>
-          {% endif %}
-          {% if 'Year' in field_names %}
-            <td><p>{{ object.year|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'State' in field_names %}
-            <td><p>{{ object.state }}</p></td>
-          {% endif %}
-          {% if 'License plate' in field_names %}
-            <td><p>{{ object.license_plate }}</p></td>
-          {% endif %}
-          {% if 'Value' in field_names %}
-            <td><p>{{ object.value|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'Mileage' in field_names %}
-            <td><p>{{ object.mileage|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'VIN' in field_names %}
-            <td><p>{{ object.vin|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'Engine' in field_names %}
-            <td><p>{{ object.get_engine_display }}</p></td>
-          {% endif %}
-          {% if 'Engine number' in field_names %}
-            <td><p>{{ object.engine_number }}</p></td>
-          {% endif %}
-          {% if 'Registration' in field_names %}
-            <td><p>{{ object.registration|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'Insurance' in field_names %}
-            <td><p>{{ object.insurance|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'Insurer' in field_names %}
-            <td><p>{{ object.insurer|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'Inspection' in field_names %}
-            <td><p>{{ object.inspection|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'Status' in field_names %}
-            <td><p>{{ object.get_status_display }}</p></td>
-          {% endif %}
-          {% if 'GPS' in field_names %}
-            <td>{% if object.gps is not None %}<input type="checkbox" {% if object.gps %}checked{% endif %} onclick="return false;">{% endif %}</td>
-          {% endif %}
-          {% if 'PrePass' in field_names %}
-            <td><p>{{ object.prepass|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'I-Pass' in field_names %}
-            <td><p>{{ object.ipass|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'IFTA' in field_names %}
-            <td><p>{{ object.ifta|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'NY' in field_names %}
-            <td><p>{{ object.ny_permit|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'KY' in field_names %}
-            <td>{% if object.ky_permit is not None %}<input type="checkbox" {% if object.ky_permit %}checked{% endif %} onclick="return false;">{% endif %}</td>
-          {% endif %}
-          {% if 'NM' in field_names %}
-            <td>{% if object.nm_permit is not None %}<input type="checkbox" {% if object.nm_permit %}checked{% endif %} onclick="return false;">{% endif %}</td>
-          {% endif %}
-          {% if 'OR' in field_names %}
-            <td>{% if object.or_permit is not None %}<input type="checkbox" {% if object.or_permit %}checked{% endif %} onclick="return false;">{% endif %}</td>
-          {% endif %}
-          {% if 'ELD' in field_names %}
-            <td><p>{{ object.eld|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'Started' in field_names %}
-            <td><p>{{ object.start_date|default_if_none:"" }}</p></td>
-          {% endif %}
-          {% if 'Terminated' in field_names %}
-            <td><p>{{ object.end_date|default_if_none:"" }}</p></td>
-          {% endif %}
+          {% for field in truck_verbose_field_names %}
+            <th> {{ field }} </th>
+          {% endfor %}
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for form in truck_formset %}
+          <tr>
+            {% for field in form %}
+              <td> {{ field }} </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </form>
 {% endblock content %}
 

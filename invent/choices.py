@@ -58,7 +58,7 @@ def status_choices():
         ('DL', 'Trip'),
         ('ID', 'Idle'),
         ('SH', 'Shop'),
-        ('IA', 'Sold'),
+        ('IA', 'Term'),
     ]
     return choices
 
