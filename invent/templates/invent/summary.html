@@ -299,7 +299,7 @@
             <td><p>{{ object.driver.trailer.inspection|default_if_none:"" }}</p></td>
           {% endif %}
           {% if 'GPS' in trailer_field_names %}
-            <td><p>{{ object.driver.trailer.gps }}</p></td>
+            <td>{% if object.driver.trailer.gps is not None %}<input type="checkbox" {% if object.gps %}checked{% endif %} onclick="return false;">{% endif %}</td>
           {% endif %}
           {% if 'Started' in trailer_field_names %}
             <td><p>{{ object.driver.trailer.start_date|default_if_none:"" }}</p></td>

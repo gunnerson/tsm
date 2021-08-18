@@ -2,71 +2,46 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, update_session_auth_hash
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
 
 from .models import ListColShow, Profile, PreferenceList
-from .forms import PreferenceListForm
+from .forms import UserCreationForm, PreferenceListForm
 from .utils import generate_profile
 
 
-def change_password(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  # Important!
-            messages.success(
-                request, 'Your password was successfully updated!')
-            return redirect('users:change_password')
-        else:
-            messages.error(request, 'Please correct the error below.')
-    else:
-        form = PasswordChangeForm(request.user)
-    return render(request, 'users/change_password.html', {
-        'form': form
-    })
-
-
 def register(request):
-    """Register a new user."""
     if request.method != 'POST':
-        # Display blank registration form.
         form = UserCreationForm()
     else:
-        # Process completed form.
         form = UserCreationForm(data=request.POST)
-
         if form.is_valid():
             new_user = form.save()
-            # Generate default settings
-            new_profile = Profile(user=new_user).save()
-            generate_profile(request)
-            ls = ListColShow.objects.filter(profile=new_profile)
-            dls = ListColShow.objects.filter(profile=admin)
-            for l in ls:
-                d = dls.get(
-                    list_name=l.list_name,
-                    field_name=l.field_name,
-                )
-                l.show = d.show
-                l.save(update_fields=['show'])
-            # Log the user in and then redirect to home page.
-            authenticated_user = authenticate(username=new_user.username,
-                                              password=request.POST['password1'])
+            new_profile = Profile(user=new_user)
+            new_profile.save()
+            generate_profile(new_profile)
+            new_preflist = PreferenceList(profile=new_profile)
+            new_preflist.save()
+            authenticated_user = authenticate(email=new_user.email,
+                                              password=request.POST['password2'])
             login(request, authenticated_user)
-            return HttpResponseRedirect(reverse('invent:index'))
-
-    context = {'form': form}
-    return render(request, 'users/register.html', context)
+            return redirect('users:preferences', new_preflist.id)
+    return render(request, 'users/register.html', {'form': form})
 
 
 class PreferenceListUpdateView(LoginRequiredMixin, UpdateView):
     model = PreferenceList
     form_class = PreferenceListForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        user = self.request.user
+        initial['email'] = user.email
+        initial['first_name'] = user.first_name
+        initial['last_name'] = user.last_name
+        return initial
 
 
 class ListColShowListView(LoginRequiredMixin, ListView):
@@ -82,29 +57,4 @@ class ListColShowListView(LoginRequiredMixin, ListView):
                 else:
                     q.show = False
                 q.save(update_fields=['show'])
-        # elif self.request.GET.get('move_up', None) is not None:
-        #     pk = int(self.request.GET.get('move_up'))
-        #     q = qs.get(id=pk)
-        #     q_order = q.order
-        #     if q_order != 0:
-        #         q.order -= 1
-        #         q2 = qs.get(
-        #             list_name=q.list_name,
-        #             order=q_order-1,
-        #             )
-        #         q2.order += 1
-        #         q.save(update_fields=['order'])
-        #         q2.save(update_fields=['order'])
-        # elif self.request.GET.get('move_down', None) is not None:
-        #     pk = int(self.request.GET.get('move_down'))
-        #     q = qs.get(id=pk)
-        #     qs2 = qs.filter(list_name=q.list_name)
-        #     qs_count = qs2.count()
-        #     q_order = q.order
-        #     if q_order != (qs_count - 1):
-        #         q.order += 1
-        #         q2 = qs2.get(order=q_order+1)
-        #         q2.order -= 1
-        #         q.save(update_fields=['order'])
-        #         q2.save(update_fields=['order'])
         return qs

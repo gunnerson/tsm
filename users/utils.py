@@ -17,9 +17,11 @@ def write_check(user):
     return (user.groups.filter(name='write').exists()
             and user.profile.account.is_active())
 
+
 def read_check(user):
     return (user.groups.filter(name='read').exists()
             and user.profile.account.is_active())
+
 
 def not_empty(param):
     return param != '' and param is not None
@@ -75,12 +77,12 @@ def get_columns(user):
     context['driver_verbose_field_names'] = driver_verbose_field_names
     return context
 
-def generate_listcolshow(request, model):
+
+def generate_listcolshow(profile, model):
     from invent.models import Truck, Trailer
     from contacts.models import Driver
     from django.db import IntegrityError
     from .models import ListColShow
-    user = request.user
     list_name = str(model._meta)
     fields = model._meta.get_fields()
     if model == Truck:
@@ -88,7 +90,7 @@ def generate_listcolshow(request, model):
             if f.name not in ('id', 'account', 'driver'):
                 try:
                     ListColShow(
-                        profile=user.profile,
+                        profile=profile,
                         list_name=list_name,
                         field_name=f.name,
                     ).save()
@@ -99,7 +101,7 @@ def generate_listcolshow(request, model):
             if f.name not in ('id', 'account', 'driver'):
                 try:
                     ListColShow(
-                        profile=user.profile,
+                        profile=profile,
                         list_name=list_name,
                         field_name=f.name,
                     ).save()
@@ -110,7 +112,7 @@ def generate_listcolshow(request, model):
             if f.name not in ('id', 'account', 'first_name', 'last_name'):
                 try:
                     ListColShow(
-                        profile=user.profile,
+                        profile=profile,
                         list_name=list_name,
                         field_name=f.name,
                     ).save()
@@ -118,10 +120,20 @@ def generate_listcolshow(request, model):
                     pass
 
 
-def generate_profile(request):
+def generate_profile(profile):
     from invent.models import Trailer, Truck
     from contacts.models import Driver
-    generate_listcolshow(request, Truck)
-    generate_listcolshow(request, Trailer)
-    generate_listcolshow(request, Driver)
+    generate_listcolshow(profile, Truck)
+    generate_listcolshow(profile, Trailer)
+    generate_listcolshow(profile, Driver)
+    return HttpResponse('Operation successful...')
+
+
+def generate_su_profile(request):
+    from invent.models import Trailer, Truck
+    from contacts.models import Driver
+    profile = request.user.profile
+    generate_listcolshow(profile, Truck)
+    generate_listcolshow(profile, Trailer)
+    generate_listcolshow(profile, Driver)
     return HttpResponse('Operation successful...')

@@ -74,9 +74,7 @@ class TruckCreateView(UserPassesTestMixin, CreateView):
         kwargs.update(is_view=True)
         return kwargs
 
-@user_passes_test(write_check,
-                  login_url='invent:index',
-                  redirect_field_name=None)
+@user_passes_test(write_check, login_url='users:login')
 def trucks_list_view(request):
     columns = get_columns(request.user)
     TruckFormSet = modelformset_factory(
@@ -150,9 +148,7 @@ class TrailerCreateView(UserPassesTestMixin, CreateView):
         return context
 
 
-@user_passes_test(write_check,
-                  login_url='invent:index',
-                  redirect_field_name=None)
+@user_passes_test(write_check, login_url='users:login')
 def trailers_list_view(request):
     columns = get_columns(request.user)
     TrailerFormSet = modelformset_factory(

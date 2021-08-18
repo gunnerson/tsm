@@ -2,19 +2,20 @@ from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 
 from . import views
-from .utils import generate_profile
+from .forms import UserLoginForm
+from .utils import generate_su_profile
 
 app_name = "users"
 
 urlpatterns = [
-    path('login/', LoginView.as_view(template_name='users/login.html'),
-         name="login"),
+    path('login/', LoginView.as_view(
+        template_name='users/login.html',
+        authentication_form=UserLoginForm),
+        name="login"),
     path('logout/', LogoutView.as_view(next_page='invent:index'),
          name="logout"),
     path('register/', views.register, name="register"),
-    path('password/', views.change_password, name="change_password"),
-    path('generate_profile/', generate_profile, name="generate_profile"),
-    path('generate_profile/', generate_profile, name="generate_profile"),
+    path('generate_profile/', generate_su_profile, name="generate_su_profile"),
     path('settings/<int:pk>', views.PreferenceListUpdateView.as_view(
         template_name='users/preferences.html'),
         name="preferences"),

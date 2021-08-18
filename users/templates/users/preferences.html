@@ -28,12 +28,12 @@
 {% block content %}
   <form method='post' id="data_form">
     {% csrf_token %}
-    {% for field in form %}
-      <div>
-        {{ field.label_tag }} {{ field }}
-        {{ field.errors }}
-      </div>
-    {% endfor %}
+    <h3> Account settings: </h3>
+    <p>{{ form.email.label_tag }}{{ form.email }}{{ form.email.errors }}</p>
+    <p>{{ form.first_name.label_tag }}{{ form.first_name }}{{ form.first_name.errors }}</p>
+    <p>{{ form.last_name.label_tag }}{{ form.last_name }}{{ form.last_name.errors }}</p>
+    <br>
+    <h3> Display settings: </h3>
   </form>
   <br>
 {% endblock content %}
