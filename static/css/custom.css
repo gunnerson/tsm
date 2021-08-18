@@ -25,6 +25,11 @@ html, body {
   background-color: var(--main-bg-color);
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
 #wrapper {
   height: 100%;
   width: 100%;
@@ -47,9 +52,7 @@ html, body {
 }
 
 #header a {
-  color: inherit;
   font-size: 1.5rem;
-  text-decoration: none;
 }
 
 #header-left {
@@ -96,7 +99,6 @@ html, body {
 
 #header-right a {
   font-size: 1rem;
-  color: inherit;
 }
 
 #left-content-hide {
@@ -149,8 +151,6 @@ html, body {
 
 #left-content a {
   list-style-type: none;
-  color: inherit;
-  text-decoration: none;
   font-size: 1.2rem;
 }
 
@@ -195,11 +195,6 @@ html, body {
   color: inherit;
 }
 
-#address-panel a {
-  color: inherit;
-  text-decoration: none;
-}
-
 #address-panel .address-line {
   padding-right: 20px;
 }
@@ -215,15 +210,15 @@ html, body {
 }
 
 .font-small{
-  font-size: 0.7rem;
+  font-size: 0.7rem!important;
 }
 
 .font-medium{
-  font-size: 0.85rem;
+  font-size: 0.85rem!important;
 }
 
 .font-large{
-  font-size: 1rem;
+  font-size: 1rem!important;
 }
 
 .form_field {
@@ -288,12 +283,6 @@ html, body {
   padding: 1px 5px;
 }
 
-.listview-table td {
-  text-align: center;
-  padding: 1px 1px;
-}
-
-
 .listview-table tr:nth-child(even) {
   background-color: var(--table-row-even-bg-color);
 }
@@ -306,13 +295,13 @@ html, body {
   background-color: var(--main-bg-color);
 }
 
-.listview-table td:not(:last-child) {
-  border-right: 1px solid var(--border-color);
+.listview-table td {
+  text-align: center;
+  padding: 1px 1px;
 }
 
-.listview-table a{
-  text-decoration: none;
-  color: inherit;
+.listview-table td:not(:last-child) {
+  border-right: 1px solid var(--border-color);
 }
 
 .listview-table tr td:first-child {
@@ -362,4 +351,62 @@ html, body {
   height: 22px;
   z-index: 1;
 }
+
+.formset-table {
+  border-spacing: 0;
+  padding: 0;
+}
+
+.formset-table thead th{
+  position: sticky;
+  top: 77px;
+  background-color: var(--content-bg-color);
+  text-align: center;
+  padding: 1px 5px;
+  border-top: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+}
+
+.formset-table tr th:first-child {
+  position: sticky;
+  left: 10px;
+  background-color: var(--content-bg-color);
+  z-index: 1;
+  border-left: 1px solid var(--border-color);
+}
+
+.formset-table td {
+  text-align: center;
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.formset-table tr td:first-child {
+  position: sticky;
+  left: 10px;
+  background-color: inherit;
+  border-left: 1px solid var(--border-color);
+}
+
+.formset-table tr td:last-child {
+  border: none;
+}
+
+.formset-table img {
+  margin-left: 5px;
+  padding-right: 5px;
+  height: 16px;
+}
+
+.formset_field {
+  outline: none;
+  border: none;
+  color: var(--main-font-color);
+}
+
+.formset_field:focus {
+  color: var(--main-font-color);
+  outline: none;
+}
+
 

@@ -24,11 +24,11 @@ class SummaryListView(UserPassesTestMixin, ListView):
 
     def get_queryset(self):
         account = self.request.user.profile.account
-        qs = Truck.objects.all()
         query = self.request.GET.get('query', None)
         if not_empty(query):
-            qs = Truck.objects.search(query)
-        qs = qs.filter(account=account)
+            qs = Truck.objects.search(query, account)
+        else:
+            qs = Truck.objects.filter(account=account)
         return qs
 
     def get_context_data(self, *args, **kwargs):
@@ -88,8 +88,9 @@ def trucks_list_view(request):
     if request.method != 'POST':
         truck_formset = TruckFormSet(request=request)
         context = {}
-        context['truck_verbose_field_names'] = columns['truck_verbose_field_names']
-        context['truck_formset'] = truck_formset
+        font_size = request.user.profile.preferencelist.trucks_font
+        context['fields'] = columns['truck_verbose_field_names']
+        context['formset'] = truck_formset
         return render(request, 'invent/truck_list.html', context)
     else:
         truck_formset = TruckFormSet(request.POST, request=request)
@@ -163,8 +164,8 @@ def trailers_list_view(request):
     if request.method != 'POST':
         trailer_formset = TrailerFormSet(request=request)
         context = {}
-        context['trailer_verbose_field_names'] = columns['trailer_verbose_field_names']
-        context['trailer_formset'] = trailer_formset
+        context['fields'] = columns['trailer_verbose_field_names']
+        context['formset'] = trailer_formset
         return render(request, 'invent/trailer_list.html', context)
     else:
         trailer_formset = TrailerFormSet(request.POST, request=request)

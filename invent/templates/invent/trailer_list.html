@@ -1,4 +1,5 @@
 {% extends "invent/base.html" %}
+{% load static %}
 
 {% block left-menu%}
   <ul>
@@ -27,20 +28,33 @@
 {% block content %}
   <form method='post' id="data_form">
     {% csrf_token %}
-    {{ trailer_formset.management_form }}
-    <table class="listview-table {{ font_class }}">
+    {{ formset.management_form }}
+    <table class="formset-table {{ font_class }}">
       <thead>
         <tr>
-          {% for field in trailer_verbose_field_names %}
+          {% for field in fields %}
             <th> {{ field }} </th>
           {% endfor %}
         </tr>
       </thead>
       <tbody>
-        {% for form in trailer_formset %}
+        {% for form in formset %}
           <tr>
             {% for field in form %}
-              <td> {{ field }} </td>
+              {% if '-id' in field.auto_id %}
+                {% if field.value %}
+                  <td class="formset_field">
+                    <a href="{% url 'invent:update_trailer' field.value %}">
+                      <img src="{% static 'img/edit.png' %}">
+                      {{ field }}
+                    </a>
+                  </td>
+                {% else %}
+                  {{ field }}
+                {% endif %}
+              {% else %}
+                <td> {{ field }}</td>
+              {% endif %}
             {% endfor %}
           </tr>
         {% endfor %}

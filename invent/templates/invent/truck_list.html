@@ -30,20 +30,33 @@
 {% block content %}
   <form method='post' id="data_form">
     {% csrf_token %}
-    {{ truck_formset.management_form }}
-    <table class="listview-table {{ font_class }}">
+    {{ formset.management_form }}
+    <table class="formset-table {{ font_class }}">
       <thead>
         <tr>
-          {% for field in truck_verbose_field_names %}
+          {% for field in fields %}
             <th> {{ field }} </th>
           {% endfor %}
         </tr>
       </thead>
       <tbody>
-        {% for form in truck_formset %}
+        {% for form in formset %}
           <tr>
             {% for field in form %}
-              <td> {{ field }} </td>
+              {% if '-id' in field.auto_id %}
+                {% if field.value %}
+                  <td class="formset_field">
+                    <a href="{% url 'invent:update_truck' field.value %}">
+                      <img src="{% static 'img/edit.png' %}">
+                      {{ field }}
+                    </a>
+                  </td>
+                {% else %}
+                  {{ field }}
+                {% endif %}
+              {% else %}
+                <td> {{ field }}</td>
+              {% endif %}
             {% endfor %}
           </tr>
         {% endfor %}

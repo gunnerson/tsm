@@ -22,11 +22,6 @@
 {% endblock page-title %}
 
 {% block content %}
-  <div class="grid" style="grid-template-columns: repeat(1, 1fr);">
-    <span><strong>Name</strong></span>
-    {% for object in object_list %}
-      <a href="{% url 'contacts:update_company' object.id %}">{{ object }}</a>
-    {% endfor %}
-  </div>
+
 {% endblock content %}
 

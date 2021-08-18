@@ -22,15 +22,6 @@
 {% endblock page-title %}
 
 {% block content %}
-  <div class="grid" style="grid-template-columns: repeat(3, 1fr);">
-    <span><strong>Name</strong></span>
-    <span><strong>Truck</strong></span>
-    <span><strong>Trailer</strong></span>
-    {% for object in object_list %}
-      <a href="{% url 'contacts:update_driver' object.id %}">{{ object }}</a>
-      <a href="{% if object.truck.id != '' and object.truck is not None %}{% url 'invent:update_truck' object.truck.id %}{% else %}{% url 'contacts:update_driver' object.id %}{% endif %}">{{ object.truck|default_if_none:"" }}</a>
-      <a href="{% if object.trailer.id != '' and object.trailer is not None %}{% url 'invent:update_trailer' object.trailer.id %}{% else %}{% url 'contacts:update_driver' object.id %}{% endif %}">{{ object.trailer|default_if_none:"" }}</a>
-    {% endfor %}
-  </div>
+
 {% endblock content %}
 

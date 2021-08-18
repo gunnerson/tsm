@@ -21,8 +21,9 @@ alphanumeric = RegexValidator(
 
 
 class TruckSearch(models.Manager):
-    def search(self, query):
+    def search(self, query, account):
         qs = self.get_queryset()
+        qs = qs.filter(account=account)
         if not_empty(query):
             qs = db_search(qs, query, 'B',
                            'fleet_number', 'vin', 'license_plate')
