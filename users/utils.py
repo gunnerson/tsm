@@ -12,9 +12,11 @@ def account_active(user):
 def has_access(user, group_name):
     return has_group(user, group_name) and account_active(user)
 
+
 def admin_check(user):
     return (user.profile.level == 'A'
             and user.profile.account.is_active())
+
 
 def write_check(user):
     return (user.profile.level in ('A', 'W')
