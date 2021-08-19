@@ -7,7 +7,7 @@ from django.forms import modelformset_factory
 
 from .models import Truck, Trailer
 from .forms import TruckForm, TrailerForm, BaseTrailerFormSet, BaseTruckFormSet
-from users.utils import (not_empty, gen_field_ver_name,
+from users.utils import (gen_field_ver_name,
                          get_columns, read_check, write_check)
 from users.models import ListColShow
 
@@ -26,7 +26,7 @@ class SummaryListView(UserPassesTestMixin, ListView):
     def get_queryset(self):
         account = self.request.user.profile.account
         query = self.request.GET.get('query', None)
-        if not_empty(query):
+        if query:
             qs = Truck.objects.search(query, account)
         else:
             qs = Truck.objects.filter(account=account)
@@ -75,6 +75,7 @@ class TruckCreateView(UserPassesTestMixin, CreateView):
         kwargs.update(is_view=True)
         return kwargs
 
+
 @user_passes_test(write_check, login_url='invent:index')
 def trucks_list_view(request):
     columns = get_columns(request.user)
@@ -84,12 +85,9 @@ def trucks_list_view(request):
         fields=columns['truck_field_names'],
         formset=BaseTruckFormSet,
     )
+    context = {'fields': columns['truck_verbose_field_names']}
     if request.method != 'POST':
         truck_formset = TruckFormSet(request=request)
-        context = {}
-        context['fields'] = columns['truck_verbose_field_names']
-        context['formset'] = truck_formset
-        return render(request, 'invent/truck_list.html', context)
     else:
         truck_formset = TruckFormSet(request.POST, request=request)
         if truck_formset.is_valid():
@@ -97,7 +95,9 @@ def trucks_list_view(request):
             for i in instances:
                 i.account = request.user.profile.account
                 i.save()
-        return redirect('invent:list_trucks')
+            return redirect('invent:list_trucks')
+    context['formset'] = truck_formset
+    return render(request, 'invent/truck_list.html', context)
 
 
 class TruckUpdateView(UserPassesTestMixin, UpdateView):
@@ -158,12 +158,9 @@ def trailers_list_view(request):
         fields=columns['trailer_field_names'],
         formset=BaseTrailerFormSet,
     )
+    context = {'fields': columns['trailer_verbose_field_names']}
     if request.method != 'POST':
         trailer_formset = TrailerFormSet(request=request)
-        context = {}
-        context['fields'] = columns['trailer_verbose_field_names']
-        context['formset'] = trailer_formset
-        return render(request, 'invent/trailer_list.html', context)
     else:
         trailer_formset = TrailerFormSet(request.POST, request=request)
         if trailer_formset.is_valid():
@@ -171,7 +168,9 @@ def trailers_list_view(request):
             for i in instances:
                 i.account = request.user.profile.account
                 i.save()
-        return redirect('invent:list_trailers')
+            return redirect('invent:list_trailers')
+    context['formset'] = trailer_formset
+    return render(request, 'invent/trailer_list.html', context)
 
 
 class TrailerUpdateView(UserPassesTestMixin, UpdateView):

@@ -44,18 +44,16 @@
           <tr>
             {% for field in form %}
               {% if '-id' in field.auto_id %}
+                {{ field }}
                 {% if field.value %}
                   <td class="formset_field">
                     <a href="{% url 'invent:update_truck' field.value %}">
                       <img src="{% static 'img/edit.png' %}">
-                      {{ field }}
                     </a>
                   </td>
-                {% else %}
-                  {{ field }}
                 {% endif %}
               {% else %}
-                <td> {{ field }}</td>
+                <td>{{ field }}{{ field.errors }}</td>
               {% endif %}
             {% endfor %}
           </tr>

@@ -42,6 +42,7 @@
           <tr>
             {% for field in form %}
               {% if '-id' in field.auto_id %}
+                {{ field }}
                 {% if field.value %}
                   <td class="formset_field">
                     <a href="{% url 'invent:update_trailer' field.value %}">
@@ -49,17 +50,17 @@
                       {{ field }}
                     </a>
                   </td>
-                {% else %}
-                  {{ field }}
                 {% endif %}
               {% else %}
-                <td> {{ field }}</td>
+                <td> {{ field }}{{ field.errors }}</td>
               {% endif %}
             {% endfor %}
           </tr>
+          {{ form.non_field_errors }}
         {% endfor %}
       </tbody>
     </table>
+    {{ formset.non_form_errors }}
   </form>
 {% endblock content %}
 

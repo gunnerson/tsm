@@ -3,7 +3,6 @@ from django.db.models import Q
 from django.urls import reverse
 from django.core.validators import RegexValidator
 
-from users.utils import not_empty
 from .utils import db_search
 from users.models import Account
 from .choices import(
@@ -24,7 +23,7 @@ class TruckSearch(models.Manager):
     def search(self, query, account):
         qs = self.get_queryset()
         qs = qs.filter(account=account)
-        if not_empty(query):
+        if query:
             qs = db_search(qs, query, 'B',
                            'fleet_number', 'vin', 'license_plate')
         return qs
@@ -46,6 +45,7 @@ class Truck(models.Model):
         null=True,
         blank=True,
         verbose_name='VIN',
+        validators=[alphanumeric],
     )
     year = models.PositiveSmallIntegerField(
         null=True,
@@ -60,7 +60,7 @@ class Truck(models.Model):
     license_plate = models.CharField(
         max_length=8,
         blank=True,
-        validators=[alphanumeric]
+        validators=[alphanumeric],
     )
     state = models.CharField(
         max_length=2,
@@ -177,9 +177,9 @@ class Truck(models.Model):
         return reverse('invent:update_truck', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
-        if not_empty(self.license_plate):
+        if self.license_plate:
             self.license_plate = self.license_plate.upper()
-        if not_empty(self.vin):
+        if self.vin:
             self.vin = self.vin.upper()
         super(Truck, self).save(*args, **kwargs)
 
@@ -190,10 +190,15 @@ class Trailer(models.Model):
         on_delete=models.CASCADE,
         null=True,
     )
-    fleet_number = models.CharField(max_length=8, null=True)
+    fleet_number = models.CharField(
+        max_length=8,
+        null=True,
+        validators=[alphanumeric],
+    )
     vin = models.CharField(
         max_length=17,
         blank=True,
+        validators=[alphanumeric],
     )
     year = models.PositiveSmallIntegerField(
         null=True,
@@ -214,6 +219,7 @@ class Trailer(models.Model):
     license_plate = models.CharField(
         max_length=8,
         blank=True,
+        validators=[alphanumeric],
     )
     company = models.ForeignKey('contacts.Company',
                                 on_delete=models.SET_NULL,
@@ -266,8 +272,8 @@ class Trailer(models.Model):
         return reverse('invent:update_trailer', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
-        if not_empty(self.license_plate):
+        if self.license_plate:
             self.license_plate = self.license_plate.upper()
-        if not_empty(self.vin):
+        if self.vin:
             self.vin = self.vin.upper()
         super(Trailer, self).save(*args, **kwargs)
