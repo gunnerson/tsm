@@ -7,7 +7,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 
 from .utils import gen_list_ver_name, gen_field_ver_name
-from invent.choices import size_choices
+from invent.choices import size_choices, level
 
 
 class UserManager(BaseUserManager):
@@ -50,6 +50,11 @@ class Profile(models.Model):
         'Account',
         on_delete=models.SET_NULL,
         null=True
+    )
+    level = models.CharField(
+        max_length=1,
+        choices=level(),
+        default='N',
     )
 
     def __str__(self):

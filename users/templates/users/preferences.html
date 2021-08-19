@@ -8,6 +8,11 @@
     <li>
       <a href="{% url 'users:listcolshow' %}" role="button" role="button">Table columns</a>
     </li>
+    {% if user.profile.level == 'A' %}
+      <li>
+        <a href="{% url 'users:update_level' %}" role="button" role="button">Users</a>
+      </li>
+    {% endif %}
     <li>
       <button type="submit" form="data_form" name="changed" value="on">+ Save changes</button>
     </li>

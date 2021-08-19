@@ -7,7 +7,7 @@ from django.forms import modelformset_factory
 
 from .models import Truck, Trailer
 from .forms import TruckForm, TrailerForm, BaseTrailerFormSet, BaseTruckFormSet
-from users.utils import (has_access, not_empty, gen_field_ver_name,
+from users.utils import (not_empty, gen_field_ver_name,
                          get_columns, read_check, write_check)
 from users.models import ListColShow
 
@@ -18,9 +18,10 @@ def index(request):
 
 class SummaryListView(UserPassesTestMixin, ListView):
     model = Truck
+    login_url = 'invent:index'
 
     def test_func(self):
-        return has_access(self.request.user, 'read')
+        return read_check(self.request.user)
 
     def get_queryset(self):
         account = self.request.user.profile.account
@@ -53,7 +54,7 @@ class TruckCreateView(UserPassesTestMixin, CreateView):
     form_class = TruckForm
 
     def test_func(self):
-        return has_access(self.request.user, 'write')
+        return write_check(self.request.user)
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -74,7 +75,7 @@ class TruckCreateView(UserPassesTestMixin, CreateView):
         kwargs.update(is_view=True)
         return kwargs
 
-@user_passes_test(write_check, login_url='users:login')
+@user_passes_test(write_check, login_url='invent:index')
 def trucks_list_view(request):
     columns = get_columns(request.user)
     TruckFormSet = modelformset_factory(
@@ -102,9 +103,10 @@ def trucks_list_view(request):
 class TruckUpdateView(UserPassesTestMixin, UpdateView):
     model = Truck
     form_class = TruckForm
+    login_url = 'invent:index'
 
     def test_func(self):
-        return has_access(self.request.user, 'write')
+        return write_check(self.request.user)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -125,7 +127,7 @@ class TrailerCreateView(UserPassesTestMixin, CreateView):
     form_class = TrailerForm
 
     def test_func(self):
-        return has_access(self.request.user, 'write')
+        return write_check(self.request.user)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -147,7 +149,7 @@ class TrailerCreateView(UserPassesTestMixin, CreateView):
         return context
 
 
-@user_passes_test(write_check, login_url='users:login')
+@user_passes_test(write_check, login_url='invent:index')
 def trailers_list_view(request):
     columns = get_columns(request.user)
     TrailerFormSet = modelformset_factory(
@@ -177,7 +179,7 @@ class TrailerUpdateView(UserPassesTestMixin, UpdateView):
     form_class = TrailerForm
 
     def test_func(self):
-        return has_access(self.request.user, 'write')
+        return write_check(self.request.user)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

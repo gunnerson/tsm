@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from .models import Driver, Company, PasswordGroup
 from .forms import DriverForm, CompanyForm, PasswordGroupForm
 from invent.models import Truck, Trailer
-from users.utils import has_access
+from users.utils import read_check, write_check
 
 
 class DriverCreateView(UserPassesTestMixin, CreateView):
@@ -14,7 +14,7 @@ class DriverCreateView(UserPassesTestMixin, CreateView):
     form_class = DriverForm
 
     def test_func(self):
-        return has_access(self.request.user, 'read')
+        return write_check(self.request.user)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -31,7 +31,7 @@ class DriverListView(UserPassesTestMixin, ListView):
     model = Driver
 
     def test_func(self):
-        return has_access(self.request.user, 'read')
+        return read_check(self.request.user)
 
 
 class DriverUpdateView(UserPassesTestMixin, UpdateView):
@@ -40,7 +40,7 @@ class DriverUpdateView(UserPassesTestMixin, UpdateView):
     template_name_suffix = '_update'
 
     def test_func(self):
-        return has_access(self.request.user, 'write')
+        return write_check(self.request.user)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -84,7 +84,7 @@ class CompanyCreateView(UserPassesTestMixin, CreateView):
     form_class = CompanyForm
 
     def test_func(self):
-        return has_access(self.request.user, 'write')
+        return write_check(self.request.user)
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -97,7 +97,7 @@ class CompanyListView(UserPassesTestMixin, ListView):
     model = Company
 
     def test_func(self):
-        return has_access(self.request.user, 'read')
+        return read_check(self.request.user)
 
 
 class CompanyUpdateView(UserPassesTestMixin, UpdateView):
@@ -106,7 +106,7 @@ class CompanyUpdateView(UserPassesTestMixin, UpdateView):
     template_name_suffix = '_update'
 
     def test_func(self):
-        return has_access(self.request.user, 'write')
+        return write_check(self.request.user)
 
 
 class PasswordGroupCreateView(UserPassesTestMixin, CreateView):
@@ -114,7 +114,7 @@ class PasswordGroupCreateView(UserPassesTestMixin, CreateView):
     form_class = PasswordGroupForm
 
     def test_func(self):
-        return has_access(self.request.user, 'write')
+        return write_check(self.request.user)
 
     def form_valid(self, form):
         self.object = form.save(commit=False)

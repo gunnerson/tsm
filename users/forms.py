@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from .models import User, PreferenceList, Account
+from .models import User, PreferenceList, Account, Profile
 
 
 class UserCreationForm(forms.ModelForm):
@@ -85,15 +85,21 @@ class PreferenceListForm(forms.ModelForm):
             self.fields[f].widget.attrs.update({'class': 'form_field'})
 
 
-class UserGroupsForm(forms.Form):
-    user = forms.CharField(max_length=24, required=False)
-    last_name = forms.CharField(max_length=24, required=False)
-
+class UserLevelForm(forms.ModelForm):
     class Meta:
-        model = PreferenceList
-        exclude = ('profile',)
+        model = Profile
+        fields = ('user', 'level',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['user'].disabled = True
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})
+
+
+class BaseUserLevelFormSet(forms.BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
+        account = self.request.user.profile.account
+        self.queryset = Profile.objects.filter(account=account)

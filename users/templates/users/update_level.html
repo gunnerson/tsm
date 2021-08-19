@@ -1,0 +1,37 @@
+{% extends "invent/base.html" %}
+
+{% block left-menu%}
+  <ul>
+    <li>
+      <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
+    </li>
+    <li>
+      <button type="submit" form="data_form" name="changed" value="on">+ Save changes</button>
+    </li>
+  </ul>
+{% endblock left-menu %}
+
+
+{% block page-title %}
+  <p>Update users' privileges</p>
+  <div class="address-line">
+    <ol>
+        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
+        <li><a href="{% url 'users:preferences' user.profile.id %}">Profile</a> > </li>
+        <li>Privileges</li>
+    </ol>
+  </div>
+{% endblock page-title %}
+
+{% block content %}
+  <form method='post' id="data_form">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    {% for form in formset %}
+      <p>{{ form.user }}{{ form.level }}{{ form.id }}</p>
+      {{ form.errors }}
+    {% endfor %}
+    {{ formset.non_form_errors }}
+  </form>
+  <br>
+{% endblock content %}

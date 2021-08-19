@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import Group
 from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
+from django.contrib.auth.decorators import user_passes_test
+from django.forms import modelformset_factory
 
-from .models import ListColShow, Profile, PreferenceList, Account
-from .forms import UserCreationForm, PreferenceListForm
-from .utils import generate_profile, not_empty
+from .models import ListColShow, Profile, PreferenceList, Account, User
+from .forms import UserCreationForm, PreferenceListForm, UserLevelForm, BaseUserLevelFormSet
+from .utils import generate_profile, not_empty, write_check, admin_check
 
 
 def register(request):
@@ -23,11 +24,12 @@ def register(request):
                 new_account.save()
                 new_user.account = new_account
                 new_user.save()
-                new_profile = Profile(user=new_user, account=new_account)
+                new_profile = Profile(
+                    user=new_user,
+                    account=new_account,
+                    level='A',
+                )
                 new_profile.save()
-                groups = Group.objects.all()
-                for g in groups:
-                    new_user.groups.add(g)
             else:
                 new_user.save()
                 account = Account.objects.get(id=request.POST['account'])
@@ -80,3 +82,24 @@ class ListColShowListView(LoginRequiredMixin, ListView):
                     q.show = False
                 q.save(update_fields=['show'])
         return qs
+
+
+@user_passes_test(admin_check, login_url='users:login')
+def users_level_view(request):
+    UserFormSet = modelformset_factory(
+        Profile,
+        form=UserLevelForm,
+        fields=['user', 'level',],
+        formset=BaseUserLevelFormSet,
+        extra=0,
+    )
+    if request.method != 'POST':
+        user_formset = UserFormSet(request=request)
+        context = {}
+        context['formset'] = user_formset
+        return render(request, 'users/update_level.html', context)
+    else:
+        user_formset = UserFormSet(request.POST, request=request)
+        if user_formset.is_valid():
+            user_formset.save()
+        return redirect(request.user.profile.preferencelist.get_absolute_url())

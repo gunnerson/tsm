@@ -12,14 +12,17 @@ def account_active(user):
 def has_access(user, group_name):
     return has_group(user, group_name) and account_active(user)
 
+def admin_check(user):
+    return (user.profile.level == 'A'
+            and user.profile.account.is_active())
 
 def write_check(user):
-    return (user.groups.filter(name='write').exists()
+    return (user.profile.level in ('A', 'W')
             and user.profile.account.is_active())
 
 
 def read_check(user):
-    return (user.groups.filter(name='read').exists()
+    return (user.profile.level in ('A', 'W', 'R')
             and user.profile.account.is_active())
 
 

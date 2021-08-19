@@ -1,6 +1,15 @@
 from datetime import date
 
 
+def level():
+    choices = [
+        ('N', 'None'),
+        ('R', 'Read'),
+        ('W', 'Write'),
+        ('A', 'Admin'),
+    ]
+    return choices
+
 def year_choices():
     choices = []
     for r in range(1980, date.today().year + 2):
