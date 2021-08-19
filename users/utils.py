@@ -14,19 +14,25 @@ def has_access(user, group_name):
 
 
 def admin_check(user):
-    return (user.profile.level == 'A'
-            and user.profile.account.is_active())
-
+    try:
+        return (user.profile.level == 'A'
+                and user.profile.account.is_active())
+    except AttributeError:
+        return False
 
 def write_check(user):
-    return (user.profile.level in ('A', 'W')
-            and user.profile.account.is_active())
-
+    try:
+        return (user.profile.level in ('A', 'W')
+                and user.profile.account.is_active())
+    except AttributeError:
+        return False
 
 def read_check(user):
-    return (user.profile.level in ('A', 'W', 'R')
-            and user.profile.account.is_active())
-
+    try:
+        return (user.profile.level in ('A', 'W', 'R')
+                and user.profile.account.is_active())
+    except AttributeError:
+        return False
 
 def not_empty(param):
     return param != '' and param is not None
