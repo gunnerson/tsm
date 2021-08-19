@@ -24,9 +24,14 @@
   </ul>
 {% endblock left-menu %}
 
-
 {% block page-title %}
-  <p>Select fields to show on list page</p>
+  <p>Select fields to show on summary page</p>
+  <div class="address-line">
+    <ol>
+        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
+        <li>Summary fields</li>
+    </ol>
+  </div>
 {% endblock page-title %}
 
 {% block content %}

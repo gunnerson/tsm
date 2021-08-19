@@ -2,7 +2,13 @@
 
 {% block page-title %}
   <p>Log in to your account</p>
-{% endblock %}
+  <div class="address-line">
+    <ol>
+        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
+        <li>Log in</li>
+    </ol>
+  </div>
+{% endblock page-title %}
 
 {% block content %}
 

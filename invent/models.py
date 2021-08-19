@@ -218,6 +218,7 @@ class Trailer(models.Model):
     company = models.ForeignKey('contacts.Company',
                                 on_delete=models.SET_NULL,
                                 null=True,
+                                blank=True,
                                 )
     value = models.DecimalField(
         max_digits=9,

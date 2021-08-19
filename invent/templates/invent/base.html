@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Truch Shop Manager</title>
+    <title>Logistics Pro Tools</title>
 
     <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
 
@@ -43,7 +43,6 @@
               <li>Hello, <a href="{% url 'users:preferences' user.profile.preferencelist.id %}">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user }}{% endif %}. &nbsp</a></li>
               <li><a href="{% url 'users:logout' %}">Log out</a></li>
             {% else %}
-              <li><a href="{% url 'users:register' %}">Register &nbsp</a></li>
               <li><a href="{% url 'users:login' %}">Log in</a></li>
             {% endif %}
           </ul>

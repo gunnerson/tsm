@@ -59,9 +59,11 @@
               {% endif %}
             {% endfor %}
           </tr>
+          {{ form.non_field_errors }}
         {% endfor %}
       </tbody>
     </table>
   </form>
+  {{ formset.non_form_errors }}
 {% endblock content %}
 

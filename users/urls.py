@@ -16,10 +16,10 @@ urlpatterns = [
          name="logout"),
     path('register/', views.register, name="register"),
     path('generate_profile/', generate_su_profile, name="generate_su_profile"),
-    path('settings/<int:pk>', views.PreferenceListUpdateView.as_view(
+    path('user/settings/<int:pk>', views.PreferenceListUpdateView.as_view(
         template_name='users/preferences.html'),
         name="preferences"),
-    path('settings/table_columns', views.ListColShowListView.as_view(
+    path('user/settings/table_columns', views.ListColShowListView.as_view(
         template_name='users/listcolshow.html'),
         name="listcolshow"),
 ]

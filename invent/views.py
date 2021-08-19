@@ -34,7 +34,7 @@ class SummaryListView(UserPassesTestMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         columns = get_columns(self.request.user)
-        font_size = self.request.user.profile.preferencelist.trucks_font
+        font_size = self.request.user.profile.preferencelist.font_size
         if font_size == 'S':
             font_class = 'font-small'
         elif font_size == 'L':
@@ -86,7 +86,6 @@ def trucks_list_view(request):
     if request.method != 'POST':
         truck_formset = TruckFormSet(request=request)
         context = {}
-        font_size = request.user.profile.preferencelist.trucks_font
         context['fields'] = columns['truck_verbose_field_names']
         context['formset'] = truck_formset
         return render(request, 'invent/truck_list.html', context)

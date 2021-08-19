@@ -2,14 +2,12 @@
 
 {% block content %}
 
-  <h2>Welcome to Truck Shop Manager
+  <h2>Welcome to Logistics Business Admin Dashboard</h2>
     {% if user.is_authenticated == False %}
-    <br>
-    <br>
-    To get access
-    <a href="{% url 'users:register' %}" style="color: inherit;">Register an account</a> or
-    <a href="{% url 'users:login' %}" style="color: inherit;">Log in</a>
-  </h2>
-  {% endif %}
+      <br>
+      <p> To get access
+      <a href="{% url 'users:register' %}" ><strong>Register</strong></a> or
+      <a href="{% url 'users:login' %}"><strong>Log in</strong></a> to an existing account
+    {% endif %}
 
 {% endblock content %}

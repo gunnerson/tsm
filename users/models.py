@@ -57,7 +57,7 @@ class Profile(models.Model):
 
 
 class Account(models.Model):
-    name = models.CharField(max_length=24)
+    name = models.CharField(max_length=36)
     expiration_date = models.DateField(
         null=True,
         blank=True,
@@ -102,11 +102,10 @@ class ListColShow(models.Model):
 
 class PreferenceList(models.Model):
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
-    trucks_font = models.CharField(
+    font_size = models.CharField(
         max_length=1,
         choices=size_choices(),
         default='M',
-        verbose_name='Trucks List Font Size',
     )
 
     def __str__(self):

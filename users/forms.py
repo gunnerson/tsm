@@ -10,6 +10,11 @@ class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(
         label='Password confirmation', widget=forms.PasswordInput)
+    account = forms.ModelChoiceField(
+        queryset=Account.objects.all(),
+        required=False,
+    )
+    new_account = forms.CharField(max_length=36, required=False)
 
     class Meta:
         model = User
@@ -21,6 +26,21 @@ class UserCreationForm(forms.ModelForm):
         if password1 and password2 and password1 != password2:
             raise ValidationError("Passwords don't match")
         return password2
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cd_account = cleaned_data.get("account")
+        cd_new_account = cleaned_data.get("new_account")
+        if cd_account is None and cd_new_account == '':
+            msg = forms.ValidationError(
+                ('Either select an existing account or specify name for a new account'),
+                code='invalid')
+            self.add_error('new_account', msg)
+        if cd_account is not None and cd_new_account != '':
+            msg = forms.ValidationError(
+                ('Either select an existing account or specify name for a new account, not both at the same time'),
+                code='invalid')
+            self.add_error('new_account', msg)
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -52,8 +72,21 @@ class UserChangeForm(forms.ModelForm):
 
 
 class PreferenceListForm(forms.ModelForm):
-    email = forms.EmailField(required=False)
     first_name = forms.CharField(max_length=24, required=False)
+    last_name = forms.CharField(max_length=24, required=False)
+
+    class Meta:
+        model = PreferenceList
+        exclude = ('profile',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for f in self.fields:
+            self.fields[f].widget.attrs.update({'class': 'form_field'})
+
+
+class UserGroupsForm(forms.Form):
+    user = forms.CharField(max_length=24, required=False)
     last_name = forms.CharField(max_length=24, required=False)
 
     class Meta:

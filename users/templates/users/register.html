@@ -1,18 +1,29 @@
 {% extends "invent/base.html" %}
 
 {% block page-title %}
-  <p>Register an account</p>
-{% endblock %}
+  <p>Register new user account</p>
+  <div class="address-line">
+    <ol>
+        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
+        <li>Register</li>
+    </ol>
+  </div>
+{% endblock page-title %}
 
 {% block content %}
 
   <form method="post" action="{% url 'users:register' %}">
   {% csrf_token %}
+  <p>Select existing account: {{ form.account }}{{ form.account.errors }} or create new account : {{ form.new_account }}{{ form.new_account.errors }}</p>
+  <p>{{ form.email.label_tag }}{{ form.email }}{{ form.email.errors }}</p>
+  <p>{{ form.password1.label_tag }}{{ form.password1 }}{{ form.password1.errors }}</p>
+  <p>{{ form.password2.label_tag }}{{ form.password2 }}{{ form.password2.errors }}</p>
+  <button name="submit" class="btn">Register</button>
+{% endblock content %}
+
   {% for field in form %}
     <p>
       {{ field.label_tag }} {{ field }}
       {{ field.errors }}
     </p>
   {% endfor %}
-  <button name="submit" class="btn">Register</button>
-{% endblock content %}
