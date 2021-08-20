@@ -1,14 +1,10 @@
-from django.shortcuts import render, redirect
-from django.views.generic import ListView
-from django.views.generic.edit import CreateView, UpdateView
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.forms import modelformset_factory
+from django.shortcuts import render
+from django.views.generic import ListView, DetailView
 
 from .models import Truck, Trailer
 from .forms import TruckForm, TrailerForm, BaseTrailerFormSet, BaseTruckFormSet
-from users.utils import (gen_field_ver_name,
-                         get_columns, read_check, write_check)
+from .mixins import FormSetView, ReadCheckMixin
+from users.utils import gen_field_ver_name, get_columns, read_check, write_check
 from users.models import ListColShow
 
 
@@ -16,9 +12,13 @@ def index(request):
     return render(request, 'invent/index.html')
 
 
-class SummaryListView(UserPassesTestMixin, ListView):
+def permission_denied_view(request, exception):
+    message = "You don't have access to this page. Contact your manager."
+    return render(request, 'invent/403.html', {'message': message})
+
+
+class SummaryListView(ReadCheckMixin, ListView):
     model = Truck
-    login_url = 'invent:index'
 
     def test_func(self):
         return read_check(self.request.user)
@@ -46,149 +46,35 @@ class SummaryListView(UserPassesTestMixin, ListView):
         context['trailer_field_names'] = columns['trailer_verbose_field_names']
         context['driver_field_names'] = columns['driver_verbose_field_names']
         context['font_class'] = font_class
+        context['btn_back'] = True
+        context['page_title'] = 'Summary'
         return context
 
 
-class TruckCreateView(UserPassesTestMixin, CreateView):
+class TruckFormSetView(ReadCheckMixin, FormSetView):
     model = Truck
-    form_class = TruckForm
-
-    def test_func(self):
-        return write_check(self.request.user)
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.account = self.request.user.profile.account
-        self.object.save()
-        return redirect(self.object.get_absolute_url())
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context['upper_name'] = "Truck"
-        context['lower_name'] = "truck"
-        context['url_left_1_a'] = "invent:list_trucks"
-        context['url_left_1_t'] = "Back"
-        return context
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update(is_view=True)
-        return kwargs
+    form = TruckForm
+    formset = BaseTruckFormSet
+    page_title = 'List of truck records'
+    nav_link = 'Trucks'
+    detail_url = 'invent:truck'
+    redirect_url = 'invent:list_trucks'
 
 
-@user_passes_test(write_check, login_url='invent:index')
-def trucks_list_view(request):
-    columns = get_columns(request.user)
-    TruckFormSet = modelformset_factory(
-        Truck,
-        form=TruckForm,
-        fields=columns['truck_field_names'],
-        formset=BaseTruckFormSet,
-    )
-    context = {'fields': columns['truck_verbose_field_names']}
-    if request.method != 'POST':
-        truck_formset = TruckFormSet(request=request)
-    else:
-        truck_formset = TruckFormSet(request.POST, request=request)
-        if truck_formset.is_valid():
-            instances = truck_formset.save(commit=False)
-            for i in instances:
-                i.account = request.user.profile.account
-                i.save()
-            return redirect('invent:list_trucks')
-    context['formset'] = truck_formset
-    return render(request, 'invent/truck_list.html', context)
+class TrailerFormSetView(ReadCheckMixin, FormSetView):
+    model = Trailer
+    form = TrailerForm
+    formset = BaseTrailerFormSet
+    page_title = 'List of truck records'
+    nav_link = 'Trucks'
+    detail_url = 'invent:trailer'
+    redirect_url = 'invent:list_trailers'
 
 
-class TruckUpdateView(UserPassesTestMixin, UpdateView):
+class TruckDetailView(ReadCheckMixin, DetailView):
     model = Truck
-    form_class = TruckForm
-    login_url = 'invent:index'
-
-    def test_func(self):
-        return write_check(self.request.user)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update(is_view=True)
-        return kwargs
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context['upper_name'] = "Truck"
-        context['lower_name'] = "truck"
-        context['url_left_1_a'] = "invent:list_trucks"
-        context['url_left_1_t'] = "Back"
-        return context
 
 
-class TrailerCreateView(UserPassesTestMixin, CreateView):
+class TrailerDetailView(ReadCheckMixin, DetailView):
     model = Trailer
-    form_class = TrailerForm
 
-    def test_func(self):
-        return write_check(self.request.user)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update(is_view=False)
-        return kwargs
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.account = self.request.user.profile.account
-        self.object.save()
-        return redirect(self.object.get_absolute_url())
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context['upper_name'] = "Trailer"
-        context['lower_name'] = "trailer"
-        context['url_left_1_a'] = "invent:list_trailers"
-        context['url_left_1_t'] = "Back"
-        return context
-
-
-@user_passes_test(write_check, login_url='invent:index')
-def trailers_list_view(request):
-    columns = get_columns(request.user)
-    TrailerFormSet = modelformset_factory(
-        Trailer,
-        form=TrailerForm,
-        fields=columns['trailer_field_names'],
-        formset=BaseTrailerFormSet,
-    )
-    context = {'fields': columns['trailer_verbose_field_names']}
-    if request.method != 'POST':
-        trailer_formset = TrailerFormSet(request=request)
-    else:
-        trailer_formset = TrailerFormSet(request.POST, request=request)
-        if trailer_formset.is_valid():
-            instances = trailer_formset.save(commit=False)
-            for i in instances:
-                i.account = request.user.profile.account
-                i.save()
-            return redirect('invent:list_trailers')
-    context['formset'] = trailer_formset
-    return render(request, 'invent/trailer_list.html', context)
-
-
-class TrailerUpdateView(UserPassesTestMixin, UpdateView):
-    model = Trailer
-    form_class = TrailerForm
-
-    def test_func(self):
-        return write_check(self.request.user)
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update(is_view=True)
-        return kwargs
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context['upper_name'] = "Trailer"
-        context['lower_name'] = "trailer"
-        context['url_left_1_a'] = "invent:list_trailers"
-        context['url_left_1_t'] = "Back"
-        return context

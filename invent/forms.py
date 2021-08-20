@@ -26,11 +26,10 @@ class TruckForm(forms.ModelForm):
         except KeyError:
             self.is_view = False
         super().__init__(*args, **kwargs)
-        if self.is_view:
-            for f in self.fields:
+        for f in self.fields:
+            if self.is_view:
                 self.fields[f].widget.attrs.update({'class': 'form_field'})
-        else:
-            for f in self.fields:
+            else:
                 self.fields[f].widget.attrs.update({'class': 'formset_field'})
 
 
@@ -52,11 +51,10 @@ class TrailerForm(forms.ModelForm):
         except KeyError:
             self.is_view = False
         super().__init__(*args, **kwargs)
-        if self.is_view:
-            for f in self.fields:
+        for f in self.fields:
+            if self.is_view:
                 self.fields[f].widget.attrs.update({'class': 'form_field'})
-        else:
-            for f in self.fields:
+            else:
                 self.fields[f].widget.attrs.update({'class': 'formset_field'})
 
 

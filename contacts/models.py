@@ -21,13 +21,13 @@ class Company(models.Model):
         max_length=2,
         choices=company_group_choices(),
         default='GN',
-        blank=True,
     )
     name = models.CharField(max_length=20, unique=True)
     comments = models.TextField(blank=True)
 
     class Meta:
         verbose_name_plural = 'Companies'
+        ordering = ['name']
 
     def __str__(self):
         return str(self.name)
@@ -66,10 +66,11 @@ class Driver(models.Model):
     phone_number = models.CharField(
         validators=[phone_number_regex],
         max_length=16,
-        unique=True,
-        null=True,
         blank=True,
     )
+
+    class Meta:
+        ordering = ['first_name', 'last_name']
 
     def __str__(self):
         return str(self.first_name + ' ' + self.last_name)

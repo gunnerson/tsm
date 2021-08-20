@@ -1,17 +1,17 @@
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, UniqueConstraint
 from django.urls import reverse
 from django.core.validators import RegexValidator
 
 from .utils import db_search
 from users.models import Account
-from .choices import(
+from .choices import (
     truck_make_choices,
     engine_choices,
     status_choices,
     trailer_make_choices,
     year_choices,
-    us_states_choices
+    us_states_choices,
 )
 
 
@@ -170,6 +170,11 @@ class Truck(models.Model):
     #                GENERATED ALWAYS AS (to_tsvector('english', coalesce(fleet_number, '') || ' ' || coalesce(license_plate, '') || ' ' || coalesce(vin, ''))) STORED;
     # CREATE INDEX trucksearch_idx ON invent_truck USING GIN (textsearchable_index_col);
 
+    class Meta:
+        ordering = ['fleet_number']
+
+    UniqueConstraint(fields=['account', 'vin'], name='unique_truck')
+
     def __str__(self):
         return self.fleet_number
 
@@ -265,6 +270,9 @@ class Trailer(models.Model):
         verbose_name='Terminated',
     )
 
+    class Meta:
+        ordering = ['fleet_number']
+
     def __str__(self):
         return str(self.fleet_number)
 
@@ -277,3 +285,5 @@ class Trailer(models.Model):
         if self.vin:
             self.vin = self.vin.upper()
         super(Trailer, self).save(*args, **kwargs)
+
+    UniqueConstraint(fields=['account', 'vin'], name='unique_trailer')

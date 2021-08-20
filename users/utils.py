@@ -20,6 +20,7 @@ def admin_check(user):
     except AttributeError:
         return False
 
+
 def write_check(user):
     try:
         return (user.profile.level in ('A', 'W')
@@ -27,12 +28,14 @@ def write_check(user):
     except AttributeError:
         return False
 
+
 def read_check(user):
     try:
         return (user.profile.level in ('A', 'W', 'R')
                 and user.profile.account.is_active())
     except AttributeError:
         return False
+
 
 def not_empty(param):
     return param != '' and param is not None
@@ -120,7 +123,7 @@ def generate_listcolshow(profile, model):
                     pass
     elif model == Driver:
         for f in fields:
-            if f.name not in ('id', 'account', 'first_name', 'last_name'):
+            if f.name not in ('id', 'account',):
                 try:
                     ListColShow(
                         profile=profile,

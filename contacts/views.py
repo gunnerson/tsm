@@ -1,12 +1,41 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.forms import modelformset_factory
+
 
 from .models import Driver, Company, PasswordGroup
-from .forms import DriverForm, CompanyForm, PasswordGroupForm
+from .forms import DriverForm, BaseDriverFormSet, CompanyForm, \
+    PasswordGroupForm
 from invent.models import Truck, Trailer
-from users.utils import read_check, write_check
+from users.utils import get_columns, read_check, write_check
+
+
+@user_passes_test(read_check, login_url='invent:index')
+def drivers_list_view(request):
+    columns = get_columns(request.user)
+    DriverFormSet = modelformset_factory(
+        Driver,
+        form=DriverForm,
+        fields=columns['driver_field_names'],
+        formset=BaseDriverFormSet,
+    )
+    context = {'fields': columns['driver_verbose_field_names']}
+    context['write_check'] = write_check(request.user)
+    if request.method != 'POST':
+        driver_formset = DriverFormSet(request=request)
+    else:
+        driver_formset = DriverFormSet(request.POST, request=request)
+        if driver_formset.is_valid():
+            instances = driver_formset.save(commit=False)
+            for i in instances:
+                i.account = request.user.profile.account
+                i.save()
+            return redirect('contacts:list_drivers')
+    context['formset'] = driver_formset
+    return render(request, 'contacts/driver_list.html', context)
 
 
 class DriverCreateView(UserPassesTestMixin, CreateView):
@@ -18,7 +47,7 @@ class DriverCreateView(UserPassesTestMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs.update(is_update=False)
+        kwargs.update(is_view=True)
         return kwargs
 
     def form_valid(self, form):
@@ -26,6 +55,7 @@ class DriverCreateView(UserPassesTestMixin, CreateView):
         self.object.account = self.request.user.profile.account
         self.object.save()
         return redirect(self.object.get_absolute_url())
+
 
 class DriverListView(UserPassesTestMixin, ListView):
     model = Driver
@@ -44,7 +74,7 @@ class DriverUpdateView(UserPassesTestMixin, UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs.update(is_update=True)
+        kwargs.update(is_view=True)
         return kwargs
 
     def get_initial(self):

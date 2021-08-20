@@ -33,31 +33,53 @@ class TrailerSelect(forms.Select):
 
 
 class DriverForm(forms.ModelForm):
-    truck = forms.ModelChoiceField(
-        queryset=Truck.objects.all(),
-        required=False,
-        widget=TruckSelect,
-    )
-    trailer = forms.ModelChoiceField(
-        queryset=Trailer.objects.all(),
-        required=False,
-        widget=TrailerSelect,
-    )
+    # truck = forms.ModelChoiceField(
+    #     queryset=Truck.objects.all(),
+    #     required=False,
+    #     widget=TruckSelect,
+    # )
+    # trailer = forms.ModelChoiceField(
+    #     queryset=Trailer.objects.all(),
+    #     required=False,
+    #     widget=TrailerSelect,
+    # )
 
     class Meta:
         model = Driver
-        exclude = ('truck', 'trailer', 'account',)
+        exclude = ('account',)
 
     def __init__(self, *args, **kwargs):
-        self.is_update = kwargs.pop('is_update')
+        try:
+            self.is_view = kwargs.pop('is_view')
+        except KeyError:
+            self.is_view = False
         super().__init__(*args, **kwargs)
-        if not self.is_update:
-            self.fields["truck"].widget = forms.HiddenInput()
-            self.fields["trailer"].widget = forms.HiddenInput()
-            self.fields["truck"].label = ''
-            self.fields["trailer"].label = ''
+        # self.fields["truck"].widget = TruckSelect
+        # self.fields["trailer"].widget = TrailerSelect
         for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'form_field'})
+            if self.is_view:
+                self.fields[f].widget.attrs.update({'class': 'form_field'})
+            else:
+                self.fields[f].widget.attrs.update({'class': 'formset_field'})
+
+    # def __init__(self, *args, **kwargs):
+    #     self.is_update = kwargs.pop('is_update')
+    #     super().__init__(*args, **kwargs)
+    #     if not self.is_update:
+    #         self.fields["truck"].widget = forms.HiddenInput()
+    #         self.fields["trailer"].widget = forms.HiddenInput()
+    #         self.fields["truck"].label = ''
+    #         self.fields["trailer"].label = ''
+    #     for f in self.fields:
+    #         self.fields[f].widget.attrs.update({'class': 'form_field'})
+
+
+class BaseDriverFormSet(forms.BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
+        account = self.request.user.profile.account
+        self.queryset = Driver.objects.filter(account=account)
 
 
 class CompanyForm(forms.ModelForm):

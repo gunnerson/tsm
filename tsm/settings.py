@@ -30,7 +30,8 @@ if os.environ.get('DJANGO_DEBUG') == 'true':
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'rumatallc.com', 'www.rumatallc.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1',
+                 'rumatallc.com', 'www.rumatallc.com']
 
 
 # Application definition
@@ -152,4 +153,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = '/trucking/'
 LOGIN_REDIRECT_URL = '/trucking/summary/'
-

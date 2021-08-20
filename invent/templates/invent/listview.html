@@ -1,29 +1,10 @@
 {% extends "invent/base.html" %}
 {% load static %}
 
-{% block left-menu%}
-  <ul>
-    <li>
-      <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
-    </li>
-    <li>
-      <a href="{% url 'invent:create_trailer' %}" role="button">+ New trailer</a>
-    </li>
-    <li>
-      <button type="submit" form="data_form">+ Save changes</a>
-    </li>
-  </ul>
-{% endblock left-menu %}
 
-{% block page-title %}
-  <p>List of trailer records</p>
-  <div class="address-line">
-    <ol>
-        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
-        <li>Trailers</li>
-    </ol>
-  </div>
-{% endblock page-title %}
+{% block nav_bar %}
+  <li>{{ nav_link }}</li>
+{% endblock nav_bar %}
 
 {% block content %}
   <form method='post' id="data_form">
@@ -43,9 +24,9 @@
             {% for field in form %}
               {% if '-id' in field.auto_id %}
                 {{ field }}
-                {% if field.value %}
+                {% if field.value and write_check %}
                   <td class="formset_field">
-                    <a href="{% url 'invent:update_trailer' field.value %}">
+                    <a href="{% url detail_url field.value %}">
                       <img src="{% static 'img/edit.png' %}">
                       {{ field }}
                     </a>
