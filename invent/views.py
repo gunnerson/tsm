@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
-from .models import Truck, Trailer
-from .forms import TruckForm, TrailerForm
+from .models import Truck, Trailer, Driver
+from .forms import TruckForm, TrailerForm, DriverForm
 from .mixins import FormSetView, ReadCheckMixin
-from users.utils import get_columns, read_check
+from users.utils import get_columns
 
 
 def index(request):
@@ -62,9 +62,20 @@ class TrailerFormSetView(ReadCheckMixin, FormSetView):
     detail_url = 'invent:trailer'
 
 
+class DriverFormSetView(ReadCheckMixin, FormSetView):
+    model = Driver
+    form = DriverForm
+    page_title = 'List of driver records'
+    nav_link = 'Drivers'
+    detail_url = 'invent:driver'
+
+
 class TruckDetailView(ReadCheckMixin, DetailView):
     model = Truck
 
 
 class TrailerDetailView(ReadCheckMixin, DetailView):
     model = Trailer
+
+class DriverDetailView(ReadCheckMixin, DetailView):
+    model = Driver
