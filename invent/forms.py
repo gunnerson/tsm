@@ -107,7 +107,8 @@ class DriverForm(forms.ModelForm):
         except KeyError:
             self.is_view = False
         super().__init__(*args, **kwargs)
-        # self.fields["truck"].widget = TruckSelect
+        self.fields["home_address"].widget.attrs.update({'rows': 1})
+        # self.fields["trailer"].widget = TrailerSelect
         # self.fields["trailer"].widget = TrailerSelect
         for f in self.fields:
             if self.is_view:

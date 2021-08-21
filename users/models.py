@@ -86,8 +86,8 @@ class Account(models.Model):
 
 class ListColShow(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    list_name = models.CharField(max_length=18)
-    field_name = models.CharField(max_length=18)
+    list_name = models.CharField(max_length=24)
+    field_name = models.CharField(max_length=24)
     show = models.BooleanField(default=True)
 
     def __str__(self):
