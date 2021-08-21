@@ -103,10 +103,22 @@ class Truck(models.Model):
     registration = models.DateField(
         null=True,
         blank=True,
+        verbose_name='Reg exp',
     )
     inspection = models.DateField(
         null=True,
         blank=True,
+        verbose_name='Annual exp',
+    )
+    last_pm_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Last PM',
+    )
+    last_pm_mls = models.PositiveIntegerField(
+        null=True, 
+        blank=True,
+        verbose_name='odometer'
     )
     gps = models.BooleanField(verbose_name='GPS', default=False)
     prepass = models.PositiveIntegerField(
@@ -144,14 +156,13 @@ class Truck(models.Model):
     start_date = models.DateField(
         null=True,
         blank=True,
-        verbose_name='Started',
+        verbose_name='Start',
     )
-    end_date = models.DateField(
+    term_date = models.DateField(
         null=True,
         blank=True,
-        verbose_name='Terminated',
+        verbose_name='Term',
     )
-
     objects = TruckSearch()
     # Create index:
     # ALTER TABLE invent_truck
@@ -177,6 +188,8 @@ class Truck(models.Model):
             self.vin = self.vin.upper()
         super(Truck, self).save(*args, **kwargs)
 
+    # def last_pm_date(self):
+    #     return self.pm_set.last()
 
 class Trailer(models.Model):
     alphanumeric = RegexValidator(
@@ -218,6 +231,11 @@ class Trailer(models.Model):
         blank=True,
         validators=[alphanumeric],
     )
+    state = models.CharField(
+        max_length=2,
+        choices=us_states_choices(),
+        blank=True,
+    )
     company = models.ForeignKey(
         'Company',
         on_delete=models.SET_NULL,
@@ -246,21 +264,23 @@ class Trailer(models.Model):
     registration = models.DateField(
         null=True,
         blank=True,
+        verbose_name='Reg exp',
     )
     inspection = models.DateField(
         null=True,
         blank=True,
+        verbose_name='Annual exp',
     )
     gps = models.BooleanField(verbose_name='GPS', default=False)
     start_date = models.DateField(
         null=True,
         blank=True,
-        verbose_name='Started',
+        verbose_name='Start',
     )
-    end_date = models.DateField(
+    term_date = models.DateField(
         null=True,
         blank=True,
-        verbose_name='Terminated',
+        verbose_name='Term',
     )
 
     class Meta:
@@ -312,6 +332,7 @@ class Company(models.Model):
 class Driver(models.Model):
     # lena's shitty commit
     phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+    ssn_regex = RegexValidator(regex=r"^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$")
     account = models.ForeignKey(
         Account,
         on_delete=models.CASCADE,
@@ -338,12 +359,64 @@ class Driver(models.Model):
         blank=True,
         limit_choices_to=Q(group='OU') | Q(group='LO'),
     )
+    date_of_birth = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='DOB',
+    )
+    cdl = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name='CDL#'
+    )
+    cdl_exp_date = models.DateField(
+        null=True,
+        blank = True,
+        verbose_name='CDL exp'
+    )
+    medical_exp_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Medical exp'
+    )
+    start_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Hire Date',
+    )
+    term_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Term date',
+    )
     phone_number = models.CharField(
         validators=[phone_number_regex],
         max_length=16,
         blank=True,
     )
-
+    email = models.EmailField(
+        blank=True,
+    )
+    home_address = models.TextField(
+        null=True,
+        blank=True
+    )
+    ssn = models.CharField(
+        validators=[ssn_regex],
+        max_length=11,
+        blank=True
+    )
+    last_mvr = models.DateField(
+        null=True,
+        blank=True
+    )
+    pre_empl_drugtest = models.BooleanField(verbose_name='DrugTest', default=False)
+    pre_empl_clearinghouse = models.BooleanField(verbose_name='Pre-empl Clearinghouse', default=False)
+    pre_empl_verification = models.BooleanField(verbose_name='PEV', default=False)
+    last_clearinghouse = models.DateField(
+        null=True,
+        blank=True
+    )
     class Meta:
         ordering = ['first_name', 'last_name']
 
