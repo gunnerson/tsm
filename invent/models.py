@@ -351,7 +351,7 @@ class Driver(models.Model):
         return str(self.first_name + ' ' + self.last_name)
 
     def get_absolute_url(self):
-        return reverse('contacts:driver', args=[str(self.id)])
+        return reverse('invent:driver', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
         if self.first_name:

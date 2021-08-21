@@ -26,7 +26,7 @@ class FormSetView():
     template_name = 'invent/listview.html'
     redirect_url = '.'
     extra = 1
-    set_redirect = False  # specify get_redirect_url() method
+    set_redirect = False  # Assign get_redirect_url() method
 
     @classmethod
     def as_view(cls):
@@ -91,13 +91,22 @@ class FormSetView():
             context['fields'] = self.get_fields()['verbose_field_names']
         except KeyError:
             pass
+        if 'formset' in kwargs:
+            context['formset'] = kwargs['formset']
+        else:
+            formset_inst = self.get_modelformset()
+            context['formset'] = formset_inst(queryset=self.get_queryset())
         return context
 
+    def render_to_response(self, context):
+        return render(
+            request=self.request,
+            template_name=self.template_name,
+            context=context,
+        )
+
     def get(self, request, *args, **kwargs):
-        context = self.get_context_data()
-        formset_inst = self.get_modelformset()
-        context['formset'] = formset_inst(queryset=self.get_queryset())
-        return render(self.request, self.template_name, context)
+        return self.render_to_response(self.get_context_data())
 
     def post(self, request, *args, **kwargs):
         formset_inst = self.get_modelformset()
@@ -111,3 +120,6 @@ class FormSetView():
                 return redirect(self.get_redirect_url())
             else:
                 return redirect(self.redirect_url)
+        else:
+            return self.render_to_response(
+                self.get_context_data(formset=formset))
