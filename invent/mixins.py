@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseNotAllowed
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, BaseModelFormSet
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.contrib.auth.views import redirect_to_login
-from django.core.exceptions import PermissionDenied
 
 from users.utils import gen_field_ver_name, read_check, write_check
 from users.models import ListColShow
@@ -18,14 +16,17 @@ class ReadCheckMixin(UserPassesTestMixin):
 class FormSetView():
     model = None
     form = None
-    formset = None
+    formset = BaseModelFormSet
     btn_back = True
     btn_save = True
+    btn_custom = False
     page_title = 'List of records'
     nav_link = 'List'
     detail_url = ''
     template_name = 'invent/listview.html'
     redirect_url = ''
+    extra = 1
+    set_redirect = False  # specify get_redirect_url() method
 
     @classmethod
     def as_view(cls):
@@ -44,9 +45,6 @@ class FormSetView():
     def __init__(self, request):
         self.request = request
 
-    def write_check(self):
-        return write_check(self.request.user)
-
     def get_fields(self):
         qs = ListColShow.objects.filter(profile=self.request.user.profile)
         field_names = []
@@ -64,39 +62,52 @@ class FormSetView():
         }
         return context
 
+    def get_queryset(self):
+        account = self.request.user.profile.account
+        qs = self.model.objects.filter(account=account)
+        return qs
+
     def get_modelformset(self):
         modelformset = modelformset_factory(
             self.model,
             form=self.form,
             fields=self.get_fields()['field_names'],
             formset=self.formset,
+            extra=self.extra,
         )
         return modelformset
 
     def get_context_data(self, *args, **kwargs):
         context = {
-            'fields': self.get_fields()['verbose_field_names'],
             'btn_back': self.btn_back,
             'btn_save': self.btn_save,
+            'btn_custom': self.btn_custom,
             'page_title': self.page_title,
             'nav_link': self.nav_link,
             'detail_url': self.detail_url,
-            'write_check': self.write_check,
+            'write_check': write_check(self.request.user)
         }
+        try:
+            context['fields'] = self.get_fields()['verbose_field_names']
+        except KeyError:
+            pass
         return context
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
         formset_inst = self.get_modelformset()
-        context['formset'] = formset_inst(request=request)
+        context['formset'] = formset_inst(queryset=self.get_queryset())
         return render(self.request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         formset_inst = self.get_modelformset()
-        formset = formset_inst(request.POST, request=request)
+        formset = formset_inst(request.POST, queryset=self.get_queryset())
         if formset.is_valid():
             instances = formset.save(commit=False)
             for i in instances:
                 i.account = request.user.profile.account
                 i.save()
-            return redirect(self.redirect_url)
+            if self.set_redirect:
+                return redirect(self.get_redirect_url())
+            else:
+                return redirect(self.redirect_url)

@@ -1,10 +1,6 @@
 {% extends "invent/base.html" %}
 
-{% block left-menu%}
-  <ul>
-    <li>
-      <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
-    </li>
+{% block custom-button %}
     <li>
       <a href="{% url 'users:listcolshow' %}">Table columns</a>
     </li>
@@ -22,18 +18,11 @@
       <button type="submit" form="data_form" name="changed" value="on">+ Save changes</button>
     </li>
   </ul>
-{% endblock left-menu %}
+{% endblock custom-button %}
 
-
-{% block page-title %}
-  <p>Account settings</p>
-  <div class="address-line">
-    <ol>
-        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
-        <li>Profile</li>
-    </ol>
-  </div>
-{% endblock page-title %}
+{% block nav_bar %}
+  <li>Profile</li>
+{% endblock nav_bar %}
 
 {% block content %}
   <form method='post' id="data_form">

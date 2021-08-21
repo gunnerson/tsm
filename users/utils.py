@@ -52,8 +52,7 @@ def gen_list_ver_name(str):
 
 def get_columns(user):
     from .models import ListColShow
-    from invent.models import Truck, Trailer
-    from contacts.models import Driver
+    from invent.models import Truck, Trailer, Driver
     qs = ListColShow.objects.filter(
         profile=user.profile,
     )
@@ -93,8 +92,7 @@ def get_columns(user):
 
 
 def generate_listcolshow(profile, model):
-    from invent.models import Truck, Trailer
-    from contacts.models import Driver
+    from invent.models import Truck, Trailer, Driver
     from django.db import IntegrityError
     from .models import ListColShow
     list_name = str(model._meta)
@@ -135,8 +133,7 @@ def generate_listcolshow(profile, model):
 
 
 def generate_profile(profile):
-    from invent.models import Trailer, Truck
-    from contacts.models import Driver
+    from invent.models import Trailer, Truck, Driver
     generate_listcolshow(profile, Truck)
     generate_listcolshow(profile, Trailer)
     generate_listcolshow(profile, Driver)
@@ -144,8 +141,7 @@ def generate_profile(profile):
 
 
 def generate_su_profile(request):
-    from invent.models import Trailer, Truck
-    from contacts.models import Driver
+    from invent.models import Trailer, Truck, Driver
     profile = request.user.profile
     generate_listcolshow(profile, Truck)
     generate_listcolshow(profile, Trailer)

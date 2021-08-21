@@ -95,11 +95,3 @@ class UserLevelForm(forms.ModelForm):
         self.fields['user'].disabled = True
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})
-
-
-class BaseUserLevelFormSet(forms.BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request')
-        super().__init__(*args, **kwargs)
-        account = self.request.user.profile.account
-        self.queryset = Profile.objects.filter(account=account)

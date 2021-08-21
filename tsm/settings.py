@@ -48,9 +48,8 @@ INSTALLED_APPS = [
     # Third party apps
 
     # My apps
+    'users',
     'invent',
-    'contacts',
-    'users'
 ]
 
 MIDDLEWARE = [

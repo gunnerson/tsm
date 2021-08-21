@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
-from django.contrib.auth.decorators import user_passes_test
-from django.forms import modelformset_factory
+from django.db.models import Q
 
-from .models import ListColShow, Profile, PreferenceList, Account, User
-from .forms import UserCreationForm, PreferenceListForm, UserLevelForm, BaseUserLevelFormSet
-from .utils import generate_profile, not_empty, write_check, admin_check
+from .models import ListColShow, Profile, PreferenceList, Account
+from .forms import UserCreationForm, PreferenceListForm, UserLevelForm
+from .utils import generate_profile, not_empty, admin_check
+from invent.mixins import FormSetView
 
 
 def register(request):
@@ -67,6 +67,14 @@ class PreferenceListUpdateView(LoginRequiredMixin, UpdateView):
         self.object.save()
         return redirect(self.object.get_absolute_url())
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['btn_back'] = True
+        context['btn_save'] = True
+        context['btn_custom'] = True
+        context['page_title'] = 'Account settings'
+        return context
+
 
 class ListColShowListView(LoginRequiredMixin, ListView):
     model = ListColShow
@@ -83,23 +91,34 @@ class ListColShowListView(LoginRequiredMixin, ListView):
                 q.save(update_fields=['show'])
         return qs
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['btn_back'] = True
+        context['btn_save'] = True
+        context['btn_custom'] = True
+        context['page_title'] = ''
+        return context
 
-@user_passes_test(admin_check, login_url='users:login')
-def users_level_view(request):
-    UserFormSet = modelformset_factory(
-        Profile,
-        form=UserLevelForm,
-        fields=['user', 'level',],
-        formset=BaseUserLevelFormSet,
-        extra=0,
-    )
-    if request.method != 'POST':
-        user_formset = UserFormSet(request=request)
-        context = {}
-        context['formset'] = user_formset
-        return render(request, 'users/update_level.html', context)
-    else:
-        user_formset = UserFormSet(request.POST, request=request)
-        if user_formset.is_valid():
-            user_formset.save()
-        return redirect(request.user.profile.preferencelist.get_absolute_url())
+
+class UsersLevelFormSetView(UserPassesTestMixin, FormSetView):
+    model = Profile
+    form = UserLevelForm
+    extra = 0
+    btn_custom = True
+    page_title = "Update users' privileges"
+    nav_link = 'Privileges'
+    set_redirect = True
+
+    def test_func(self):
+        return admin_check(self.request.user)
+
+    def get_fields(self):
+        context = {'field_names': ['user', 'level', ]}
+        return context
+
+    def get_redirect_url(self):
+        return self.request.user.profile.preferencelist.get_absolute_url()
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(~Q(user=self.request.user))

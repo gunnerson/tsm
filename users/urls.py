@@ -22,6 +22,8 @@ urlpatterns = [
     path('user/settings/table_columns', views.ListColShowListView.as_view(
         template_name='users/listcolshow.html'),
         name="listcolshow"),
-    path('account/users/', views.users_level_view,
+    # path('account/users/', views.users_level_view,
+    #     name="update_level"),
+    path('account/users/', views.UsersLevelFormSetView.as_view(),
         name="update_level"),
 ]

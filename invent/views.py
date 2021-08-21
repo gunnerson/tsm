@@ -2,10 +2,9 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
 from .models import Truck, Trailer
-from .forms import TruckForm, TrailerForm, BaseTrailerFormSet, BaseTruckFormSet
+from .forms import TruckForm, TrailerForm
 from .mixins import FormSetView, ReadCheckMixin
-from users.utils import gen_field_ver_name, get_columns, read_check, write_check
-from users.models import ListColShow
+from users.utils import get_columns, read_check
 
 
 def index(request):
@@ -54,7 +53,6 @@ class SummaryListView(ReadCheckMixin, ListView):
 class TruckFormSetView(ReadCheckMixin, FormSetView):
     model = Truck
     form = TruckForm
-    formset = BaseTruckFormSet
     page_title = 'List of truck records'
     nav_link = 'Trucks'
     detail_url = 'invent:truck'
@@ -64,7 +62,6 @@ class TruckFormSetView(ReadCheckMixin, FormSetView):
 class TrailerFormSetView(ReadCheckMixin, FormSetView):
     model = Trailer
     form = TrailerForm
-    formset = BaseTrailerFormSet
     page_title = 'List of truck records'
     nav_link = 'Trucks'
     detail_url = 'invent:trailer'
@@ -77,4 +74,3 @@ class TruckDetailView(ReadCheckMixin, DetailView):
 
 class TrailerDetailView(ReadCheckMixin, DetailView):
     model = Trailer
-
