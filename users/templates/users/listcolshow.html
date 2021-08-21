@@ -1,38 +1,8 @@
 {% extends "invent/base.html" %}
 
-{% comment %}
-<script>
-  {% block js %}
-    const colBoxes = document.querySelectorAll('.colBox');
-    for (colBox of colBoxes){
-      colBox.addEventListener('change', function(e){
-        document.getElementById('checkform').submit();
-      });
-    };
-  {% endblock js %}
-</script>
-{% endcomment %}
-
-{% block left-menu%}
-  <ul>
-    <li>
-      <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
-    </li>
-    <li>
-      <button type="submit" form="data_form" name="changed" value="on">+ Save changes</button>
-    </li>
-  </ul>
-{% endblock left-menu %}
-
-{% block page-title %}
-  <p>Select fields to show on summary page</p>
-  <div class="address-line">
-    <ol>
-        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
-        <li>Summary fields</li>
-    </ol>
-  </div>
-{% endblock page-title %}
+{% block nav_bar %}
+  <li>{{ nav_link }}</li>
+{% endblock nav_bar %}
 
 {% block content %}
   <form method="GET" id="data_form">
@@ -46,6 +16,7 @@
         {% endcomment %}
       </p>
     {% endfor %}
+    <input type="hidden" name="changed" value="on">
   </form>
 
 {% endblock content %}

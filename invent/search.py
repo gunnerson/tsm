@@ -42,8 +42,7 @@ def db_search(queryset, query, config, *args):
 
 class TruckSearch(models.Manager):
     def search(self, query, account):
-        qs = self.get_queryset()
-        qs = qs.filter(account=account)
+        qs = self.get_queryset().filter(account=account)
         if query:
             qs = db_search(qs, query, 'B',
                            'fleet_number', 'vin', 'license_plate')

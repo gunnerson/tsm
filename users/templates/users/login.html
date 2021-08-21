@@ -1,19 +1,11 @@
 {% extends "invent/base.html" %}
 
-{% block page-title %}
-  <p>Log in to your account</p>
-  <div class="address-line">
-    <ol>
-        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
-        <li>Log in</li>
-    </ol>
-  </div>
-{% endblock page-title %}
+{% block nav_bar %}
+  <li>{{ nav_link }}</li>
+{% endblock nav_bar %}
 
 {% block content %}
-
-<div >
-  <form method="post" action="{% url 'users:login' %}">
+  <form method="post">
     {% csrf_token %}
     {% for field in form %}
       <p>
@@ -23,6 +15,4 @@
     {% endfor %}
     <button name="submit" class="btn">Log in</button>
   </form>
-</div>
-
 {% endblock content %}
