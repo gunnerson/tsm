@@ -1,34 +1,28 @@
 {% extends "invent/base.html" %}
 
-{% block left-menu%}
-  <ul>
+{% block custom-button %}
     <li>
-      <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
-    </li>
-    <li>
-      <a href="{% url 'users:listcolshow' %}" role="button" role="button">Table columns</a>
+      <a href="{% url 'users:listcolshow' %}">Table columns</a>
     </li>
     {% if user.profile.level == 'A' %}
       <li>
-        <a href="{% url 'users:update_level' %}" role="button" role="button">Users</a>
+        <a href="{% url 'users:update_level' %}">Users</a>
+      </li>
+    {% endif %}
+    {% if user.is_superuser %}
+      <li>
+        <a href="{% url 'admin:index' %}">Admin page</a>
       </li>
     {% endif %}
     <li>
       <button type="submit" form="data_form" name="changed" value="on">+ Save changes</button>
     </li>
   </ul>
-{% endblock left-menu %}
+{% endblock custom-button %}
 
-
-{% block page-title %}
-  <p>Account settings</p>
-  <div class="address-line">
-    <ol>
-        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
-        <li>Profile</li>
-    </ol>
-  </div>
-{% endblock page-title %}
+{% block nav_bar %}
+  <li>Profile</li>
+{% endblock nav_bar %}
 
 {% block content %}
   <form method='post' id="data_form">

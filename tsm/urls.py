@@ -9,6 +9,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('trucking/', include('users.urls'), name='users'),
-    path('trucking/', include('contacts.urls'), name='contacts'),
     path('trucking/', include('invent.urls'), name='invent'),
 ]
+
+handler403 = 'invent.views.permission_denied_view'

@@ -1,31 +1,10 @@
 {% extends "invent/base.html" %}
 {% load static %}
 
-{% block left-menu%}
-  <ul>
-    <li>
-      <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
-    </li>
-    <li>
-      <a href="{% url 'invent:create_truck' %}" role="button">+ New truck</a>
-    </li>
-    <li>
-      <button type="submit" form="data_form">+ Save changes</a>
-    </li>
-  </ul>
-{% endblock left-menu %}
 
-{% block page-title %}
-  <div class="page-title">
-    <span>List of truck records</span>
-  </div>
-  <div class="address-line">
-    <ol>
-        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
-        <li>Trucks</li>
-    </ol>
-  </div>
-{% endblock page-title %}
+{% block nav_bar %}
+  <li>{{ nav_link }}</li>
+{% endblock nav_bar %}
 
 {% block content %}
   <form method='post' id="data_form">
@@ -45,15 +24,16 @@
             {% for field in form %}
               {% if '-id' in field.auto_id %}
                 {{ field }}
-                {% if field.value %}
+                {% if field.value and write_check %}
                   <td class="formset_field">
-                    <a href="{% url 'invent:update_truck' field.value %}">
+                    <a href="{% url detail_url field.value %}">
                       <img src="{% static 'img/edit.png' %}">
+                      {{ field }}
                     </a>
                   </td>
                 {% endif %}
               {% else %}
-                <td>{{ field }}{{ field.errors }}</td>
+                <td> {{ field }}{{ field.errors }}</td>
               {% endif %}
             {% endfor %}
           </tr>
@@ -61,7 +41,7 @@
         {% endfor %}
       </tbody>
     </table>
+    {{ formset.non_form_errors }}
   </form>
-  {{ formset.non_form_errors }}
 {% endblock content %}
 

@@ -17,6 +17,7 @@
   <body>
 
     <div id="wrapper">
+
       <div id="header">
         <div id="header-left">
           <ul>
@@ -30,10 +31,10 @@
               <a href="{% url 'invent:list_trailers' %}">Trailers</a>
             </li>
             <li id="navItem4">
-              <a href="{% url 'contacts:list_drivers' %}">Drivers</a>
+              <a href="">Drivers</a>
             </li>
             <li id="navItem5">
-              <a href="{% url 'contacts:list_companies' %}">Companies</a>
+              <a href="">Companies</a>
             </li>
           </ul>
         </div>
@@ -48,19 +49,47 @@
           </ul>
         </div>
       </div>
+
       <div id="left-content">
-        {% block left-menu %}{% endblock left-menu %}
+          <ul>
+            {% if btn_back %}
+              <li>
+                <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
+              </li>
+            {% endif %}
+            {% if btn_custom %}
+              {% block custom-button %}{% endblock custom-button %}
+            {% endif %}
+            {% if btn_save and write_check %}
+              <li>
+                <button type="submit" form="data_form">+ Save changes</a>
+              </li>
+            {% endif %}
+          </ul>
       </div>
+
       <div id="left-content-hide">
         <button id="left-content-hide-button" class="left-content-hide" type="button"><</button>
         <button id="left-content-show-button" class="left-content-hide" type="button" style="display: none;">></button>
       </div>
+
       <div id="address-panel">
-        {% block page-title %}{% endblock page-title %}
+        <div class="page-title">
+          <span>{{ page_title }}</span>
+          {% block title_bar %}{% endblock title_bar %}
+        </div>
+        <div class="address-line">
+          <ol>
+              <li><a href="{% url 'invent:index' %}">Home</a> > </li>
+              {% block nav_bar %}{% endblock nav_bar %}
+          </ol>
+        </div>
       </div>
+
       <div id="main-content">
         {% block content %}{% endblock content %}
       </div>
+
     </div>
 
     <script>

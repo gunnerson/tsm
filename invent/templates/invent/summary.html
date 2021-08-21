@@ -16,34 +16,20 @@
   {% endblock js %}
 </script>
 
-{% block left-menu%}
-  <ul>
-    <li>
-      <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
-    </li>
-  </ul>
-{% endblock left-menu %}
-
-{% block page-title %}
-  <div class="page-title">
-    <span>Summary</span>
+{% block title_bar %}
     <form method="GET" id="search-form">
       <button type="submit" class="search-button" id="search-button">
         <img src="{% static 'img/search.png' %}">
       </button>
       <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
     </form>
-  </div>
-  <div class="address-line">
-    <ol>
-        <li><a href="{% url 'invent:index' %}">Home</a> > </li>
-        <li>Summary</li>
-    </ol>
-  </div>
-{% endblock page-title %}
+{% endblock title_bar %}
+
+{% block nav_bar %}
+  <li>Summary</li>
+{% endblock nav_bar %}
 
 {% block content %}
-
   <table class="listview-table {{ font_class }}">
     <thead>
       <tr>
@@ -184,7 +170,7 @@
       {% for object in object_list %}
         <tr>
           {% if 'Fleet number' in truck_field_names %}
-            <td><a href="{% url 'invent:update_truck' object.id %}">{{ object.fleet_number }}</a></td>
+            <td><a href="{% url 'invent:truck' object.id %}">{{ object.fleet_number }}</a></td>
           {% endif %}
           {% if 'VIN' in truck_field_names %}
             <td><p>{{ object.vin|default_if_none:"" }}</p></td>
@@ -205,7 +191,7 @@
             <td><p>{{ object.get_status_display }}</p></td>
           {% endif %}
           {% if 'Owner' in truck_field_names %}
-            <td><a href="{% if object.owner.id != '' and object.owner is not None %}{% url 'contacts:update_company' object.owner.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.owner|default_if_none:"" }}</a></td>
+            <td><a href="{% if object.owner.id != '' and object.owner is not None %}{% url 'contacts:update_company' object.owner.id %}{% endif %}">{{ object.owner|default_if_none:"" }}</a></td>
           {% endif %}
           {% if 'Mileage' in truck_field_names %}
             <td><p>{{ object.mileage|default_if_none:"" }}</p></td>
@@ -264,7 +250,7 @@
           {% if 'Terminated' in truck_field_names %}
             <td><p>{{ object.end_date|default_if_none:"" }}</p></td>
           {% endif %}
-          <td><a href="{% if object.driver.trailer.id != '' and object.driver.trailer is not None %}{% url 'invent:update_trailer' object.driver.trailer.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver.trailer|default_if_none:"" }}</a></td>
+          <td><a href="{% if object.driver.trailer.id != '' and object.driver.trailer is not None %}{% url 'invent:trailer' object.driver.trailer.id %}{% endif %}">{{ object.driver.trailer|default_if_none:"" }}</a></td>
           {% if 'Vin' in trailer_field_names %}
             <td><p>{{ object.driver.trailer.vin|default_if_none:"" }}</p></td>
           {% endif %}
@@ -307,7 +293,7 @@
           {% if 'Terminated' in trailer_field_names %}
             <td><p>{{ object.driver.trailer.end_date|default_if_none:"" }}</p></td>
           {% endif %}
-          <td><a href="{% if object.driver.id != '' and object.driver is not None %}{% url 'contacts:update_driver' object.driver.id %}{% else %}{% url 'invent:update_truck' object.id %}{% endif %}">{{ object.driver }}</a></td>
+          <td><a href="{% if object.driver.id != '' and object.driver is not None %}{% url 'contacts:update_driver' object.driver.id %}{% endif %}">{{ object.driver }}</a></td>
           {% if 'Company' in driver_field_names %}
             <td><p>{{ object.driver.company|default_if_none:"" }}</p></td>
           {% endif %}
@@ -318,6 +304,5 @@
       {% endfor %}
     </tbody>
   </table>
-
 {% endblock content %}
 
