@@ -371,6 +371,11 @@ class Driver(models.Model):
         blank=True,
         verbose_name='CDL#'
     )
+    state = models.CharField(
+        max_length=2,
+        choices=us_states_choices(),
+        blank=True,
+    )
     cdl_exp_date = models.DateField(
         null=True,
         blank=True,
