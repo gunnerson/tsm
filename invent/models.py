@@ -116,7 +116,7 @@ class Truck(models.Model):
         verbose_name='Last PM',
     )
     last_pm_mls = models.PositiveIntegerField(
-        null=True, 
+        null=True,
         blank=True,
         verbose_name='odometer'
     )
@@ -190,6 +190,7 @@ class Truck(models.Model):
 
     # def last_pm_date(self):
     #     return self.pm_set.last()
+
 
 class Trailer(models.Model):
     alphanumeric = RegexValidator(
@@ -332,7 +333,8 @@ class Company(models.Model):
 class Driver(models.Model):
     # lena's shitty commit
     phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
-    ssn_regex = RegexValidator(regex=r"^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$")
+    ssn_regex = RegexValidator(
+        regex=r"^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$")
     account = models.ForeignKey(
         Account,
         on_delete=models.CASCADE,
@@ -376,7 +378,7 @@ class Driver(models.Model):
     )
     cdl_exp_date = models.DateField(
         null=True,
-        blank = True,
+        blank=True,
         verbose_name='CDL exp'
     )
     medical_exp_date = models.DateField(
@@ -415,13 +417,17 @@ class Driver(models.Model):
         null=True,
         blank=True
     )
-    pre_empl_drugtest = models.BooleanField(verbose_name='DrugTest', default=False)
-    pre_empl_clearinghouse = models.BooleanField(verbose_name='Pre-empl Clearinghouse', default=False)
-    pre_empl_verification = models.BooleanField(verbose_name='PEV', default=False)
+    pre_empl_drugtest = models.BooleanField(
+        verbose_name='DrugTest', default=False)
+    pre_empl_clearinghouse = models.BooleanField(
+        verbose_name='Pre-empl Clearinghouse', default=False)
+    pre_empl_verification = models.BooleanField(
+        verbose_name='PEV', default=False)
     last_clearinghouse = models.DateField(
         null=True,
         blank=True
     )
+
     class Meta:
         ordering = ['first_name', 'last_name']
 
