@@ -94,4 +94,5 @@ class UserLevelForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['user'].disabled = True
         for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'form_field'})
+            self.fields[f].widget.attrs.update({'class': 'formset_field'})
+            self.fields[f].widget.attrs.update({'style': 'font-size: 1rem'})

@@ -24,7 +24,7 @@ class FormSetView():
     nav_link = 'List'
     detail_url = ''
     template_name = 'invent/listview.html'
-    redirect_url = ''
+    redirect_url = '.'
     extra = 1
     set_redirect = False  # specify get_redirect_url() method
 

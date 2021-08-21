@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
+from django.contrib.auth.views import LoginView
 from django.db.models import Q
 
 from .models import ListColShow, Profile, PreferenceList, Account
@@ -38,11 +39,28 @@ def register(request):
             generate_profile(new_profile)
             new_preflist = PreferenceList(profile=new_profile)
             new_preflist.save()
-            authenticated_user = authenticate(email=new_user.email,
-                                              password=request.POST['password1'])
+            authenticated_user = authenticate(
+                email=new_user.email,
+                password=request.POST['password1'],
+            )
             login(request, authenticated_user)
             return redirect('users:preferences', new_preflist.id)
-    return render(request, 'users/register.html', {'form': form})
+    context = {
+        'form': form,
+        'btn_back': True,
+        'page_title': 'Register new user account',
+        'nav_link': 'Register',
+    }
+    return render(request, 'users/register.html', context)
+
+
+class UserLoginView(LoginView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Login to your account'
+        context['btn_back'] = True
+        context['nav_link'] = 'Login'
+        return context
 
 
 class PreferenceListUpdateView(LoginRequiredMixin, UpdateView):
@@ -73,6 +91,8 @@ class PreferenceListUpdateView(LoginRequiredMixin, UpdateView):
         context['btn_save'] = True
         context['btn_custom'] = True
         context['page_title'] = 'Account settings'
+        context['nav_link'] = 'Preferences'
+        context['write_check'] = True
         return context
 
 
@@ -96,7 +116,9 @@ class ListColShowListView(LoginRequiredMixin, ListView):
         context['btn_back'] = True
         context['btn_save'] = True
         context['btn_custom'] = True
-        context['page_title'] = ''
+        context['page_title'] = 'Select summary columns'
+        context['nav_link'] = 'Columns'
+        context['write_check'] = True
         return context
 
 
@@ -107,13 +129,15 @@ class UsersLevelFormSetView(UserPassesTestMixin, FormSetView):
     btn_custom = True
     page_title = "Update users' privileges"
     nav_link = 'Privileges'
-    set_redirect = True
 
     def test_func(self):
         return admin_check(self.request.user)
 
     def get_fields(self):
-        context = {'field_names': ['user', 'level', ]}
+        context = {
+            'field_names': ['user', 'level', ],
+            'verbose_field_names': ['User', 'Access level', ],
+        }
         return context
 
     def get_redirect_url(self):

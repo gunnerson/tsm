@@ -12,15 +12,12 @@ def index(request):
 
 
 def permission_denied_view(request, exception):
-    message = "You don't have access to this page. Contact your manager."
+    message = "You don't have access to this page. Contact account administrator."
     return render(request, 'invent/403.html', {'message': message})
 
 
 class SummaryListView(ReadCheckMixin, ListView):
     model = Truck
-
-    def test_func(self):
-        return read_check(self.request.user)
 
     def get_queryset(self):
         account = self.request.user.profile.account
@@ -36,15 +33,14 @@ class SummaryListView(ReadCheckMixin, ListView):
         columns = get_columns(self.request.user)
         font_size = self.request.user.profile.preferencelist.font_size
         if font_size == 'S':
-            font_class = 'font-small'
+            context['font_class'] = 'font-small'
         elif font_size == 'L':
-            font_class = 'font-large'
+            context['font_class'] = 'font-large'
         else:
-            font_class = 'font-medium'
+            context['font_class'] = 'font-medium'
         context['truck_field_names'] = columns['truck_verbose_field_names']
         context['trailer_field_names'] = columns['trailer_verbose_field_names']
         context['driver_field_names'] = columns['driver_verbose_field_names']
-        context['font_class'] = font_class
         context['btn_back'] = True
         context['page_title'] = 'Summary'
         return context
@@ -56,7 +52,6 @@ class TruckFormSetView(ReadCheckMixin, FormSetView):
     page_title = 'List of truck records'
     nav_link = 'Trucks'
     detail_url = 'invent:truck'
-    redirect_url = 'invent:list_trucks'
 
 
 class TrailerFormSetView(ReadCheckMixin, FormSetView):
@@ -65,7 +60,6 @@ class TrailerFormSetView(ReadCheckMixin, FormSetView):
     page_title = 'List of truck records'
     nav_link = 'Trucks'
     detail_url = 'invent:trailer'
-    redirect_url = 'invent:list_trailers'
 
 
 class TruckDetailView(ReadCheckMixin, DetailView):
