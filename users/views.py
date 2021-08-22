@@ -101,15 +101,27 @@ class ListColShowListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         qs = ListColShow.objects.filter(profile=self.request.user.profile)
-        if self.request.GET.get('changed', None):
+        return qs
+
+    def post(self, *args, **kwargs):
+        qs = ListColShow.objects.filter(profile=self.request.user.profile)
+        if self.request.POST.get('check_all', None):
             for q in qs:
-                checked = self.request.GET.get(str(q.id), None)
+                q.show = True
+                q.save(update_fields=['show'])
+        elif self.request.POST.get('uncheck_all', None):
+            for q in qs:
+                q.show = False
+                q.save(update_fields=['show'])
+        else:
+            for q in qs:
+                checked = self.request.POST.get(str(q.id), None)
                 if checked:
                     q.show = True
                 else:
                     q.show = False
                 q.save(update_fields=['show'])
-        return qs
+        return redirect('users:listcolshow')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

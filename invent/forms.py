@@ -12,7 +12,7 @@ class TruckForm(forms.ModelForm):
             'insurance': forms.DateInput(attrs={'type': 'date'}),
             'inspection': forms.DateInput(attrs={'type': 'date'}),
             'start_date': forms.DateInput(attrs={'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            'term_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -37,7 +37,7 @@ class TrailerForm(forms.ModelForm):
             'insurance': forms.DateInput(attrs={'type': 'date'}),
             'inspection': forms.DateInput(attrs={'type': 'date'}),
             'start_date': forms.DateInput(attrs={'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            'term_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
     def __init__(self, *args, **kwargs):
