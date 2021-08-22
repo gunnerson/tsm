@@ -191,7 +191,7 @@
             <td><p>{{ object.get_status_display }}</p></td>
           {% endif %}
           {% if 'Owner' in truck_field_names %}
-            <td><a href="{% if object.owner.id != '' and object.owner is not None %}{% url 'contacts:update_company' object.owner.id %}{% endif %}">{{ object.owner|default_if_none:"" }}</a></td>
+            <td><a href="{% if object.owner.id != '' and object.owner is not None %}{% url 'invent:company' object.owner.id %}{% endif %}">{{ object.owner|default_if_none:"" }}</a></td>
           {% endif %}
           {% if 'Mileage' in truck_field_names %}
             <td><p>{{ object.mileage|default_if_none:"" }}</p></td>
@@ -293,7 +293,7 @@
           {% if 'Terminated' in trailer_field_names %}
             <td><p>{{ object.driver.trailer.end_date|default_if_none:"" }}</p></td>
           {% endif %}
-          <td><a href="{% if object.driver.id != '' and object.driver is not None %}{% url 'contacts:update_driver' object.driver.id %}{% endif %}">{{ object.driver }}</a></td>
+          <td><a href="{% if object.driver.id != '' and object.driver is not None %}{% url 'invent:driver' object.driver.id %}{% endif %}">{{ object.driver }}</a></td>
           {% if 'Company' in driver_field_names %}
             <td><p>{{ object.driver.company|default_if_none:"" }}</p></td>
           {% endif %}
