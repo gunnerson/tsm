@@ -26,7 +26,6 @@ class FormSetView():
     template_name = 'invent/listview.html'
     redirect_url = '.'
     extra = 1
-    set_redirect = False  # Assign get_redirect_url() method
 
     @classmethod
     def as_view(cls):
@@ -50,12 +49,11 @@ class FormSetView():
         field_names = []
         verbose_field_names = []
         for q in qs:
-            if q.show:
-                if q.list_name == str(self.model._meta):
-                    field = self.model._meta.get_field(q.field_name)
-                    field_names.append(q.field_name)
-                    verbose_field_names.append(
-                        gen_field_ver_name(field.verbose_name))
+            if q.list_name == str(self.model._meta):
+                field = self.model._meta.get_field(q.field_name)
+                field_names.append(q.field_name)
+                verbose_field_names.append(
+                    gen_field_ver_name(field.verbose_name))
         context = {
             'field_names': field_names,
             'verbose_field_names': verbose_field_names,
@@ -67,7 +65,7 @@ class FormSetView():
         qs = self.model.objects.filter(account=account)
         return qs
 
-    def get_modelformset(self):
+    def get_modelformset(self, data=None):
         modelformset = modelformset_factory(
             self.model,
             form=self.form,
@@ -75,7 +73,7 @@ class FormSetView():
             formset=self.formset,
             extra=self.extra,
         )
-        return modelformset
+        return modelformset(data, queryset=self.get_queryset())
 
     def get_context_data(self, *args, **kwargs):
         context = {
@@ -94,8 +92,7 @@ class FormSetView():
         if 'formset' in kwargs:
             context['formset'] = kwargs['formset']
         else:
-            formset_inst = self.get_modelformset()
-            context['formset'] = formset_inst(queryset=self.get_queryset())
+            context['formset'] = self.get_modelformset()
         return context
 
     def render_to_response(self, context):
@@ -109,17 +106,13 @@ class FormSetView():
         return self.render_to_response(self.get_context_data())
 
     def post(self, request, *args, **kwargs):
-        formset_inst = self.get_modelformset()
-        formset = formset_inst(request.POST, queryset=self.get_queryset())
+        formset = self.get_modelformset(request.POST)
         if formset.is_valid():
             instances = formset.save(commit=False)
             for i in instances:
                 i.account = request.user.profile.account
                 i.save()
-            if self.set_redirect:
-                return redirect(self.get_redirect_url())
-            else:
-                return redirect(self.redirect_url)
+            return redirect(self.redirect_url)
         else:
             return self.render_to_response(
                 self.get_context_data(formset=formset))

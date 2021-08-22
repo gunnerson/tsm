@@ -77,5 +77,6 @@ class TruckDetailView(ReadCheckMixin, DetailView):
 class TrailerDetailView(ReadCheckMixin, DetailView):
     model = Trailer
 
+
 class DriverDetailView(ReadCheckMixin, DetailView):
     model = Driver
