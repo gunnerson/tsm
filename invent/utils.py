@@ -72,7 +72,6 @@ def get_summary_context(qs, profile):
                 obj.append(('', ''))
         obj_list.append(obj)
         get_truck_names = False
-    print(obj_list[2])
     context = {
         'object_list': obj_list,
         'field_names': field_names,
