@@ -89,6 +89,7 @@ class ListColShow(models.Model):
     list_name = models.CharField(max_length=24)
     field_name = models.CharField(max_length=24)
     show = models.BooleanField(default=True)
+    order = models.PositiveSmallIntegerField(null=True)
 
     def __str__(self):
         return gen_list_ver_name(self.list_name) + ' | ' + \
@@ -102,7 +103,7 @@ class ListColShow(models.Model):
                 name='unique_listcolshow',
             ),
         ]
-        ordering = ['profile', '-list_name', 'id']
+        ordering = ['profile', '-list_name', 'order']
 
 
 class PreferenceList(models.Model):

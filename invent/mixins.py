@@ -15,7 +15,7 @@ class ReadCheckMixin(UserPassesTestMixin):
 
 class FormSetView():
     model = None
-    form = None
+    form_class = None
     formset = BaseModelFormSet
     btn_back = True
     btn_save = True
@@ -41,8 +41,10 @@ class FormSetView():
         method = getattr(self, self.request.method.lower())
         return method(request, *args, **kwargs)
 
-    def __init__(self, request):
+    def __init__(self, request, **kwargs):
         self.request = request
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def get_fields(self):
         qs = ListColShow.objects.filter(profile=self.request.user.profile)
@@ -65,15 +67,19 @@ class FormSetView():
         qs = self.model.objects.filter(account=account)
         return qs
 
+    def get_form_kwargs(self):
+        return {}
+
     def get_modelformset(self, data=None):
         modelformset = modelformset_factory(
             self.model,
-            form=self.form,
+            form=self.form_class,
             fields=self.get_fields()['field_names'],
             formset=self.formset,
             extra=self.extra,
         )
-        return modelformset(data, queryset=self.get_queryset())
+        return modelformset(data, queryset=self.get_queryset(),
+                            form_kwargs=self.get_form_kwargs())
 
     def get_context_data(self, *args, **kwargs):
         context = {

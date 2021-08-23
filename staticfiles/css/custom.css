@@ -413,3 +413,11 @@ td .errorlist {
   font-size: 0.8rem;
   text-align: left;
 }
+
+.summary_link {
+  border-right: none!important;
+}
+
+.summary_link img {
+  height: 20px;
+}

@@ -67,7 +67,7 @@ class Truck(models.Model):
         null=True,
         blank=True,
         related_name='owned_trucks',
-        db_column='owner_id',
+        db_column='owner',
         limit_choices_to=Q(group='OU') | Q(group='LO'),
     )
     mileage = models.PositiveIntegerField(null=True, blank=True)
@@ -80,8 +80,8 @@ class Truck(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='insured_trailers',
-        db_column='insurer_id',
+        related_name='insured_trucks',
+        db_column='insurer',
         limit_choices_to={'group': 'IN'},
     )
     value = models.DecimalField(
@@ -237,11 +237,13 @@ class Trailer(models.Model):
         choices=us_states_choices(),
         blank=True,
     )
-    company = models.ForeignKey(
+    owner = models.ForeignKey(
         'Company',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        related_name='owned_trailers',
+        db_column='owner',
     )
     value = models.DecimalField(
         max_digits=9,
@@ -258,8 +260,8 @@ class Trailer(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='insured_trucks',
-        db_column='insurer_id',
+        related_name='insured_trailers',
+        db_column='insurer',
         limit_choices_to={'group': 'IN'},
     )
     registration = models.DateField(
@@ -309,12 +311,12 @@ class Company(models.Model):
         on_delete=models.CASCADE,
         null=True,
     )
+    name = models.CharField(max_length=20)
     group = models.CharField(
         max_length=2,
         choices=company_group_choices(),
         default='GN',
     )
-    name = models.CharField(max_length=20)
     comments = models.TextField(blank=True)
 
     class Meta:
@@ -340,8 +342,7 @@ class Driver(models.Model):
         on_delete=models.CASCADE,
         null=True,
     )
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20)
+    name = models.CharField(max_length=40)
     truck = models.OneToOneField(
         Truck,
         on_delete=models.SET_NULL,
@@ -428,21 +429,15 @@ class Driver(models.Model):
         blank=True
     )
 
-    class Meta:
-        ordering = ['first_name', 'last_name']
-
     def __str__(self):
-        return str(self.first_name + ' ' + self.last_name)
+        return self.name
+
+    def get_account(self):
+        return self.request.user.profile.account
+
 
     def get_absolute_url(self):
         return reverse('invent:driver', args=[str(self.id)])
-
-    def save(self, *args, **kwargs):
-        if self.first_name:
-            self.first_name = self.first_name.capitalize()
-        if self.last_name:
-            self.last_name = self.last_name.capitalize()
-        super(Driver, self).save(*args, **kwargs)
 
 
 class PasswordGroup(models.Model):
