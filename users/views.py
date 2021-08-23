@@ -111,8 +111,9 @@ class ListColShowListView(LoginRequiredMixin, ListView):
                 q.save(update_fields=['show'])
         elif self.request.POST.get('uncheck_all', None):
             for q in qs:
-                q.show = False
-                q.save(update_fields=['show'])
+                if q.field_name not in ('truck', 'trailer'):
+                    q.show = False
+                    q.save(update_fields=['show'])
         else:
             for q in qs:
                 checked = self.request.POST.get(str(q.id), None)
@@ -121,6 +122,24 @@ class ListColShowListView(LoginRequiredMixin, ListView):
                 else:
                     q.show = False
                 q.save(update_fields=['show'])
+        if self.request.POST.get('move_up', None):
+            q_id = self.request.POST.get('move_up')
+            q = qs.get(id=q_id)
+            if q.order > 1:
+                q.order -= 1
+                prev_q = qs.get(list_name=q.list_name, order=q.order)
+                q.save(update_fields=['order'])
+                prev_q.order += 1
+                prev_q.save(update_fields=['order'])
+        elif self.request.POST.get('move_down', None):
+            q_id = self.request.POST.get('move_down')
+            q = qs.get(id=q_id)
+            if q.order < qs.filter(list_name=q.list_name).count():
+                q.order += 1
+                next_q = qs.get(list_name=q.list_name, order=q.order)
+                q.save(update_fields=['order'])
+                next_q.order -= 1
+                next_q.save(update_fields=['order'])
         return redirect('users:listcolshow')
 
     def get_context_data(self, *args, **kwargs):
@@ -136,7 +155,7 @@ class ListColShowListView(LoginRequiredMixin, ListView):
 
 class UsersLevelFormSetView(UserPassesTestMixin, FormSetView):
     model = Profile
-    form = UserLevelForm
+    form_class = UserLevelForm
     extra = 0
     btn_custom = True
     page_title = "Update users' privileges"

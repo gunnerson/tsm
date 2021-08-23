@@ -14,11 +14,9 @@
     {% for object in object_list %}
       <p>
         {{ object }}
-        <input type="checkbox" name="{{ object.id }}" class="colBox form_field" id="{{ object.id }}" {% if object.show %}checked{% endif %}>
-        {% comment %}
+        <input type="checkbox" {% if object.field_name == 'truck' or object.field_name == 'trailer' %}disabled{% endif %} name="{{ object.id }}" class="colBox form_field" id="{{ object.id }}" {% if object.show %}checked{% endif %}>
         <button type="submit" form="data_form" class="move_button" name="move_up" value="{{ object.id }}">up</button>
         <button type="submit" form="data_form" class="move_button" name="move_down" value="{{ object.id }}">down</button>
-        {% endcomment %}
       </p>
     {% endfor %}
   </form>

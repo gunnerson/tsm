@@ -1,0 +1,308 @@
+{% extends "invent/base.html" %}
+{% load static %}
+{% load invent_extras %}
+
+<script>
+  {% block js %}
+
+  document.getElementById("search-button").addEventListener('click', function() {
+    var query = document.getElementById('search-input').value;
+    const pattern = /^[^!&|:]+$/
+    if(pattern.test(query)) {
+      document.getElementById('search-form').submit();
+    };
+  }, false);
+
+  {% endblock js %}
+</script>
+
+{% block title_bar %}
+    <form method="GET" id="search-form">
+      <button type="submit" class="search-button" id="search-button">
+        <img src="{% static 'img/search.png' %}">
+      </button>
+      <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
+    </form>
+{% endblock title_bar %}
+
+{% block nav_bar %}
+  <li>Summary</li>
+{% endblock nav_bar %}
+
+{% block content %}
+  <table class="listview-table {{ font_class }}">
+    <thead>
+      <tr>
+        {% if 'Fleet number' in truck_field_names %}
+          <th>Fleet number</th>
+        {% endif %}
+        {% if 'VIN' in truck_field_names %}
+          <th>Vin</th>
+        {% endif %}
+        {% if 'Year' in truck_field_names %}
+          <th>Year</th>
+        {% endif %}
+        {% if 'Make' in truck_field_names %}
+          <th>Make</th>
+        {% endif %}
+        {% if 'License plate' in truck_field_names %}
+          <th>License plate</th>
+        {% endif %}
+        {% if 'State' in truck_field_names %}
+          <th>State</th>
+        {% endif %}
+        {% if 'Status' in truck_field_names %}
+          <th>Status</th>
+        {% endif %}
+        {% if 'Owner' in truck_field_names %}
+          <th>Owner</th>
+        {% endif %}
+        {% if 'Mileage' in truck_field_names %}
+          <th>Mileage</th>
+        {% endif %}
+        {% if 'Insurance' in truck_field_names %}
+          <th>Insurance</th>
+        {% endif %}
+        {% if 'Insurer' in truck_field_names %}
+          <th>Insurer</th>
+        {% endif %}
+        {% if 'Value' in truck_field_names %}
+          <th>Value</th>
+        {% endif %}
+        {% if 'Engine' in truck_field_names %}
+          <th>Engine</th>
+        {% endif %}
+        {% if 'Engine number' in truck_field_names %}
+          <th>Engine number</th>
+        {% endif %}
+        {% if 'Registration' in truck_field_names %}
+          <th>Registration</th>
+        {% endif %}
+        {% if 'Inspection' in truck_field_names %}
+          <th>Inspection</th>
+        {% endif %}
+        {% if 'GPS' in truck_field_names %}
+          <th>GPS</th>
+        {% endif %}
+        {% if 'PrePass' in truck_field_names %}
+          <th>PrePass</th>
+        {% endif %}
+        {% if 'I-Pass' in truck_field_names %}
+          <th>I-Pass</th>
+        {% endif %}
+        {% if 'IFTA' in truck_field_names %}
+          <th>IFTA</th>
+        {% endif %}
+        {% if 'NY' in truck_field_names %}
+          <th>NY</th>
+        {% endif %}
+        {% if 'KY' in truck_field_names %}
+          <th>KY</th>
+        {% endif %}
+        {% if 'NM' in truck_field_names %}
+          <th>NM</th>
+        {% endif %}
+        {% if 'OR' in truck_field_names %}
+          <th>OR</th>
+        {% endif %}
+        {% if 'ELD' in truck_field_names %}
+          <th>ELD</th>
+        {% endif %}
+        {% if 'Started' in truck_field_names %}
+          <th>Started</th>
+        {% endif %}
+        {% if 'Terminated' in truck_field_names %}
+          <th style="border-right: 1px solid var(--border-color)">Terminated</th>
+        {% endif %}
+        <th>Trailer</th>
+        {% if 'Vin' in trailer_field_names %}
+          <th>VIN</th>
+        {% endif %}
+        {% if 'Year' in trailer_field_names %}
+          <th>Year</th>
+        {% endif %}
+        {% if 'Make' in trailer_field_names %}
+          <th>Make</th>
+        {% endif %}
+        {% if 'Status' in trailer_field_names %}
+          <th>Status</th>
+        {% endif %}
+        {% if 'License plate' in trailer_field_names %}
+          <th>License plate</th>
+        {% endif %}
+        {% if 'Company' in trailer_field_names %}
+          <th>Company</th>
+        {% endif %}
+        {% if 'Value' in trailer_field_names %}
+          <th>Value</th>
+        {% endif %}
+        {% if 'Insurance' in trailer_field_names %}
+          <th>Insurance</th>
+        {% endif %}
+        {% if 'Insurer' in trailer_field_names %}
+          <th>Insurer</th>
+        {% endif %}
+        {% if 'Registration' in trailer_field_names %}
+          <th>Registration</th>
+        {% endif %}
+        {% if 'Inspection' in trailer_field_names %}
+          <th>Inspection</th>
+        {% endif %}
+        {% if 'GPS' in trailer_field_names %}
+          <th>GPS</th>
+        {% endif %}
+        {% if 'Started' in trailer_field_names %}
+          <th>Started</th>
+        {% endif %}
+        {% if 'Terminated' in trailer_field_names %}
+          <th style="border-right: 1px solid var(--border-color)">Terminated</th>
+        {% endif %}
+        <th>Driver</th>
+        {% if 'Company' in driver_field_names %}
+          <th>Company</th>
+        {% endif %}
+        {% if 'Phone number' in driver_field_names %}
+          <th>Phone</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in object_list %}
+        <tr>
+          {% if 'Fleet number' in truck_field_names %}
+            <td><a href="{% url 'invent:truck' object.id %}">{{ object.fleet_number }}</a></td>
+          {% endif %}
+          {% if 'VIN' in truck_field_names %}
+            <td><p>{{ object.vin|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Year' in truck_field_names %}
+            <td><p>{{ object.year.field_name }}</p></td>
+          {% endif %}
+          {% if 'Make' in truck_field_names %}
+            <td><p>{{ object.make }}</p></td>
+          {% endif %}
+          {% if 'License plate' in truck_field_names %}
+            <td><p>{{ object.license_plate }}</p></td>
+          {% endif %}
+          {% if 'State' in truck_field_names %}
+            <td><p>{{ object.state }}</p></td>
+          {% endif %}
+          {% if 'Status' in truck_field_names %}
+            <td><p>{{ object.get_status_display }}</p></td>
+          {% endif %}
+          {% if 'Owner' in truck_field_names %}
+            <td><a href="{% if object.owner.id != '' and object.owner is not None %}{% url 'invent:company' object.owner.id %}{% endif %}">{{ object.owner|default_if_none:"" }}</a></td>
+          {% endif %}
+          {% if 'Mileage' in truck_field_names %}
+            <td><p>{{ object.mileage|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Insurance' in truck_field_names %}
+            <td><p>{{ object.insurance|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Insurer' in truck_field_names %}
+            <td><p>{{ object.insurer|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Value' in truck_field_names %}
+            <td><p>{{ object.value|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Engine' in truck_field_names %}
+            <td><p>{{ object.get_engine_display }}</p></td>
+          {% endif %}
+          {% if 'Engine number' in truck_field_names %}
+            <td><p>{{ object.engine_number }}</p></td>
+          {% endif %}
+          {% if 'Registration' in truck_field_names %}
+            <td><p>{{ object.registration|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Inspection' in truck_field_names %}
+            <td><p>{{ object.inspection|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'GPS' in truck_field_names %}
+            <td>{% if object.gps is not None %}<input type="checkbox" {% if object.gps %}checked{% endif %} onclick="return false;">{% endif %}</td>
+          {% endif %}
+          {% if 'PrePass' in truck_field_names %}
+            <td><p>{{ object.prepass|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'I-Pass' in truck_field_names %}
+            <td><p>{{ object.ipass|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'IFTA' in truck_field_names %}
+            <td><p>{{ object.ifta|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'NY' in truck_field_names %}
+            <td><p>{{ object.ny_permit|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'KY' in truck_field_names %}
+            <td>{% if object.ky_permit is not None %}<input type="checkbox" {% if object.ky_permit %}checked{% endif %} onclick="return false;">{% endif %}</td>
+          {% endif %}
+          {% if 'NM' in truck_field_names %}
+            <td>{% if object.nm_permit is not None %}<input type="checkbox" {% if object.nm_permit %}checked{% endif %} onclick="return false;">{% endif %}</td>
+          {% endif %}
+          {% if 'OR' in truck_field_names %}
+            <td>{% if object.or_permit is not None %}<input type="checkbox" {% if object.or_permit %}checked{% endif %} onclick="return false;">{% endif %}</td>
+          {% endif %}
+          {% if 'ELD' in truck_field_names %}
+            <td><p>{{ object.eld|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Started' in truck_field_names %}
+            <td><p>{{ object.start_date|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Terminated' in truck_field_names %}
+            <td><p>{{ object.end_date|default_if_none:"" }}</p></td>
+          {% endif %}
+          <td><a href="{% if object.driver.trailer.id != '' and object.driver.trailer is not None %}{% url 'invent:trailer' object.driver.trailer.id %}{% endif %}">{{ object.driver.trailer|default_if_none:"" }}</a></td>
+          {% if 'Vin' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.vin|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Year' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.year|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Make' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.make }}</p></td>
+          {% endif %}
+          {% if 'Status' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.get_status_display }}</p></td>
+          {% endif %}
+          {% if 'License plate' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.license_plate }}</p></td>
+          {% endif %}
+          {% if 'Company' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.company}}</p></td>
+          {% endif %}
+          {% if 'Value' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.value|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Insurance' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.insurance|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Insurer' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.insurer|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Registration' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.registration|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Inspection' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.inspection|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'GPS' in trailer_field_names %}
+            <td>{% if object.driver.trailer.gps is not None %}<input type="checkbox" {% if object.gps %}checked{% endif %} onclick="return false;">{% endif %}</td>
+          {% endif %}
+          {% if 'Started' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.start_date|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Terminated' in trailer_field_names %}
+            <td><p>{{ object.driver.trailer.end_date|default_if_none:"" }}</p></td>
+          {% endif %}
+          <td><a href="{% if object.driver.id != '' and object.driver is not None %}{% url 'invent:driver' object.driver.id %}{% endif %}">{{ object.driver }}</a></td>
+          {% if 'Company' in driver_field_names %}
+            <td><p>{{ object.driver.company|default_if_none:"" }}</p></td>
+          {% endif %}
+          {% if 'Phone number' in driver_field_names %}
+            <td><p>{{ object.driver.phone_number|default_if_none:"" }}</p></td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}
+
