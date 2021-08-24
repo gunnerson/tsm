@@ -77,7 +77,9 @@ def generate_profile(profile):
 
 def generate_su_profile(request):
     from invent.models import Trailer, Truck, Driver, Company
+    from .models import ListColShow
     profile = request.user.profile
+    ListColShow.objects.filter(profile=profile).delete()
     generate_listcolshow(profile, Truck)
     generate_listcolshow(profile, Trailer)
     generate_listcolshow(profile, Driver)

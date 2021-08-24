@@ -4,11 +4,12 @@ from django.urls import reverse
 from django.core.validators import RegexValidator
 
 from users.models import Account
-from .search import TruckSearch
+from .search import DBSearch
 from .choices import (
     truck_make_choices,
     engine_choices,
     status_choices,
+    driver_status_choices,
     trailer_make_choices,
     year_choices,
     us_states_choices,
@@ -59,7 +60,7 @@ class Truck(models.Model):
     status = models.CharField(
         max_length=2,
         choices=status_choices(),
-        default='ID',
+        default='I',
     )
     owner = models.ForeignKey(
         'Company',
@@ -163,7 +164,7 @@ class Truck(models.Model):
         blank=True,
         verbose_name='Term',
     )
-    objects = TruckSearch()
+    objects = DBSearch()
     # Create index:
     # ALTER TABLE invent_truck
     #     ADD COLUMN textsearchable_index_col tsvector
@@ -224,7 +225,7 @@ class Trailer(models.Model):
     status = models.CharField(
         max_length=2,
         choices=status_choices(),
-        default='ID',
+        default='I',
         blank=True,
     )
     license_plate = models.CharField(
@@ -286,6 +287,8 @@ class Trailer(models.Model):
         verbose_name='Term',
     )
 
+    objects = DBSearch()
+
     class Meta:
         ordering = ['fleet_number']
         constraints = [models.UniqueConstraint(
@@ -318,6 +321,8 @@ class Company(models.Model):
         default='GN',
     )
     comments = models.TextField(blank=True)
+
+    objects = DBSearch()
 
     class Meta:
         verbose_name_plural = 'Companies'
@@ -407,7 +412,7 @@ class Driver(models.Model):
     )
     home_address = models.TextField(
         null=True,
-        blank=True
+        blank=True,
     )
     ssn = models.CharField(
         validators=[ssn_regex],
@@ -428,13 +433,19 @@ class Driver(models.Model):
         null=True,
         blank=True
     )
+    status = models.CharField(
+        max_length=2,
+        choices=driver_status_choices(),
+        default='A',
+    )
+
+    objects = DBSearch()
 
     def __str__(self):
         return self.name
 
     def get_account(self):
         return self.request.user.profile.account
-
 
     def get_absolute_url(self):
         return reverse('invent:driver', args=[str(self.id)])

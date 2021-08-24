@@ -2,29 +2,6 @@
 {% load static %}
 {% load invent_extras %}
 
-<script>
-  {% block js %}
-
-  document.getElementById("search-button").addEventListener('click', function() {
-    var query = document.getElementById('search-input').value;
-    const pattern = /^[^!&|:]+$/
-    if(pattern.test(query)) {
-      document.getElementById('search-form').submit();
-    };
-  }, false);
-
-  {% endblock js %}
-</script>
-
-{% block title_bar %}
-    <form method="GET" id="search-form">
-      <button type="submit" class="search-button" id="search-button">
-        <img src="{% static 'img/search.png' %}">
-      </button>
-      <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
-    </form>
-{% endblock title_bar %}
-
 {% block nav_bar %}
   <li>Summary</li>
 {% endblock nav_bar %}

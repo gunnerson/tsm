@@ -3,7 +3,7 @@ from users.models import ListColShow
 from users.utils import gen_field_ver_name
 
 
-def get_summary_context(qs, profile):
+def get_summary_context(qs, profile, context):
     lcs = ListColShow.objects.filter(profile=profile, show=True)
     checked_field_names = {
         'invent.truck': [],
@@ -72,8 +72,6 @@ def get_summary_context(qs, profile):
                 obj.append(('', ''))
         obj_list.append(obj)
         get_truck_names = False
-    context = {
-        'object_list': obj_list,
-        'field_names': field_names,
-    }
+    context['object_list'] = obj_list
+    context['field_names'] = field_names
     return context

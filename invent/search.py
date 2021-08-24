@@ -40,10 +40,15 @@ def db_search(queryset, query, config, *args):
     return qs
 
 
-class TruckSearch(models.Manager):
-    def search(self, query, account):
+class DBSearch(models.Manager):
+    def search(self, query, account, model):
         qs = self.get_queryset().filter(account=account)
         if query:
-            qs = db_search(qs, query, 'B',
-                           'fleet_number', 'vin', 'license_plate')
+            if model in ('Truck', 'Trailer'):
+                fields = ('fleet_number', 'vin', 'license_plate')
+            elif model == 'Driver':
+                fields = ('name', 'cdl', 'phone_number', 'home_address', 'ssn')
+            elif model == 'Company':
+                fields = ('name', 'comments')
+            qs = db_search(qs, query, 'B', *fields)
         return qs
