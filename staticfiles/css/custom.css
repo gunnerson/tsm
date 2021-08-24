@@ -317,7 +317,7 @@ a {
   z-index: 1;
 }
 
-#search-form{
+#filter-form{
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -416,6 +416,7 @@ td .errorlist {
 
 .summary_link {
   border-right: none!important;
+  padding: 0px 5px !important;
 }
 
 .summary_link img {

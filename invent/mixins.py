@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseNotAllowed
 from django.forms import modelformset_factory, BaseModelFormSet
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.core.exceptions import FieldError
 
 from users.utils import gen_field_ver_name, read_check, write_check
 from users.models import ListColShow
@@ -20,6 +21,7 @@ class FormSetView():
     btn_back = True
     btn_save = True
     btn_custom = False
+    filter_bar = True
     page_title = 'List of records'
     nav_link = 'List'
     detail_url = ''
@@ -65,6 +67,19 @@ class FormSetView():
     def get_queryset(self):
         account = self.request.user.profile.account
         qs = self.model.objects.filter(account=account)
+        if self.filter_bar:
+            query = self.request.GET.get('query', None)
+            if query:
+                qs = self.model.objects.search(
+                    query,
+                    self.request.user.profile.account,
+                    self.model.__name__
+                )
+            if not self.request.GET.get('term', None):
+                try:
+                    qs = qs.exclude(status='T')
+                except FieldError:
+                    pass
         return qs
 
     def get_form_kwargs(self):
@@ -89,7 +104,7 @@ class FormSetView():
             'page_title': self.page_title,
             'nav_link': self.nav_link,
             'detail_url': self.detail_url,
-            'write_check': write_check(self.request.user)
+            'write_check': write_check(self.request.user),
         }
         try:
             context['fields'] = self.get_fields()['verbose_field_names']
@@ -99,6 +114,10 @@ class FormSetView():
             context['formset'] = kwargs['formset']
         else:
             context['formset'] = self.get_modelformset()
+        if self.filter_bar:
+            context['filter_bar'] = True
+            context['query'] = self.request.GET.get('query', None)
+            context['term'] = self.request.GET.get('term', None)
         return context
 
     def render_to_response(self, context):

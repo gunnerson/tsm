@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import DetailView
+from django.forms.models import model_to_dict
 
 from .models import Truck, Trailer, Driver, Company
 from .forms import TruckForm, TrailerForm, DriverForm, CompanyForm
@@ -18,12 +19,18 @@ def permission_denied_view(request, exception):
 
 def summary(request):
     profile = request.user.profile
+    context = {}
     query = request.GET.get('query', None)
     if query:
-        qs = Truck.objects.search(query, profile.account)
+        qs = Truck.objects.search(query, profile.account, 'Truck')
+        context['query'] = query
     else:
         qs = Truck.objects.filter(account=profile.account)
-    context = get_summary_context(qs, profile)
+    if not request.GET.get('term', None):
+        qs = qs.exclude(status='T')
+    else:
+        context['term'] = True
+    get_summary_context(qs, profile, context)
     font_size = profile.preferencelist.font_size
     if font_size == 'S':
         context['font_class'] = 'font-small'
@@ -32,6 +39,7 @@ def summary(request):
     else:
         context['font_class'] = 'font-medium'
     context['btn_back'] = True
+    context['filter_bar'] = True
     context['page_title'] = 'Summary'
     return render(request, 'invent/summary.html', context)
 
@@ -74,13 +82,6 @@ class CompanyFormSetView(ReadCheckMixin, FormSetView):
 class TruckDetailView(ReadCheckMixin, DetailView):
     model = Truck
 
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context['btn_back'] = True
-        context['page_title'] = 'Truck info'
-        context['nav_link'] = 'Truck'
-        return context
-
 
 class TrailerDetailView(ReadCheckMixin, DetailView):
     model = Trailer
@@ -113,3 +114,7 @@ class CompanyDetailView(ReadCheckMixin, DetailView):
         context['page_title'] = 'Company info'
         context['nav_link'] = 'Company'
         return context
+
+
+# def create_mymodel(request):
+#     if request.method != "POST":

@@ -116,12 +116,13 @@ class ListColShowListView(LoginRequiredMixin, ListView):
                     q.save(update_fields=['show'])
         else:
             for q in qs:
-                checked = self.request.POST.get(str(q.id), None)
-                if checked:
-                    q.show = True
-                else:
-                    q.show = False
-                q.save(update_fields=['show'])
+                if q.field_name not in ('truck', 'trailer'):
+                    checked = self.request.POST.get(str(q.id), None)
+                    if checked:
+                        q.show = True
+                    else:
+                        q.show = False
+                    q.save(update_fields=['show'])
         if self.request.POST.get('move_up', None):
             q_id = self.request.POST.get('move_up')
             q = qs.get(id=q_id)
@@ -160,6 +161,7 @@ class UsersLevelFormSetView(UserPassesTestMixin, FormSetView):
     btn_custom = True
     page_title = "Update users' privileges"
     nav_link = 'Privileges'
+    filter_bar = False
 
     def test_func(self):
         return admin_check(self.request.user)

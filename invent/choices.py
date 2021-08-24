@@ -18,6 +18,13 @@ def year_choices():
     return choices
 
 
+def mechanic_choices():
+    choices = [
+        ('VP', 'Vadim'),
+    ]
+    return choices
+
+
 def truck_make_choices():
     choices = [
         ('FL', 'Freighliner'),
@@ -64,10 +71,18 @@ def engine_choices():
 
 def status_choices():
     choices = [
-        ('DL', 'Trip'),
-        ('ID', 'Idle'),
-        ('SH', 'Shop'),
-        ('IA', 'Term'),
+        ('D', 'Delivery'),
+        ('I', 'Idle'),
+        ('S', 'Shop'),
+        ('T', 'Term'),
+    ]
+    return choices
+
+
+def driver_status_choices():
+    choices = [
+        ('A', 'Active'),
+        ('T', 'Term'),
     ]
     return choices
 

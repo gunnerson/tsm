@@ -76,7 +76,18 @@
       <div id="address-panel">
         <div class="page-title">
           <span>{{ page_title }}</span>
-          {% block title_bar %}{% endblock title_bar %}
+          {% if filter_bar %}
+              <form method="GET" id="filter-form">
+                <button type="submit" class="search-button filter-button" id="search-button">
+                  <img src="{% static 'img/search.png' %}">
+                </button>
+                <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
+                <div class="filter-button">
+                  <input type="checkbox" name="term" id="check_term" {% if term %}checked{% endif %}>
+                  <label class="custom-control-label" for="check_term">Show terminated</label>
+                </div>
+              </form>
+          {% endif %}
         </div>
         <div class="address-line">
           <ol>
@@ -132,10 +143,27 @@
           document.getElementById("left-content-hide-button").style.display = "inline-block";
         }, false);
 
-        {% block js %}{% endblock %}
+        {% if filter_bar %}
+          function submitForm() {
+            let query = document.getElementById('search-input').value;
+            if (query) {
+              let pattern = /^[^!&|:]+$/
+              if(pattern.test(query)) {
+                document.getElementById('filter-form').submit();
+              };
+            } else {
+              document.getElementById('filter-form').submit();
+            };
+          };
+
+          const filters = document.getElementsByClassName("filter-button")
+          for (i = 0; i < filters.length; i++) {
+            filters[i].addEventListener("click", submitForm)
+           };
+        {% endif %}
+
+        {% block js %}{% endblock js %}
       });
-
-
 
     </script>
 
