@@ -345,6 +345,10 @@ a {
   outline: none;
 }
 
+.search-button:hover {
+  cursor: pointer;
+}
+
 .search-button img{
   position: relative;
   top: 2px;
@@ -426,5 +430,9 @@ td .errorlist {
 }
 
 .summary-link-next:hover {
+  cursor: pointer;
+}
+
+.filter-button:hover {
   cursor: pointer;
 }
