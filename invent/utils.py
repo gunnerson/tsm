@@ -20,7 +20,6 @@ def get_summary_context(qs, profile, context):
     get_driver_names = True
     for q in qs:
         obj = [('truck_id', q.id), ]
-        field_names.append('')
         for checked_field in checked_field_names['invent.truck']:
             field = q._meta.get_field(checked_field)
             field_verbose_name = gen_field_ver_name(field.verbose_name)
@@ -31,7 +30,6 @@ def get_summary_context(qs, profile, context):
             trailer = q.driver.trailer
             if trailer is not None:
                 obj.append(('trailer_id', trailer.id))
-                field_names.append('')
                 for checked_field in checked_field_names['invent.trailer']:
                     field = trailer._meta.get_field(checked_field)
                     field_verbose_name = gen_field_ver_name(field.verbose_name)
@@ -52,7 +50,6 @@ def get_summary_context(qs, profile, context):
             driver = q.driver
             if driver is not None:
                 obj.append(('driver_id', driver.id))
-                field_names.append('')
                 for checked_field in checked_field_names['invent.driver']:
                     field = driver._meta.get_field(checked_field)
                     field_verbose_name = gen_field_ver_name(field.verbose_name)

@@ -414,11 +414,17 @@ td .errorlist {
   text-align: left;
 }
 
-.summary_link {
-  border-right: none!important;
-  padding: 0px 5px !important;
+.summary-link {
+  display: none;
 }
 
-.summary_link img {
-  height: 20px;
+.summary-link-next {
+  position: sticky;
+  left: 10px;
+  background-color: inherit;
+  z-index: 1;
+}
+
+.summary-link-next:hover {
+  cursor: pointer;
 }
