@@ -1,6 +1,20 @@
 {% extends "invent/base.html" %}
-{% load static %}
-{% load invent_extras %}
+
+<script>
+  {% block js %}
+    const links = document.getElementsByClassName("summary-link")
+    for (i = 0; i < links.length; i++) {
+      try{
+        let url_addr = links[i].childNodes[1].getAttribute("href")
+        next_td = links[i].nextSibling.nextSibling
+        next_td.addEventListener("click", function () {
+          window.location = url_addr
+        });
+        next_td.classList.add('summary-link-next')
+      } catch (ex) {};
+    };
+  {% endblock js %}
+</script>
 
 {% block nav_bar %}
   <li>Summary</li>
@@ -11,7 +25,11 @@
     <thead>
       <tr>
         {% for field_name in field_names %}
-           <th>{{ field_name }}</th>
+          {% if field_name == 'Fleet number' or field_name == 'Name' %}
+            <th class="summary-link-next">{{ field_name }}</th>
+          {% else %}
+            <th>{{ field_name }}</th>
+          {% endif %}
         {% endfor %}
       </tr>
     </thead>
@@ -20,26 +38,23 @@
         <tr>
           {% for key,value in object %}
             {% if 'truck_id' in key %}
-              <td class="summary_link">
+              <td class="summary-link">
                 {% if value %}
                   <a href="{% url 'invent:truck' value %}">
-                    <img src="{% static 'img/edit.png' %}">
                   </a>
                 {% endif %}
               </td>
             {% elif 'trailer_id' in key %}
-              <td class="summary_link">
+              <td class="summary-link">
                 {% if value %}
                   <a href="{% url 'invent:trailer' value %}">
-                    <img src="{% static 'img/edit.png' %}">
                   </a>
                 {% endif %}
               </td>
             {% elif 'driver_id' in key %}
-              <td class="summary_link">
+              <td class="summary-link">
                 {% if value %}
                   <a href="{% url 'invent:driver' value %}">
-                    <img src="{% static 'img/edit.png' %}">
                   </a>
                 {% endif %}
               </td>
