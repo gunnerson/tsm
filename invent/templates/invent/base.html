@@ -82,9 +82,9 @@
                   <img src="{% static 'img/search.png' %}">
                 </button>
                 <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
-                <div class="filter-button">
-                  <input type="checkbox" name="term" id="check_term" {% if term %}checked{% endif %}>
-                  <label class="custom-control-label" for="check_term">Show terminated</label>
+                <div>
+                  <input type="checkbox" name="term" id="check_term" class="filter-button" {% if term %}checked{% endif %}>
+                  <label for="check_term" class="filter-button">Show terminated</label>
                 </div>
               </form>
           {% endif %}
