@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
 from django.forms.models import model_to_dict
+from django.contrib.auth.decorators import login_required
 
 from .models import Truck, Trailer, Driver, Company
 from .forms import TruckForm, TrailerForm, DriverForm, CompanyForm
@@ -8,6 +9,7 @@ from .mixins import FormSetView, ReadCheckMixin
 from .utils import get_summary_context
 
 
+@login_required
 def summary(request):
     user = request.user
     context = {}
@@ -16,7 +18,7 @@ def summary(request):
         qs = Truck.objects.search(query, 'Truck', user.db_name)
         context['query'] = query
     else:
-        qs = Truck.objects.using(user.db_name)
+        qs = Truck.objects.using(user.db_name).all()
     if not request.GET.get('term', None):
         qs = qs.exclude(status='T')
     else:
