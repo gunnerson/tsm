@@ -18,6 +18,7 @@ class WriteCheckMixin(UserPassesTestMixin):
     def test_func(self):
         return write_check(self.request.user)
 
+
 class FormSetView():
     model = None
     form_class = None
@@ -69,15 +70,13 @@ class FormSetView():
         return context
 
     def get_queryset(self):
-        db_name = self.request.user.db_name
-        qs = self.model.objects.using(db_name).all()
+        qs = self.model.objects.all()
         if self.filter_bar:
             query = self.request.GET.get('query', None)
             if query:
                 qs = self.model.objects.search(
                     query,
                     self.model.__name__,
-                    db_name,
                 )
             if not self.request.GET.get('term', None):
                 try:
@@ -137,9 +136,7 @@ class FormSetView():
     def post(self, request, *args, **kwargs):
         formset = self.get_modelformset(request.POST)
         if formset.is_valid():
-            forms = formset.save(commit=False)
-            for f in forms:
-                f.save(using=request.user.db_name)
+            formset.save()
             return redirect(self.redirect_url)
         else:
             return self.render_to_response(
@@ -150,7 +147,6 @@ class VehicleSelect(forms.Select):
 
     def __init__(self, *args, **kwargs):
         self.model = kwargs.pop('model')
-        self.db_name = kwargs.pop('db_name')
         return super().__init__(*args, **kwargs)
 
     def create_option(self, name, value, label, selected, index, subindex=None,
@@ -159,7 +155,7 @@ class VehicleSelect(forms.Select):
                                        subindex, attrs)
         object_id = option['value'].__str__()
         if object_id:
-            obj = self.model.objects.using(self.db_name).get(id=object_id)
+            obj = self.model.objects.get(id=object_id)
             try:
                 obj.driver
                 option['attrs']['class'] = 'choice_taken'

@@ -27,7 +27,7 @@
         <div id="header-right">
           <ul>
             {% if user.is_authenticated %}
-              <li>Hello, <a href="{% url 'users:preferences' user.profile.preferencelist.id %}">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user }}{% endif %}. &nbsp</a></li>
+              <li>Hello, <a href="{% url 'users:profile' user.profile.id %}">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user }}{% endif %}. &nbsp</a></li>
               <li><a href="{% url 'users:logout' %}">Log out</a></li>
             {% else %}
               <li><a href="{% url 'users:login' %}">Log in</a></li>

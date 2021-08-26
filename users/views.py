@@ -6,9 +6,9 @@ from django.views.generic.edit import UpdateView
 from django.contrib.auth.views import LoginView
 from django.db.models import Q
 
-from .models import ListColShow, Profile, PreferenceList, Account
-from .forms import UserCreationForm, PreferenceListForm, UserLevelForm
-from .utils import generate_profile, not_empty, admin_check
+from .models import ListColShow, Profile
+from .forms import UserCreationForm, ProfileForm, UserLevelForm
+from .utils import generate_profile, admin_check
 from invent.mixins import FormSetView
 
 
@@ -18,33 +18,16 @@ def register(request):
     else:
         form = UserCreationForm(data=request.POST)
         if form.is_valid():
-            new_user = form.save(commit=False)
-            new_account_name = request.POST['new_account']
-            if not_empty(new_account_name):
-                new_account = Account(name=new_account_name)
-                new_account.save()
-                new_user.account = new_account
-                new_user.save()
-                new_profile = Profile(
-                    user=new_user,
-                    account=new_account,
-                    level='A',
-                )
-                new_profile.save()
-            else:
-                new_user.save()
-                account = Account.objects.get(id=request.POST['account'])
-                new_profile = Profile(user=new_user, account=account)
-                new_profile.save()
+            new_user = form.save()
+            new_profile = Profile(user=new_user)
+            new_profile.save()
             generate_profile(new_profile)
-            new_preflist = PreferenceList(profile=new_profile)
-            new_preflist.save()
             authenticated_user = authenticate(
                 email=new_user.email,
                 password=request.POST['password1'],
             )
             login(request, authenticated_user)
-            return redirect('users:preferences', new_preflist.id)
+            return redirect('users:profile', new_profile.id)
     context = {
         'form': form,
         'btn_back': True,
@@ -63,9 +46,9 @@ class UserLoginView(LoginView):
         return context
 
 
-class PreferenceListUpdateView(LoginRequiredMixin, UpdateView):
-    model = PreferenceList
-    form_class = PreferenceListForm
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = Profile
+    form_class = ProfileForm
 
     def get_initial(self):
         initial = super().get_initial()
@@ -75,14 +58,13 @@ class PreferenceListUpdateView(LoginRequiredMixin, UpdateView):
         return initial
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
+        self.object = form.save()
         first_name = self.request.POST['first_name']
         last_name = self.request.POST['last_name']
-        user = self.object.profile.user
+        user = self.object.user
         user.first_name = first_name
         user.last_name = last_name
         user.save(update_fields=['first_name', 'last_name'])
-        self.object.save()
         return redirect(self.object.get_absolute_url())
 
     def get_context_data(self, *args, **kwargs):
@@ -175,7 +157,7 @@ class UsersLevelFormSetView(UserPassesTestMixin, FormSetView):
         return context
 
     def get_redirect_url(self):
-        return self.request.user.profile.preferencelist.get_absolute_url()
+        return self.request.user.profile.get_absolute_url()
 
     def get_queryset(self):
         qs = super().get_queryset()

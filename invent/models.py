@@ -3,7 +3,6 @@ from django.db.models import Q
 from django.urls import reverse
 from django.core.validators import RegexValidator
 
-from users.models import Account
 from .managers import DBSearch
 from .choices import (
     truck_make_choices,

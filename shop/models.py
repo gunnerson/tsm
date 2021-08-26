@@ -8,11 +8,6 @@ from invent.choices import mechanic_choices
 
 
 class Order(models.Model):
-    account = models.ForeignKey(
-        Account,
-        on_delete=models.CASCADE,
-        null=True,
-    )
     truck = models.ForeignKey(
         Truck,
         on_delete=models.CASCADE,

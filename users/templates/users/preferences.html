@@ -32,6 +32,10 @@
     <br>
     <h3> Display settings: </h3>
     <p>{{ form.font_size.label_tag }}{{ form.font_size }}{{ form.font_size.errors }}</p>
+    <br>
+    <h3> Database settings: </h3>
+    <p>{{ form.labor_rate.label_tag }}{{ form.labor_rate }}{{ form.labor_rate.errors }}</p>
+    {{ form.non_field_errors }}
   </form>
   <br>
 {% endblock content %}

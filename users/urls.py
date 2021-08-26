@@ -6,7 +6,7 @@ from .utils import generate_su_profile
 from .views import (
     register,
     UserLoginView,
-    PreferenceListUpdateView,
+    ProfileUpdateView,
     ListColShowListView,
     UsersLevelFormSetView,
 )
@@ -22,9 +22,9 @@ urlpatterns = [
          name="logout"),
     path('register/', register, name="register"),
     path('generate_profile/', generate_su_profile, name="generate_su_profile"),
-    path('user/settings/<int:pk>', PreferenceListUpdateView.as_view(
+    path('user/settings/<int:pk>', ProfileUpdateView.as_view(
         template_name='users/preferences.html'),
-        name="preferences"),
+        name="profile"),
     path('user/settings/table_columns', ListColShowListView.as_view(
         template_name='users/listcolshow.html'),
         name="listcolshow"),
