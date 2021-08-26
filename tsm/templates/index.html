@@ -1,4 +1,13 @@
-{% extends "invent/base.html" %}
+{% extends "base.html" %}
+
+{% block header %}
+  <li id="navItem1">
+    <a href="{% url 'invent:summary' %}">Safety</a>
+  </li>
+  <li id="navItem2">
+    <a href="">Shop</a>
+  </li>
+{% endblock header %}
 
 {% block content %}
 

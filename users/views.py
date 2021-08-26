@@ -162,6 +162,7 @@ class UsersLevelFormSetView(UserPassesTestMixin, FormSetView):
     page_title = "Update users' privileges"
     nav_link = 'Privileges'
     filter_bar = False
+    template_name = 'users/listview.html'
 
     def test_func(self):
         return admin_check(self.request.user)

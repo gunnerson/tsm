@@ -8,15 +8,6 @@ from .mixins import FormSetView, ReadCheckMixin
 from .utils import get_summary_context
 
 
-def index(request):
-    return render(request, 'invent/index.html')
-
-
-def permission_denied_view(request, exception):
-    message = "You don't have access to this page. Contact account administrator."
-    return render(request, 'invent/403.html', {'message': message})
-
-
 def summary(request):
     profile = request.user.profile
     context = {}

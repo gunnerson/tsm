@@ -1,175 +1,66 @@
+{% extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
+{% block header %}
+  <li id="navItem1">
+    <a href="">Orders</a>
+  </li>
+  <li id="navItem2">
+    <a href="">Parts</a>
+  </li>
+  <li id="navItem3">
+    <a href="">Accounting</a>
+  </li>
+{% endblock header %}
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% block page_title %}
+  {% if filter_bar %}
+      <form method="GET" id="filter-form">
+        <button type="submit" class="search-button filter-button" id="search-button">
+          <img src="{% static 'img/search.png' %}">
+        </button>
+        <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
+      </form>
+  {% endif %}
+{% endblock page_title %}
 
-    <title>Logistics Pro Tools</title>
+{% block nav_bar_main %}
+  <li><a href="{% url 'index' %}">Home</a> > </li>
+  {% block nav_bar %}{% endblock nav_bar %}
+{% endblock nav_bar_main %}
 
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+<script>
+  {% block main_js %}
 
-  </head>
+    var section = window.location.toString().replace(/^http?:\/\//, '').split('/')[1];
+    if (section == "orders") {
+      document.getElementById("navItem1").classList.add('active');
+    } else if (section == "parts") {
+      document.getElementById("navItem2").classList.add('active');
+    } else if (section == "accounting") {
+      document.getElementById("navItem3").classList.add('active');
+    };
 
-  <body>
-
-    <div id="wrapper">
-
-      <div id="header">
-        <div id="header-left">
-          <ul>
-            <li id="navItem1">
-              <a href="{% url 'invent:summary' %}">Summary</a>
-            </li>
-            <li id="navItem2">
-              <a href="{% url 'invent:list_trucks' %}">Trucks</a>
-            </li>
-            <li id="navItem3">
-              <a href="{% url 'invent:list_trailers' %}">Trailers</a>
-            </li>
-            <li id="navItem4">
-              <a href="{% url 'invent:list_drivers' %}">Drivers</a>
-            </li>
-            <li id="navItem5">
-              <a href="{% url 'invent:list_companies' %}">Companies</a>
-            </li>
-          </ul>
-        </div>
-        <div id="header-right">
-          <ul>
-            {% if user.is_authenticated %}
-              <li>Hello, <a href="{% url 'users:preferences' user.profile.preferencelist.id %}">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user }}{% endif %}. &nbsp</a></li>
-              <li><a href="{% url 'users:logout' %}">Log out</a></li>
-            {% else %}
-              <li><a href="{% url 'users:login' %}">Log in</a></li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-
-      <div id="left-content">
-          <ul>
-            {% if btn_back %}
-              <li>
-                <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
-              </li>
-            {% endif %}
-            {% if btn_custom %}
-              {% block custom-button %}{% endblock custom-button %}
-            {% endif %}
-            {% if btn_save and write_check %}
-              <li>
-                <button type="submit" form="data_form">+ Save changes</a>
-              </li>
-            {% endif %}
-          </ul>
-      </div>
-
-      <div id="left-content-hide">
-        <button id="left-content-hide-button" class="left-content-hide" type="button"><</button>
-        <button id="left-content-show-button" class="left-content-hide" type="button" style="display: none;">></button>
-      </div>
-
-      <div id="address-panel">
-        <div class="page-title">
-          <span>{{ page_title }}</span>
-          {% if filter_bar %}
-              <form method="GET" id="filter-form">
-                <button type="submit" class="search-button filter-button" id="search-button">
-                  <img src="{% static 'img/search.png' %}">
-                </button>
-                <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
-                <div>
-                  <input type="checkbox" name="term" id="check_term" class="filter-button" {% if term %}checked{% endif %}>
-                  <label for="check_term" class="filter-button">Show terminated</label>
-                </div>
-              </form>
-          {% endif %}
-        </div>
-        <div class="address-line">
-          <ol>
-              <li><a href="{% url 'invent:index' %}">Home</a> > </li>
-              {% block nav_bar %}{% endblock nav_bar %}
-          </ol>
-        </div>
-      </div>
-
-      <div id="main-content">
-        {% block content %}{% endblock content %}
-      </div>
-
-    </div>
-
-    <script>
-
-      function docReady(fn) {
-          if (document.readyState === "complete" || document.readyState === "interactive") {
-              setTimeout(fn, 1);
-          } else {
-              document.addEventListener("DOMContentLoaded", fn);
+    {% if filter_bar %}
+      function submitForm() {
+        let query = document.getElementById('search-input').value;
+        if (query) {
+          let pattern = /^[^!&|:]+$/
+          if(pattern.test(query)) {
+            document.getElementById('filter-form').submit();
           };
-      };
-
-      docReady(function() {
-        var section = window.location.toString().replace(/^http?:\/\//, '').split('/')[1];
-        if (section == "summary") {
-          document.getElementById("navItem1").classList.add('active');
-        } else if (section == "trucks") {
-          document.getElementById("navItem2").classList.add('active');
-        } else if (section == "trailers") {
-          document.getElementById("navItem3").classList.add('active');
-        } else if (section == "drivers") {
-          document.getElementById("navItem4").classList.add('active');
-        } else if (section == "companies") {
-          document.getElementById("navItem5").classList.add('active');
+        } else {
+          document.getElementById('filter-form').submit();
         };
+      };
+      const filters = document.getElementsByClassName("filter-button")
+      for (i = 0; i < filters.length; i++) {
+        filters[i].addEventListener("click", submitForm)
+       };
+    {% endif %}
 
-        document.getElementById("left-content-hide-button").addEventListener('click', function() {
-          document.getElementById("main-content").style.marginLeft = "10px";
-          document.getElementById("left-content").style.display = "none";
-          document.getElementById("address-panel").style.left = "0px";
-          document.getElementById("left-content-hide-button").style.display = "none";
-          document.getElementById("left-content-show-button").style.display = "inline-block";
-        }, false);
+    {% block page_js %}{% endblock page_js %}
 
-        document.getElementById("left-content-show-button").addEventListener('click', function() {
-          document.getElementById("main-content").style.marginLeft = "200px";
-          document.getElementById("left-content").style.display = "inline-block";
-          document.getElementById("address-panel").style.left = "199px";
-          document.getElementById("left-content-show-button").style.display = "none";
-          document.getElementById("left-content-hide-button").style.display = "inline-block";
-        }, false);
-
-        {% if filter_bar %}
-          function submitForm() {
-            let query = document.getElementById('search-input').value;
-            if (query) {
-              let pattern = /^[^!&|:]+$/
-              if(pattern.test(query)) {
-                document.getElementById('filter-form').submit();
-              };
-            } else {
-              document.getElementById('filter-form').submit();
-            };
-          };
-
-          const filters = document.getElementsByClassName("filter-button")
-          for (i = 0; i < filters.length; i++) {
-            filters[i].addEventListener("click", submitForm)
-           };
-        {% endif %}
-
-        {% block js %}{% endblock js %}
-      });
-
-    </script>
-
-    <br>
-
-  </body>
-
-</html>
+  {% endblock main_js %}
+</script>
 
