@@ -32,7 +32,7 @@
 <script>
   {% block main_js %}
 
-    var section = window.location.toString().replace(/^http?:\/\//, '').split('/')[1];
+    var section = window.location.toString().replace(/^https?:\/\//, '').split('/')[1];
     if (section == "orders") {
       document.getElementById("navItem1").classList.add('active');
     } else if (section == "parts") {
