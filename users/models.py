@@ -75,11 +75,12 @@ class Account(models.Model):
 
     def save(self, *args, **kwargs):
         d = date.today()
-        try:
-            self.expiration_date = d.replace(year=d.year + 1)
-        except ValueError:
-            self.expiration_date = d + (date(d.year + 1, 1, 1) -
-                                        date(d.year, 1, 1))
+        if not self.expiration_date:
+            try:
+                self.expiration_date = d.replace(year=d.year + 1)
+            except ValueError:
+                self.expiration_date = d + (date(d.year + 1, 1, 1) -
+                                            date(d.year, 1, 1))
         super(Account, self).save(*args, **kwargs)
 
     def __str__(self):
