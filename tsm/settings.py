@@ -30,12 +30,9 @@ if os.environ.get('DJANGO_DEBUG') == 'true':
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1',
-                 'rumatallc.com', 'www.rumatallc.com', 'lpt.rumatallc.com']
-
+ALLOWED_HOSTS = os.environ.get('DJANGO_HOSTS', '127.0.0.1').split(',')
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

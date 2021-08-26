@@ -72,8 +72,8 @@ class FormSetView():
             if query:
                 qs = self.model.objects.search(
                     query,
+                    self.model.__name__,
                     self.request.user.profile.account,
-                    self.model.__name__
                 )
             if not self.request.GET.get('term', None):
                 try:

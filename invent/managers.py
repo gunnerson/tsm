@@ -41,7 +41,8 @@ def db_search(queryset, query, config, *args):
 
 
 class DBSearch(models.Manager):
-    def search(self, query, account, model):
+
+    def search(self, query, model, account):
         qs = self.get_queryset().filter(account=account)
         if query:
             if model in ('Truck', 'Trailer'):

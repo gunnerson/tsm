@@ -22,7 +22,7 @@ def summary(request):
     context = {}
     query = request.GET.get('query', None)
     if query:
-        qs = Truck.objects.search(query, profile.account, 'Truck')
+        qs = Truck.objects.search(query, 'Truck', profile.account)
         context['query'] = query
     else:
         qs = Truck.objects.filter(account=profile.account)

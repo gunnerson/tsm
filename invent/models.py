@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.core.validators import RegexValidator
 
 from users.models import Account
-from .search import DBSearch
+from .managers import DBSearch
 from .choices import (
     truck_make_choices,
     engine_choices,
@@ -187,10 +187,7 @@ class Truck(models.Model):
             self.license_plate = self.license_plate.upper()
         if self.vin:
             self.vin = self.vin.upper()
-        super(Truck, self).save(*args, **kwargs)
-
-    # def last_pm_date(self):
-    #     return self.pm_set.last()
+        super().save(*args, **kwargs)
 
 
 class Trailer(models.Model):
@@ -310,7 +307,7 @@ class Trailer(models.Model):
             self.license_plate = self.license_plate.upper()
         if self.vin:
             self.vin = self.vin.upper()
-        super(Trailer, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class Company(models.Model):
@@ -348,7 +345,6 @@ class Company(models.Model):
 
 
 class Driver(models.Model):
-    # lena's shitty commit
     phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
     ssn_regex = RegexValidator(
         regex=r"^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$")
@@ -458,9 +454,6 @@ class Driver(models.Model):
 
     def __str__(self):
         return self.name
-
-    def get_account(self):
-        return self.request.user.profile.account
 
     def get_absolute_url(self):
         return reverse('invent:driver', args=[str(self.id)])
