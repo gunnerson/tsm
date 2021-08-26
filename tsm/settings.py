@@ -88,7 +88,24 @@ DATABASES = {
         'USER': os.environ.get('POSTGRES_DB_USER'),
         'PASSWORD': os.environ.get('POSTGRES_DB_PASSWORD'),
         'HOST': 'localhost',
-        'PORT': '', }
+        'PORT': '',
+    },
+    'guest': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'guest',
+        'USER': os.environ.get('POSTGRES_DB_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_DB_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '',
+    },
+    'leadway': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'leadway',
+        'USER': os.environ.get('POSTGRES_DB_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_DB_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '',
+    },
 }
 
 

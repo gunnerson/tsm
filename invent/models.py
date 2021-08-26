@@ -20,11 +20,6 @@ from .choices import (
 class Truck(models.Model):
     alphanumeric = RegexValidator(
         r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
-    account = models.ForeignKey(
-        Account,
-        on_delete=models.CASCADE,
-        null=True,
-    )
     fleet_number = models.CharField(
         max_length=8,
         null=True,
@@ -36,6 +31,7 @@ class Truck(models.Model):
         blank=True,
         verbose_name='VIN',
         validators=[alphanumeric],
+        unique=True,
     )
     year = models.PositiveSmallIntegerField(
         null=True,
@@ -173,8 +169,6 @@ class Truck(models.Model):
 
     class Meta:
         ordering = ['fleet_number']
-        constraints = [models.UniqueConstraint(
-            fields=['account', 'vin'], name='unique_truck')]
 
     def __str__(self):
         return self.fleet_number
@@ -193,11 +187,6 @@ class Truck(models.Model):
 class Trailer(models.Model):
     alphanumeric = RegexValidator(
         r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
-    account = models.ForeignKey(
-        Account,
-        on_delete=models.CASCADE,
-        null=True,
-    )
     fleet_number = models.CharField(
         max_length=8,
         null=True,
@@ -208,6 +197,7 @@ class Trailer(models.Model):
         null=True,
         blank=True,
         validators=[alphanumeric],
+        unique=True,
     )
     year = models.PositiveSmallIntegerField(
         null=True,
@@ -293,8 +283,6 @@ class Trailer(models.Model):
 
     class Meta:
         ordering = ['fleet_number']
-        constraints = [models.UniqueConstraint(
-            fields=['account', 'vin'], name='unique_trailer')]
 
     def __str__(self):
         return str(self.fleet_number)
@@ -311,11 +299,6 @@ class Trailer(models.Model):
 
 
 class Company(models.Model):
-    account = models.ForeignKey(
-        Account,
-        on_delete=models.CASCADE,
-        null=True,
-    )
     name = models.CharField(max_length=20)
     group = models.CharField(
         max_length=2,
@@ -335,7 +318,7 @@ class Company(models.Model):
         verbose_name_plural = 'Companies'
         ordering = ['name']
         constraints = [models.UniqueConstraint(
-            fields=['account', 'group', 'name'], name='unique_company')]
+            fields=['group', 'name'], name='unique_company')]
 
     def __str__(self):
         return str(self.name)
@@ -348,11 +331,6 @@ class Driver(models.Model):
     phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
     ssn_regex = RegexValidator(
         regex=r"^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$")
-    account = models.ForeignKey(
-        Account,
-        on_delete=models.CASCADE,
-        null=True,
-    )
     name = models.CharField(max_length=40)
     truck = models.OneToOneField(
         Truck,
@@ -460,57 +438,30 @@ class Driver(models.Model):
 
 
 class PasswordGroup(models.Model):
-    account = models.ForeignKey(
-        Account,
-        on_delete=models.CASCADE,
-        null=True,
-    )
-    name = models.CharField(max_length=24)
+    name = models.CharField(max_length=24, unique=True)
     comments = models.TextField()
     url = models.URLField(null=True, blank=True)
-
-    class Meta:
-        constraints = [models.UniqueConstraint(
-            fields=['account', 'name'], name='password_group')]
 
     def __str__(self):
         return str(self.name)
 
 
 class PasswordAccount(models.Model):
-    account = models.ForeignKey(
-        Account,
-        on_delete=models.CASCADE,
-        null=True,
-    )
     group = models.ForeignKey(
         PasswordGroup,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
     )
-    name = models.CharField(max_length=24)
-
-    class Meta:
-        constraints = [models.UniqueConstraint(
-            fields=['account', 'name'], name='password_account')]
+    name = models.CharField(max_length=24, unique=True)
 
     def __str__(self):
         return str(self.name)
 
 
 class PasswordRecord(models.Model):
-    account = models.ForeignKey(
-        PasswordAccount,
-        on_delete=models.CASCADE,
-        null=True,
-    )
-    name = models.CharField(max_length=24)
+    name = models.CharField(max_length=24, unique=True)
     value = models.CharField(max_length=48)
-
-    class Meta:
-        constraints = [models.UniqueConstraint(
-            fields=['account', 'name'], name='password_record')]
 
     def __str__(self):
         return str(self.name)
