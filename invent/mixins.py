@@ -70,7 +70,7 @@ class FormSetView():
 
     def get_queryset(self):
         db_name = self.request.user.db_name
-        qs = self.model.objects.using(db_name)
+        qs = self.model.objects.using(db_name).all()
         if self.filter_bar:
             query = self.request.GET.get('query', None)
             if query:
