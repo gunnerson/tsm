@@ -55,16 +55,15 @@ class DriverForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        db_name = kwargs.pop('db_name')
         super().__init__(*args, **kwargs)
         self.fields["truck"] = forms.ModelChoiceField(
-            queryset=Truck.objects.using(db_name).all(),
-            widget=VehicleSelect(model=Truck, db_name=db_name),
+            queryset=Truck.objects.all(),
+            widget=VehicleSelect(model=Truck),
             required=False,
         )
         self.fields["trailer"] = forms.ModelChoiceField(
-            queryset=Trailer.objects.using(db_name).all(),
-            widget=VehicleSelect(model=Trailer, db_name=db_name),
+            queryset=Trailer.objects.all(),
+            widget=VehicleSelect(model=Trailer),
             required=False,
         )
         self.fields["home_address"].widget.attrs.update({'rows': 1})

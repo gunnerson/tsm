@@ -2,27 +2,15 @@ from django.http import HttpResponse
 
 
 def admin_check(user):
-    try:
-        return (user.profile.level == 'A'
-                and user.profile.account.is_active())
-    except AttributeError:
-        return False
+    return user.profile.level == 'A'
 
 
 def write_check(user):
-    try:
-        return (user.profile.level in ('A', 'W')
-                and user.profile.account.is_active())
-    except AttributeError:
-        return False
+    return user.profile.level in ('A', 'W')
 
 
 def read_check(user):
-    try:
-        return (user.profile.level in ('A', 'W', 'R')
-                and user.profile.account.is_active())
-    except AttributeError:
-        return False
+    return user.profile.level in ('A', 'W', 'R')
 
 
 def not_empty(param):

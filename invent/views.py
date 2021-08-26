@@ -11,20 +11,20 @@ from .utils import get_summary_context
 
 @login_required
 def summary(request):
-    user = request.user
+    profile = request.user.profile
     context = {}
     query = request.GET.get('query', None)
     if query:
-        qs = Truck.objects.search(query, 'Truck', user.db_name)
+        qs = Truck.objects.search(query, 'Truck')
         context['query'] = query
     else:
-        qs = Truck.objects.using(user.db_name).all()
+        qs = Truck.objects.all()
     if not request.GET.get('term', None):
         qs = qs.exclude(status='T')
     else:
         context['term'] = True
-    get_summary_context(qs, user.profile, context)
-    font_size = user.profile.preferencelist.font_size
+    get_summary_context(qs, profile, context)
+    font_size = profile.font_size
     if font_size == 'S':
         context['font_class'] = 'font-small'
     elif font_size == 'L':
@@ -59,9 +59,6 @@ class DriverFormSetView(ReadCheckMixin, FormSetView):
     page_title = 'List of driver records'
     nav_link = 'Drivers'
     detail_url = 'invent:driver'
-
-    def get_form_kwargs(self):
-        return {'db_name': self.request.user.db_name}
 
 
 class CompanyFormSetView(ReadCheckMixin, FormSetView):
