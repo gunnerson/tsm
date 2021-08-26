@@ -1,7 +1,6 @@
 from django.urls import path
 
 from .views import (
-    index,
     summary,
     TruckFormSetView,
     TrailerFormSetView,
@@ -16,7 +15,6 @@ from .views import (
 app_name = "invent"
 
 urlpatterns = [
-    path('', index, name='index'),
     path('summary/', summary, name='summary'),
     path('trucks/', TruckFormSetView.as_view(),
          name='list_trucks'),

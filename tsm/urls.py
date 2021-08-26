@@ -5,11 +5,13 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import index
 
 urlpatterns = [
+    path('', index, name='index'),
     path('admin/', admin.site.urls),
     path('', include('users.urls'), name='users'),
     path('', include('invent.urls'), name='invent'),
 ]
 
-handler403 = 'invent.views.permission_denied_view'
+handler403 = 'tsm.views.permission_denied_view'

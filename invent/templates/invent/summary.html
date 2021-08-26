@@ -1,7 +1,7 @@
 {% extends "invent/base.html" %}
 
 <script>
-  {% block js %}
+  {% block page_js %}
     const links = document.getElementsByClassName("summary-link")
     for (i = 0; i < links.length; i++) {
       try{
@@ -13,7 +13,7 @@
         next_td.classList.add('summary-link-next')
       } catch (ex) {};
     };
-  {% endblock js %}
+  {% endblock page_js %}
 </script>
 
 {% block nav_bar %}

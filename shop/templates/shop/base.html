@@ -3,19 +3,13 @@
 
 {% block header %}
   <li id="navItem1">
-    <a href="{% url 'invent:summary' %}">Summary</a>
+    <a href="">Orders</a>
   </li>
   <li id="navItem2">
-    <a href="{% url 'invent:list_trucks' %}">Trucks</a>
+    <a href="">Parts</a>
   </li>
   <li id="navItem3">
-    <a href="{% url 'invent:list_trailers' %}">Trailers</a>
-  </li>
-  <li id="navItem4">
-    <a href="{% url 'invent:list_drivers' %}">Drivers</a>
-  </li>
-  <li id="navItem5">
-    <a href="{% url 'invent:list_companies' %}">Companies</a>
+    <a href="">Accounting</a>
   </li>
 {% endblock header %}
 
@@ -26,10 +20,6 @@
           <img src="{% static 'img/search.png' %}">
         </button>
         <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
-        <div>
-          <input type="checkbox" name="term" id="check_term" class="filter-button" {% if term %}checked{% endif %}>
-          <label for="check_term" class="filter-button">Show terminated</label>
-        </div>
       </form>
   {% endif %}
 {% endblock page_title %}
@@ -39,21 +29,16 @@
   {% block nav_bar %}{% endblock nav_bar %}
 {% endblock nav_bar_main %}
 
-
 <script>
   {% block main_js %}
 
     var section = window.location.toString().replace(/^http?:\/\//, '').split('/')[1];
-    if (section == "summary") {
+    if (section == "orders") {
       document.getElementById("navItem1").classList.add('active');
-    } else if (section == "trucks") {
+    } else if (section == "parts") {
       document.getElementById("navItem2").classList.add('active');
-    } else if (section == "trailers") {
+    } else if (section == "accounting") {
       document.getElementById("navItem3").classList.add('active');
-    } else if (section == "drivers") {
-      document.getElementById("navItem4").classList.add('active');
-    } else if (section == "companies") {
-      document.getElementById("navItem5").classList.add('active');
     };
 
     {% if filter_bar %}

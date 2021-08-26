@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block header %}
+  <li id="navItem1">
+    <a href="{% url 'invent:summary' %}">Safety</a>
+  </li>
+  <li id="navItem2">
+    <a href="">Shop</a>
+  </li>
+{% endblock header %}
+
+{% block nav_bar_main %}
+  <li><a href="{% url 'index' %}">Home</a> > </li>
+  {% block nav_bar %}{% endblock nav_bar %}
+{% endblock nav_bar_main %}

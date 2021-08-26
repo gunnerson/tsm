@@ -8,21 +8,12 @@ from .mixins import FormSetView, ReadCheckMixin
 from .utils import get_summary_context
 
 
-def index(request):
-    return render(request, 'invent/index.html')
-
-
-def permission_denied_view(request, exception):
-    message = "You don't have access to this page. Contact account administrator."
-    return render(request, 'invent/403.html', {'message': message})
-
-
 def summary(request):
     profile = request.user.profile
     context = {}
     query = request.GET.get('query', None)
     if query:
-        qs = Truck.objects.search(query, profile.account, 'Truck')
+        qs = Truck.objects.search(query, 'Truck', profile.account)
         context['query'] = query
     else:
         qs = Truck.objects.filter(account=profile.account)

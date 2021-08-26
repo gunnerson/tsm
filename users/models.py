@@ -113,6 +113,7 @@ class PreferenceList(models.Model):
         choices=size_choices(),
         default='M',
     )
+    labor_rate = models.PositiveSmallIntegerField(default=100)
 
     def __str__(self):
         return str(self.profile)
