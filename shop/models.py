@@ -3,11 +3,16 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 from invent.models import Truck, Trailer, Company
-from users.models import Profile
+from users.models import Profile, Account
 from invent.choices import mechanic_choices
 
 
 class Order(models.Model):
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        null=True,
+    )
     truck = models.ForeignKey(
         Truck,
         on_delete=models.CASCADE,

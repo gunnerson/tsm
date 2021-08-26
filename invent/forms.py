@@ -1,12 +1,13 @@
 from django import forms
 
+from .mixins import VehicleSelect
 from .models import Truck, Trailer, Company, Driver, PasswordGroup
 
 
 class TruckForm(forms.ModelForm):
     class Meta:
         model = Truck
-        exclude = ('account',)
+        fields = '__all__'
         widgets = {
             'registration': forms.DateInput(attrs={'type': 'date'}),
             'insurance': forms.DateInput(attrs={'type': 'date'}),
@@ -24,7 +25,7 @@ class TruckForm(forms.ModelForm):
 class TrailerForm(forms.ModelForm):
     class Meta:
         model = Trailer
-        exclude = ('account', )
+        fields = '__all__'
         widgets = {
             'registration': forms.DateInput(attrs={'type': 'date'}),
             'insurance': forms.DateInput(attrs={'type': 'date'}),
@@ -39,43 +40,10 @@ class TrailerForm(forms.ModelForm):
             self.fields[f].widget.attrs.update({'class': 'formset_field'})
 
 
-class TruckSelect(forms.Select):
-    def create_option(self, name, value, label, selected, index, subindex=None,
-                      attrs=None):
-        option = super().create_option(name, value, label, selected, index,
-                                       subindex, attrs)
-        object_id = option['value'].__str__()
-        if object_id:
-            ob = Truck.objects.get(id=object_id)
-            try:
-                ob.driver
-                option['attrs']['class'] = 'choice_taken'
-            except Truck.driver.RelatedObjectDoesNotExist:
-                pass
-        return option
-
-
-class TrailerSelect(forms.Select):
-    def create_option(self, name, value, label, selected, index, subindex=None,
-                      attrs=None):
-        option = super().create_option(name, value, label, selected, index,
-                                       subindex, attrs)
-        object_id = option['value'].__str__()
-        if object_id:
-            obj = Trailer.objects.get(id=object_id)
-            try:
-                obj.driver
-                option['attrs']['class'] = 'choice_taken'
-            except Trailer.driver.RelatedObjectDoesNotExist:
-                pass
-        return option
-
-
 class DriverForm(forms.ModelForm):
-
     class Meta:
         model = Driver
-        exclude = ('account',)
+        fields = '__all__'
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
             'cdl_exp_date': forms.DateInput(attrs={'type': 'date'}),
@@ -87,16 +55,16 @@ class DriverForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        self.account = kwargs.pop('account')
+        db_name = kwargs.pop('db_name')
         super().__init__(*args, **kwargs)
         self.fields["truck"] = forms.ModelChoiceField(
-            queryset=Truck.objects.filter(account=self.account),
-            widget=TruckSelect,
+            queryset=Truck.objects.using(db_name).all(),
+            widget=VehicleSelect(model=Truck, db_name=db_name),
             required=False,
         )
         self.fields["trailer"] = forms.ModelChoiceField(
-            queryset=Trailer.objects.filter(account=self.account),
-            widget=TrailerSelect,
+            queryset=Trailer.objects.using(db_name).all(),
+            widget=VehicleSelect(model=Trailer, db_name=db_name),
             required=False,
         )
         self.fields["home_address"].widget.attrs.update({'rows': 1})
@@ -107,7 +75,7 @@ class DriverForm(forms.ModelForm):
 class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
-        exclude = ('account',)
+        fields = '__all__'
         widgets = {
             'comments': forms.Textarea(attrs={'rows': 1})
         }
@@ -121,7 +89,7 @@ class CompanyForm(forms.ModelForm):
 class PasswordGroupForm(forms.ModelForm):
     class Meta:
         model = PasswordGroup
-        exclude = ('account',)
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

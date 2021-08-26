@@ -43,6 +43,10 @@ class User(AbstractUser):
     def __str__(self):
         return self.email.split("@")[0]
 
+    @property
+    def db_name(self):
+        return self.profile.account.db_name
+
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
@@ -67,6 +71,7 @@ class Account(models.Model):
         null=True,
         blank=True,
     )
+    db_name = models.CharField(max_length=12, default='guest')
 
     def save(self, *args, **kwargs):
         d = date.today()
