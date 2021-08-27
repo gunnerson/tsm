@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 from invent.models import Truck, Trailer, Company
-from users.models import Profile, Account
+from users.models import Profile
 from invent.choices import mechanic_choices
 
 
@@ -20,28 +20,31 @@ class Order(models.Model):
         null=True,
         blank=True,
     )
-    date_opened = models.DateField(null=True, blank=True)
+    opened = models.DateField(null=True, blank=True, default=now)
     mechanic = models.CharField(
         max_length=2,
         choices=mechanic_choices(),
         null=True,
         blank=True,
+        default='VP',
     )
     mileage = models.PositiveIntegerField(null=True, blank=True)
-    date_closed = models.DateField(null=True, blank=True)
+    closed = models.DateField(null=True, blank=True)
     stdopitems = models.ManyToManyField('StdOpItem')
 
     class Meta:
         ordering = ['-id']
 
     def __str__(self):
-        return str(f'{self.id:05}')
+        return self.truck.__str__() if self.truck else self.trailer.__str__()
 
     def get_absolute_url(self):
         return reverse('shop:order', kwargs={'pk': self.id})
 
-    def is_closed(self):
-        return True if self.date_closed else False
+    @property
+    def get_fields(self):
+        return [(field.verbose_name, field.value_from_object(self))
+                for field in self.__class__._meta.fields]
 
 
 class Part(models.Model):
@@ -66,6 +69,7 @@ class PartOrder(models.Model):
     vendor = models.ForeignKey(
         Company,
         on_delete=models.SET_NULL,
+        null=True,
         limit_choices_to={'group': 'VE'},
     )
     date = models.DateField()
@@ -86,7 +90,7 @@ class PartOrderItem(models.Model):
     amount = models.PositiveSmallIntegerField()
 
 
-class PartsAmount(models.Model):
+class OpPartItem(models.Model):
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
     amount = models.PositiveSmallIntegerField()
 
@@ -99,7 +103,7 @@ class StdOp(models.Model):
         null=True,
         blank=True,
     )
-    parts = models.ManyToManyField(PartsAmount)
+    parts = models.ManyToManyField(OpPartItem)
     pm = models.BooleanField(default=False)
 
 
@@ -112,16 +116,3 @@ class StdOpItem(models.Model):
     )
     started = models.DateTimeField(default=now)
     finished = models.DateTimeField(null=True, blank=True)
-
-    # def save(self, *args, **kwargs):
-    #     if not self.stdop:
-    #         new_stdop = StdOp(
-    #             name=self.name,
-    #             duration=self.duration,
-    #             ).save()
-    #         new_stdop.parts.add(self.parts)
-    #         self.stdop = new_stdop
-    #         self.name = ""
-    #         self.duration = None
-    #         self.parts.clear()
-    #     super().save(*args, **kwargs)

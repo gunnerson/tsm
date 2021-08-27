@@ -19,13 +19,26 @@ class WriteCheckMixin(UserPassesTestMixin):
         return write_check(self.request.user)
 
 
+class FormMixin(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for f in self.fields:
+            self.fields[f].widget.attrs.update({'class': 'form_field'})
+
+
+class FormSetMixin(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for f in self.fields:
+            self.fields[f].widget.attrs.update({'class': 'formset_field'})
+
+
 class FormSetView():
     model = None
     form_class = None
     formset = BaseModelFormSet
     btn_back = True
     btn_save = True
-    btn_custom = False
     filter_bar = True
     page_title = 'List of records'
     nav_link = 'List'
@@ -103,11 +116,9 @@ class FormSetView():
         context = {
             'btn_back': self.btn_back,
             'btn_save': self.btn_save,
-            'btn_custom': self.btn_custom,
             'page_title': self.page_title,
             'nav_link': self.nav_link,
             'detail_url': self.detail_url,
-            'write_check': write_check(self.request.user),
         }
         try:
             context['fields'] = self.get_fields()['verbose_field_names']

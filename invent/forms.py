@@ -1,10 +1,10 @@
 from django import forms
 
-from .mixins import VehicleSelect
+from .mixins import VehicleSelect, FormMixin, FormSetMixin
 from .models import Truck, Trailer, Company, Driver, PasswordGroup
 
 
-class TruckForm(forms.ModelForm):
+class TruckForm(FormSetMixin):
     class Meta:
         model = Truck
         fields = '__all__'
@@ -16,13 +16,8 @@ class TruckForm(forms.ModelForm):
             'term_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'formset_field'})
 
-
-class TrailerForm(forms.ModelForm):
+class TrailerForm(FormSetMixin):
     class Meta:
         model = Trailer
         fields = '__all__'
@@ -34,13 +29,8 @@ class TrailerForm(forms.ModelForm):
             'term_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'formset_field'})
 
-
-class DriverForm(forms.ModelForm):
+class DriverForm(FormSetMixin):
     class Meta:
         model = Driver
         fields = '__all__'
@@ -66,12 +56,12 @@ class DriverForm(forms.ModelForm):
             widget=VehicleSelect(model=Trailer),
             required=False,
         )
+        self.fields["truck"].widget.attrs.update({'class': 'formset_field'})
+        self.fields["trailer"].widget.attrs.update({'class': 'formset_field'})
         self.fields["home_address"].widget.attrs.update({'rows': 1})
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'formset_field'})
 
 
-class CompanyForm(forms.ModelForm):
+class CompanyForm(FormSetMixin):
     class Meta:
         model = Company
         fields = '__all__'
@@ -79,18 +69,9 @@ class CompanyForm(forms.ModelForm):
             'comments': forms.Textarea(attrs={'rows': 1})
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'formset_field'})
 
-
-class PasswordGroupForm(forms.ModelForm):
+class PasswordGroupForm(FormMixin):
     class Meta:
         model = PasswordGroup
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'form_field'})
