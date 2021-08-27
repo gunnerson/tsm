@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Truck, Trailer, Driver, Company
 from .forms import TruckForm, TrailerForm, DriverForm, CompanyForm
-from .mixins import FormSetView, ReadCheckMixin
+from .mixins import FormSetView, ReadCheckMixin, WriteCheckMixin
 from .utils import get_summary_context
 
 
@@ -37,7 +37,7 @@ def summary(request):
     return render(request, 'invent/summary.html', context)
 
 
-class TruckFormSetView(ReadCheckMixin, FormSetView):
+class TruckFormSetView(WriteCheckMixin, FormSetView):
     model = Truck
     form_class = TruckForm
     page_title = 'List of truck records'
@@ -45,7 +45,7 @@ class TruckFormSetView(ReadCheckMixin, FormSetView):
     detail_url = 'invent:truck'
 
 
-class TrailerFormSetView(ReadCheckMixin, FormSetView):
+class TrailerFormSetView(WriteCheckMixin, FormSetView):
     model = Trailer
     form_class = TrailerForm
     page_title = 'List of truck records'
@@ -53,7 +53,7 @@ class TrailerFormSetView(ReadCheckMixin, FormSetView):
     detail_url = 'invent:trailer'
 
 
-class DriverFormSetView(ReadCheckMixin, FormSetView):
+class DriverFormSetView(WriteCheckMixin, FormSetView):
     model = Driver
     form_class = DriverForm
     page_title = 'List of driver records'
@@ -61,7 +61,7 @@ class DriverFormSetView(ReadCheckMixin, FormSetView):
     detail_url = 'invent:driver'
 
 
-class CompanyFormSetView(ReadCheckMixin, FormSetView):
+class CompanyFormSetView(WriteCheckMixin, FormSetView):
     model = Company
     form_class = CompanyForm
     page_title = 'List of company records'

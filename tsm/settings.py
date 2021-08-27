@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     # My apps
     'users',
     'invent',
-    # 'shop',
+    'shop',
 ]
 
 MIDDLEWARE = [

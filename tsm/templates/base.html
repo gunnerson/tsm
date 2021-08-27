@@ -43,10 +43,8 @@
                 <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
               </li>
             {% endif %}
-            {% if btn_custom %}
-              {% block custom-button %}{% endblock custom-button %}
-            {% endif %}
-            {% if btn_save and write_check %}
+            {% block custom-button %}{% endblock custom-button %}
+            {% if btn_save %}
               <li>
                 <button type="submit" form="data_form">+ Save changes</a>
               </li>

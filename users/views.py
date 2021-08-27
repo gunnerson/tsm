@@ -71,7 +71,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(*args, **kwargs)
         context['btn_back'] = True
         context['btn_save'] = True
-        context['btn_custom'] = True
         context['page_title'] = 'Account settings'
         context['nav_link'] = 'Preferences'
         context['write_check'] = True
@@ -129,7 +128,6 @@ class ListColShowListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(*args, **kwargs)
         context['btn_back'] = True
         context['btn_save'] = True
-        context['btn_custom'] = True
         context['page_title'] = 'Select summary columns'
         context['nav_link'] = 'Columns'
         context['write_check'] = True
@@ -140,7 +138,6 @@ class UsersLevelFormSetView(UserPassesTestMixin, FormSetView):
     model = Profile
     form_class = UserLevelForm
     extra = 0
-    btn_custom = True
     page_title = "Update users' privileges"
     nav_link = 'Privileges'
     filter_bar = False

@@ -12,6 +12,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls'), name='users'),
     path('', include('invent.urls'), name='invent'),
+    path('', include('shop.urls'), name='shop'),
 ]
 
 handler403 = 'tsm.views.permission_denied_view'
