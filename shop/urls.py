@@ -14,8 +14,8 @@ urlpatterns = [
          name='orders'),
     path('orders/create', OrderCreateView.as_view(),
          name='create_order'),
-    path('order/<int:pk>', OrderDetailView.as_view(),
+    path('orders/<int:pk>', OrderDetailView.as_view(),
          name='order'),
-    path('order/<int:pk>/update', OrderUpdateView.as_view(),
+    path('orders/<int:pk>/update', OrderUpdateView.as_view(),
          name='update_order'),
 ]
