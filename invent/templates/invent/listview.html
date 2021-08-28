@@ -23,7 +23,7 @@
             {% for field in form %}
               {% if '-id' in field.auto_id %}
                 {{ field }}
-                {% if field.value and detail_url and write_check %}
+                {% if field.value and detail_url %}
                   <td class="formset_field">
                     <a href="{% url detail_url field.value %}">
                       <img src="{% static 'img/edit.png' %}">

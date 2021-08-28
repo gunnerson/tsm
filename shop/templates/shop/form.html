@@ -8,6 +8,20 @@
 <form method='post' id="data_form">
     {% csrf_token %}
     {{ form.as_p}}
+    <p> Jobs: </p>
+    {{ formset.management_form }}
+    <table>
+      <tbody>
+        {% for form in formset %}
+          <tr>
+              <td> {{ form.job }}{{ form.job.errors }}</td>
+              <td> {{ form.amount }}{{ form.amount.errors }}</td>
+          </tr>
+          {{ form.non_field_errors }}
+        {% endfor %}
+      </tbody>
+    </table>
+    {{ formset.non_form_errors }}
 </form>
 {% endblock content %}
 

@@ -1,12 +1,13 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.shortcuts import render, redirect
+# from django.urls import reverse
+from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
-from django.forms import modelformset_factory
 
 from invent.mixins import ReadCheckMixin, WriteCheckMixin
 
 from .models import Order
 from .forms import OrderForm
+from .utils import get_job_forms
 
 
 class OrderListView(ReadCheckMixin, ListView):
@@ -44,27 +45,30 @@ class OrderCreateView(WriteCheckMixin, CreateView):
         return context
 
 
-class OrderDetailView(ReadCheckMixin, DetailView):
-    model = Order
-    template_name = 'shop/detail.html'
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context['btn_back'] = True
-        context['page_title'] = 'Order #' + str(self.get_object().id)
-        context['nav_link'] = 'Order'
-        return context
-
-
 class OrderUpdateView(WriteCheckMixin, UpdateView):
     model = Order
     form_class = OrderForm
     template_name = 'shop/form.html'
 
-    def get_context_data(self, *args, **kwargs):
+    def form_valid(self, form):
+        self.object = form.save()
+        formset = get_job_forms(self.object, self.request.POST)
+        if formset.is_valid():
+            for f in formset:
+                inst = f.save(commit=False)
+                inst.order = self.object
+                inst.save()
+        else:
+            return self.render_to_response(
+                self.get_context_data(form=form, formset=formset))
+        return redirect(self.object.get_absolute_url())
+
+    def get_context_data(self, *args, formset=None, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        order = self.get_object()
         context['btn_back'] = True
         context['btn_save'] = True
-        context['page_title'] = 'Update order #' + self.get_object().__str__()
+        context['page_title'] = 'Update order ' + order.__str__()
         context['nav_link'] = 'Update order'
+        context['formset'] = formset if formset else get_job_forms(order)
         return context
