@@ -8,6 +8,7 @@ from invent.mixins import ReadCheckMixin, WriteCheckMixin
 from .models import Order
 from .forms import OrderForm
 from .utils import get_job_forms
+from .mixins import ObjectView
 
 
 class OrderListView(ReadCheckMixin, ListView):
@@ -45,30 +46,36 @@ class OrderCreateView(WriteCheckMixin, CreateView):
         return context
 
 
-class OrderUpdateView(WriteCheckMixin, UpdateView):
+class OrderUpdateView(WriteCheckMixin, ObjectView):
     model = Order
     form_class = OrderForm
     template_name = 'shop/form.html'
 
     def form_valid(self, form):
         self.object = form.save()
-        formset = get_job_forms(self.object, self.request.POST)
-        if formset.is_valid():
-            for f in formset:
-                inst = f.save(commit=False)
-                inst.order = self.object
-                inst.save()
-        else:
-            return self.render_to_response(
-                self.get_context_data(form=form, formset=formset))
+        if not self.is_create:
+            formset = get_job_forms(self.object, self.request.POST)
+            if formset.is_valid():
+                for f in formset:
+                    inst = f.save(commit=False)
+                    if inst.job_id:
+                        inst.order = self.object
+                        inst.save()
+            else:
+                return self.render_to_response(
+                    self.get_context_data(form=form, formset=formset))
         return redirect(self.object.get_absolute_url())
 
     def get_context_data(self, *args, formset=None, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        order = self.get_object()
         context['btn_back'] = True
         context['btn_save'] = True
-        context['page_title'] = 'Update order ' + order.__str__()
-        context['nav_link'] = 'Update order'
-        context['formset'] = formset if formset else get_job_forms(order)
+        if self.is_create:
+            context['page_title'] = 'Create new work order'
+            context['nav_link'] = 'New order'
+        else:
+            order = self.get_object()
+            context['page_title'] = 'Update order ' + order.__str__()
+            context['nav_link'] = 'Update order'
+            context['formset'] = formset if formset else get_job_forms(order)
         return context

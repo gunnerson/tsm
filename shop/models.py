@@ -87,13 +87,11 @@ class JobItem(models.Model):
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
-        null=True,
         blank=True,
     )
     job = models.ForeignKey(
         Job,
         on_delete=models.CASCADE,
-        null=True,
         related_name='job_items',
     )
     amount = models.PositiveSmallIntegerField(default=1)

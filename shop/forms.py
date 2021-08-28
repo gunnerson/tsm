@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Order, JobItem
-from invent.mixins import FormMixin, FormSetMixin
+from invent.mixins import FormMixin
 
 
 class OrderForm(FormMixin):
