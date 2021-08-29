@@ -2,35 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseNotAllowed
 from django import forms
 from django.forms import modelformset_factory, BaseModelFormSet
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.exceptions import FieldError
 
-from users.utils import gen_field_ver_name, read_check, write_check
+from users.utils import gen_field_ver_name
 from users.models import ListColShow
-
-
-class ReadCheckMixin(UserPassesTestMixin):
-    def test_func(self):
-        return read_check(self.request.user)
-
-
-class WriteCheckMixin(UserPassesTestMixin):
-    def test_func(self):
-        return write_check(self.request.user)
-
-
-class FormMixin(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'form_field'})
-
-
-class FormSetMixin(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'formset_field'})
 
 
 class FormSetView():
@@ -173,3 +148,17 @@ class VehicleSelect(forms.Select):
             except self.model.driver.RelatedObjectDoesNotExist:
                 pass
         return option
+
+
+class FormMixin(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for f in self.fields:
+            self.fields[f].widget.attrs.update({'class': 'form_field'})
+
+
+class FormSetMixin(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for f in self.fields:
+            self.fields[f].widget.attrs.update({'class': 'formset_field'})

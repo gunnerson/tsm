@@ -1,7 +1,7 @@
 from django import forms
 
-from .models import Order, JobItem
-from invent.mixins import FormMixin
+from .models import Order, Job, OrderJob, OrderPart
+from invent.mixins import FormMixin, FormSetMixin
 
 
 class OrderForm(FormMixin):
@@ -29,7 +29,19 @@ class OrderForm(FormMixin):
             self.add_error('trailer', msg)
 
 
-class JobItemForm(FormMixin):
+class JobForm(FormSetMixin):
     class Meta:
-        model = JobItem
+        model = Job
+        fields = '__all__'
+
+
+class OrderPartForm(FormSetMixin):
+    class Meta:
+        model = OrderPart
+        fields = '__all__'
+
+
+class OrderJobForm(FormSetMixin):
+    class Meta:
+        model = OrderJob
         fields = '__all__'

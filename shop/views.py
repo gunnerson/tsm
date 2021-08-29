@@ -1,14 +1,11 @@
-from django.shortcuts import render, redirect
-# from django.urls import reverse
+from django.shortcuts import redirect
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView, UpdateView
 
-from invent.mixins import ReadCheckMixin, WriteCheckMixin
-
-from .models import Order
-from .forms import OrderForm
+from .models import Order, Part, Job, OrderPart
+from .forms import OrderForm, JobForm, OrderPartForm
 from .utils import get_job_forms
-from .mixins import ObjectView
+from .mixins import ObjectView, FormSetView
+from users.mixins import ReadCheckMixin, WriteCheckMixin
 
 
 class OrderListView(ReadCheckMixin, ListView):
@@ -27,26 +24,7 @@ class OrderListView(ReadCheckMixin, ListView):
         return context
 
 
-class OrderCreateView(WriteCheckMixin, CreateView):
-    model = Order
-    form_class = OrderForm
-    template_name = 'shop/form.html'
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update(is_create=True)
-        return kwargs
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context['btn_back'] = True
-        context['btn_save'] = True
-        context['page_title'] = 'Create new work order'
-        context['nav_link'] = 'New order'
-        return context
-
-
-class OrderUpdateView(WriteCheckMixin, ObjectView):
+class OrderView(WriteCheckMixin, ObjectView):
     model = Order
     form_class = OrderForm
     template_name = 'shop/form.html'
@@ -58,7 +36,9 @@ class OrderUpdateView(WriteCheckMixin, ObjectView):
             if formset.is_valid():
                 for f in formset:
                     inst = f.save(commit=False)
-                    if inst.job_id:
+                    if inst.amount == 0:
+                        inst.delete()
+                    elif inst.job_id:
                         inst.order = self.object
                         inst.save()
             else:
@@ -79,3 +59,50 @@ class OrderUpdateView(WriteCheckMixin, ObjectView):
             context['nav_link'] = 'Update order'
             context['formset'] = formset if formset else get_job_forms(order)
         return context
+
+
+class JobFormSetView(WriteCheckMixin, FormSetView):
+    model = Job
+    form_class = JobForm
+    page_title = 'List of standart jobs'
+    nav_link = 'Jobs'
+    detail_url = 'shop:job_parts'
+    fields = ('name', 'man_hours')
+    field_names = ('Description', 'Man-hours')
+
+
+class JobPartsSetView(WriteCheckMixin, FormSetView):
+    model = OrderPart
+    form_class = OrderPartForm
+    page_title = 'Add parts'
+    nav_link = 'Job > Parts'
+    template_name = "shop/listview.html"
+    redirect_url = './parts'
+
+    def get_object(self):
+        return Job.objects.get(id=self.pk)
+
+    def get_queryset(self):
+        return self.get_object().parts.all()
+
+    def get_fields(self):
+        return {
+            'field_names': ['part', 'amount', ],
+            'verbose_field_names': ['Part', 'Amount', ],
+        }
+
+    def post(self, request, *args, **kwargs):
+        formset = self.get_modelformset(request.POST)
+        if formset.is_valid():
+            job = self.get_object()
+            for f in formset:
+                inst = f.save(commit=False)
+                if inst.amount == 0:
+                    inst.delete()
+                elif inst.part_id:
+                    inst = f.save()
+                    job.parts.add(inst)
+            return redirect(self.redirect_url)
+        else:
+            return self.render_to_response(
+                self.get_context_data(formset=formset))

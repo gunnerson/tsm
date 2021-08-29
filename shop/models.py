@@ -3,9 +3,7 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 from invent.models import Truck, Trailer, Company
-from users.models import Profile
 from invent.choices import mechanic_choices
-from users.utils import gen_field_ver_name
 
 
 class Order(models.Model):
@@ -42,12 +40,6 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse('shop:order', kwargs={'pk': self.id})
 
-    # @property
-    # def get_fields(self):
-    #     return [(gen_field_ver_name(field.verbose_name),
-    #              field.value_from_object(self))
-    #             for field in self.__class__._meta.fields]
-
 
 class Part(models.Model):
     part_number = models.CharField(max_length=30)
@@ -67,23 +59,24 @@ class Part(models.Model):
         return reverse('shop:part', kwargs={'pk': self.id})
 
 
-class PartAmount(models.Model):
-    part = models.ForeignKey(Part, on_delete=models.CASCADE)
-    amount = models.PositiveSmallIntegerField(default=1)
-
-
 class Job(models.Model):
     name = models.CharField(max_length=50)
-    duration = models.DecimalField(
+    man_hours = models.DecimalField(
         max_digits=4,
         decimal_places=1,
         null=True,
         blank=True,
     )
-    parts = models.ManyToManyField(PartAmount, blank=True)
+    parts = models.ManyToManyField(Part, blank=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
 
 
-class JobItem(models.Model):
+class OrderJob(models.Model):
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
@@ -94,6 +87,21 @@ class JobItem(models.Model):
         on_delete=models.CASCADE,
         related_name='job_items',
     )
+    man_hours = models.DecimalField(
+        max_digits=4,
+        decimal_places=1,
+        null=True,
+        blank=True,
+    )
+
+
+class OrderPart(models.Model):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        blank=True,
+    )
+    part = models.ForeignKey(Part, on_delete=models.CASCADE)
     amount = models.PositiveSmallIntegerField(default=1)
 
 

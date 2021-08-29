@@ -1,18 +1,41 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseNotAllowed
-from django.views.generic.edit import UpdateView
+from django import forms
 from django.forms import modelformset_factory, BaseModelFormSet
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.exceptions import FieldError
 
+from users.utils import gen_field_ver_name, read_check, write_check, admin_check
+from users.models import ListColShow
 
-class ObjectView(UpdateView):
-    is_create = False
 
-    def get_object(self, queryset=None):
-        try:
-            return super().get_object(queryset)
-        except AttributeError:
-            return None
+class ReadCheckMixin(UserPassesTestMixin):
+    def test_func(self):
+        return read_check(self.request.user)
+
+
+class WriteCheckMixin(UserPassesTestMixin):
+    def test_func(self):
+        return write_check(self.request.user)
+
+
+class AdminCheckMixin(UserPassesTestMixin):
+    def test_func(self):
+        return admin_check(self.request.user)
+
+
+class FormMixin(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for f in self.fields:
+            self.fields[f].widget.attrs.update({'class': 'form_field'})
+
+
+class FormSetMixin(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for f in self.fields:
+            self.fields[f].widget.attrs.update({'class': 'formset_field'})
 
 
 class FormSetView():
@@ -21,15 +44,13 @@ class FormSetView():
     formset = BaseModelFormSet
     btn_back = True
     btn_save = True
-    filter_bar = False
+    filter_bar = True
     page_title = 'List of records'
     nav_link = 'List'
     detail_url = ''
-    template_name = 'shop/listview.html'
+    template_name = 'invent/listview.html'
     redirect_url = '.'
     extra = 1
-    fields = ()
-    field_names = ()
 
     @classmethod
     def as_view(cls):
@@ -49,6 +70,22 @@ class FormSetView():
         self.request = request
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+    def get_fields(self):
+        qs = ListColShow.objects.filter(profile=self.request.user.profile)
+        field_names = []
+        verbose_field_names = []
+        for q in qs:
+            if q.list_name == str(self.model._meta):
+                field = self.model._meta.get_field(q.field_name)
+                field_names.append(q.field_name)
+                verbose_field_names.append(
+                    gen_field_ver_name(field.verbose_name))
+        context = {
+            'field_names': field_names,
+            'verbose_field_names': verbose_field_names,
+        }
+        return context
 
     def get_queryset(self):
         qs = self.model.objects.all()
@@ -73,7 +110,7 @@ class FormSetView():
         modelformset = modelformset_factory(
             self.model,
             form=self.form_class,
-            fields=self.fields,
+            fields=self.get_fields()['field_names'],
             formset=self.formset,
             extra=self.extra,
         )
@@ -89,7 +126,7 @@ class FormSetView():
             'detail_url': self.detail_url,
         }
         try:
-            context['fields'] = self.field_names
+            context['fields'] = self.get_fields()['verbose_field_names']
         except KeyError:
             pass
         if 'formset' in kwargs:

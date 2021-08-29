@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
-from django.forms.models import model_to_dict
 from django.contrib.auth.decorators import login_required
 
 from .models import Truck, Trailer, Driver, Company
 from .forms import TruckForm, TrailerForm, DriverForm, CompanyForm
-from .mixins import FormSetView, ReadCheckMixin, WriteCheckMixin
+from .mixins import FormSetView
+from users.mixins import ReadCheckMixin, WriteCheckMixin
 from .utils import get_summary_context
 
 

@@ -1,0 +1,12 @@
+{% extends "shop/base.html" %}
+
+{% block nav_bar %}
+  <li>{{ nav_link }}</li>
+{% endblock nav_bar %}
+
+{% block content %}
+  {% for object in object_list %}
+    <p>{{ object }}</p>
+  {% endfor %}
+{% endblock content %}
+
