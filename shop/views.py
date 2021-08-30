@@ -79,6 +79,11 @@ class OrderView(WriteCheckMixin, ObjectView):
                 part_formset if part_formset else get_part_forms(order))
         return context
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update(is_create=self.is_create)
+        return kwargs
+
 
 class JobFormSetView(WriteCheckMixin, FormSetView):
     model = Job
@@ -180,3 +185,8 @@ class PurchaseView(WriteCheckMixin, ObjectView):
             context['formset'] = (
                 formset if formset else get_purchase_forms(order))
         return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update(is_create=self.is_create)
+        return kwargs
