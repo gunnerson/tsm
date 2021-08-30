@@ -34,12 +34,12 @@ def generate_listcolshow(profile, model):
     fields = model._meta.get_fields()
     i = 1
     if model == Truck or model == Trailer:
-        exclude = ('id', 'driver')
+        exclude = ('id', 'driver', 'order', 'part')
     elif model == Driver:
         exclude = ('id')
     elif model == Company:
         exclude = ('id', 'driver', 'owned_trucks', 'insured_trucks',
-                   'owned_trailers', 'insured_trailers')
+                   'owned_trailers', 'insured_trailers', 'purchase')
     for f in fields:
         if f.name not in exclude:
             try:
@@ -73,44 +73,3 @@ def generate_su_profile(request):
     generate_listcolshow(profile, Driver)
     generate_listcolshow(profile, Company)
     return HttpResponse('Operation successful...')
-
-
-# def get_columns(user):
-#     from .models import ListColShow
-#     from invent.models import Truck, Trailer, Driver
-#     qs = ListColShow.objects.filter(
-#         profile=user.profile,
-#     )
-#     context = {}
-#     truck_field_names = []
-#     trailer_field_names = []
-#     driver_field_names = []
-#     truck_verbose_field_names = []
-#     trailer_verbose_field_names = []
-#     driver_verbose_field_names = []
-#     for q in qs:
-#         if q.show:
-#             if q.list_name == 'invent.truck':
-#                 field = Truck._meta.get_field(q.field_name)
-#                 truck_field_names.append(q.field_name)
-#                 truck_verbose_field_names.append(
-#                     gen_field_ver_name(field.verbose_name))
-#             elif q.list_name == 'invent.trailer':
-#                 field = Trailer._meta.get_field(q.field_name)
-#                 trailer_field_names.append(q.field_name)
-#                 trailer_verbose_field_names.append(
-#                     gen_field_ver_name(field.verbose_name))
-#             elif q.list_name == 'contacts.driver':
-#                 field = Driver._meta.get_field(q.field_name)
-#                 driver_field_names.append(q.field_name)
-#                 driver_verbose_field_names.append(
-#                     gen_field_ver_name(field.verbose_name))
-#             else:
-#                 pass
-#     context['truck_field_names'] = truck_field_names
-#     context['trailer_field_names'] = trailer_field_names
-#     context['driver_field_names'] = driver_field_names
-#     context['truck_verbose_field_names'] = truck_verbose_field_names
-#     context['trailer_verbose_field_names'] = trailer_verbose_field_names
-#     context['driver_verbose_field_names'] = driver_verbose_field_names
-#     return context

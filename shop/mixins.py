@@ -1,12 +1,19 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseNotAllowed
+from django.views.generic.edit import UpdateView
 from django import forms
 from django.forms import modelformset_factory, BaseModelFormSet
 from django.core.exceptions import FieldError
 
-from .models import Company
-from users.utils import gen_field_ver_name
-from users.models import ListColShow
+
+class ObjectView(UpdateView):
+    is_create = False
+
+    def get_object(self, queryset=None):
+        try:
+            return super().get_object(queryset)
+        except AttributeError:
+            return None
 
 
 class FormSetView():
@@ -15,13 +22,15 @@ class FormSetView():
     formset = BaseModelFormSet
     btn_back = True
     btn_save = True
-    filter_bar = True
+    filter_bar = False
     page_title = 'List of records'
     nav_link = 'List'
     detail_url = ''
-    template_name = 'invent/listview.html'
+    template_name = 'shop/listview.html'
     redirect_url = '.'
     extra = 1
+    fields = ()
+    field_names = ()
 
     @classmethod
     def as_view(cls):
@@ -42,45 +51,20 @@ class FormSetView():
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-    def get_fields(self):
-        qs = ListColShow.objects.filter(profile=self.request.user.profile)
-        field_names = []
-        verbose_field_names = []
-        for q in qs:
-            if q.list_name == str(self.model._meta):
-                field = self.model._meta.get_field(q.field_name)
-                field_names.append(q.field_name)
-                verbose_field_names.append(
-                    gen_field_ver_name(field.verbose_name))
-        context = {
-            'field_names': field_names,
-            'verbose_field_names': verbose_field_names,
-        }
-        return context
-
     def get_queryset(self):
-        request = self.request
-        ours = request.GET.get('ours', None)
-        our_companies = Company.objects.filter(group='OU')
-        if ours:
-            qs = self.model.objects.all()
-        else:
-            try:
-                qs = self.model.objects.filter(owner__in=our_companies)
-            except FieldError:
-                qs = self.model.objects.all()
-        query = self.request.GET.get('query', None)
-        if query:
-            qs = self.model.objects.search(
-                query,
-                self.model.__name__,
-                our_companies,
-            )
-        if not self.request.GET.get('term', None):
-            try:
-                qs = qs.exclude(status='T')
-            except FieldError:
-                pass
+        qs = self.model.objects.all()
+        if self.filter_bar:
+            query = self.request.GET.get('query', None)
+            if query:
+                qs = self.model.objects.search(
+                    query,
+                    self.model.__name__,
+                )
+            if not self.request.GET.get('term', None):
+                try:
+                    qs = qs.exclude(status='T')
+                except FieldError:
+                    pass
         return qs
 
     def get_form_kwargs(self):
@@ -90,7 +74,7 @@ class FormSetView():
         modelformset = modelformset_factory(
             self.model,
             form=self.form_class,
-            fields=self.get_fields()['field_names'],
+            fields=self.fields,
             formset=self.formset,
             extra=self.extra,
         )
@@ -106,7 +90,7 @@ class FormSetView():
             'detail_url': self.detail_url,
         }
         try:
-            context['fields'] = self.get_fields()['verbose_field_names']
+            context['fields'] = self.field_names
         except KeyError:
             pass
         if 'formset' in kwargs:
@@ -116,7 +100,6 @@ class FormSetView():
         if self.filter_bar:
             context['filter_bar'] = True
             context['query'] = self.request.GET.get('query', None)
-            context['ours'] = self.request.GET.get('ours', None)
             context['term'] = self.request.GET.get('term', None)
         return context
 
@@ -140,36 +123,16 @@ class FormSetView():
                 self.get_context_data(formset=formset))
 
 
-class VehicleSelect(forms.Select):
+class OrderSelect(forms.Select):
 
     def __init__(self, *args, **kwargs):
-        self.model = kwargs.pop('model')
+        self.exclude = kwargs.pop('exclude')
         return super().__init__(*args, **kwargs)
 
     def create_option(self, name, value, label, selected, index, subindex=None,
                       attrs=None):
         option = super().create_option(name, value, label, selected, index,
                                        subindex, attrs)
-        object_id = option['value'].__str__()
-        if object_id:
-            obj = self.model.objects.get(id=object_id)
-            try:
-                obj.driver
-                option['attrs']['class'] = 'choice_taken'
-            except self.model.driver.RelatedObjectDoesNotExist:
-                pass
+        if option['value'] in self.exclude:
+            option['attrs']['style'] = 'display: none;'
         return option
-
-
-class FormMixin(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'form_field'})
-
-
-class FormSetMixin(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'formset_field'})

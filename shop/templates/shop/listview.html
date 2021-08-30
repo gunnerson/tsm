@@ -1,4 +1,4 @@
-{% extends "invent/base.html" %}
+{% extends "shop/base.html" %}
 {% load static %}
 
 {% block nav_bar %}
@@ -26,7 +26,7 @@
                 {% if field.value and detail_url %}
                   <td class="formset_field">
                     <a href="{% url detail_url field.value %}">
-                      <img src="{% static 'img/edit.png' %}">
+                      <img src="{% static 'img/parts.png' %}">
                       {{ field }}
                     </a>
                   </td>

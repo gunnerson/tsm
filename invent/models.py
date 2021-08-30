@@ -298,11 +298,31 @@ class Trailer(models.Model):
 
 
 class Company(models.Model):
+    phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+    zip_code_regex = RegexValidator(r'^\d{5}$', 'Invalid zip-code')
     name = models.CharField(max_length=20)
     group = models.CharField(
         max_length=2,
         choices=company_group_choices(),
         default='GN',
+    )
+    address_line_1 = models.CharField(max_length=30, blank=True)
+    address_line_2 = models.CharField(max_length=10, blank=True)
+    city = models.CharField(max_length=15, blank=True)
+    state = models.CharField(
+        max_length=2,
+        choices=us_states_choices(),
+        blank=True,
+    )
+    zip_code = models.CharField(
+        max_length=5,
+        blank=True,
+        validators=[zip_code_regex],
+    )
+    phone_number = models.CharField(
+        validators=[phone_number_regex],
+        max_length=16,
+        blank=True,
     )
     comments = models.TextField(blank=True)
 
@@ -328,6 +348,7 @@ class Company(models.Model):
 
 class Driver(models.Model):
     phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
+    zip_code_regex = RegexValidator(r'^\d{5}$', 'Invalid zip-code')
     ssn_regex = RegexValidator(
         regex=r"^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$")
     name = models.CharField(max_length=40)
@@ -343,12 +364,13 @@ class Driver(models.Model):
         null=True,
         blank=True,
     )
-    company = models.ForeignKey(
+    owner = models.ForeignKey(
         Company,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         limit_choices_to=Q(group='OU') | Q(group='LO'),
+        verbose_name='Company',
     )
     date_of_birth = models.DateField(
         null=True,
@@ -393,9 +415,18 @@ class Driver(models.Model):
     email = models.EmailField(
         blank=True,
     )
-    home_address = models.TextField(
-        null=True,
+    address_line_1 = models.CharField(max_length=30, blank=True)
+    address_line_2 = models.CharField(max_length=10, blank=True)
+    city = models.CharField(max_length=15, blank=True)
+    state = models.CharField(
+        max_length=2,
+        choices=us_states_choices(),
         blank=True,
+    )
+    zip_code = models.CharField(
+        max_length=5,
+        blank=True,
+        validators=[zip_code_regex],
     )
     ssn = models.CharField(
         validators=[ssn_regex],

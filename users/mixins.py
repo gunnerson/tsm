@@ -2,11 +2,40 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseNotAllowed
 from django import forms
 from django.forms import modelformset_factory, BaseModelFormSet
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.exceptions import FieldError
 
-from .models import Company
-from users.utils import gen_field_ver_name
+from users.utils import gen_field_ver_name, read_check, write_check, admin_check
 from users.models import ListColShow
+
+
+class ReadCheckMixin(UserPassesTestMixin):
+    def test_func(self):
+        return read_check(self.request.user)
+
+
+class WriteCheckMixin(UserPassesTestMixin):
+    def test_func(self):
+        return write_check(self.request.user)
+
+
+class AdminCheckMixin(UserPassesTestMixin):
+    def test_func(self):
+        return admin_check(self.request.user)
+
+
+class FormMixin(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for f in self.fields:
+            self.fields[f].widget.attrs.update({'class': 'form_field'})
+
+
+class FormSetMixin(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for f in self.fields:
+            self.fields[f].widget.attrs.update({'class': 'formset_field'})
 
 
 class FormSetView():
@@ -59,28 +88,19 @@ class FormSetView():
         return context
 
     def get_queryset(self):
-        request = self.request
-        ours = request.GET.get('ours', None)
-        our_companies = Company.objects.filter(group='OU')
-        if ours:
-            qs = self.model.objects.all()
-        else:
-            try:
-                qs = self.model.objects.filter(owner__in=our_companies)
-            except FieldError:
-                qs = self.model.objects.all()
-        query = self.request.GET.get('query', None)
-        if query:
-            qs = self.model.objects.search(
-                query,
-                self.model.__name__,
-                our_companies,
-            )
-        if not self.request.GET.get('term', None):
-            try:
-                qs = qs.exclude(status='T')
-            except FieldError:
-                pass
+        qs = self.model.objects.all()
+        if self.filter_bar:
+            query = self.request.GET.get('query', None)
+            if query:
+                qs = self.model.objects.search(
+                    query,
+                    self.model.__name__,
+                )
+            if not self.request.GET.get('term', None):
+                try:
+                    qs = qs.exclude(status='T')
+                except FieldError:
+                    pass
         return qs
 
     def get_form_kwargs(self):
@@ -116,7 +136,6 @@ class FormSetView():
         if self.filter_bar:
             context['filter_bar'] = True
             context['query'] = self.request.GET.get('query', None)
-            context['ours'] = self.request.GET.get('ours', None)
             context['term'] = self.request.GET.get('term', None)
         return context
 
@@ -138,38 +157,3 @@ class FormSetView():
         else:
             return self.render_to_response(
                 self.get_context_data(formset=formset))
-
-
-class VehicleSelect(forms.Select):
-
-    def __init__(self, *args, **kwargs):
-        self.model = kwargs.pop('model')
-        return super().__init__(*args, **kwargs)
-
-    def create_option(self, name, value, label, selected, index, subindex=None,
-                      attrs=None):
-        option = super().create_option(name, value, label, selected, index,
-                                       subindex, attrs)
-        object_id = option['value'].__str__()
-        if object_id:
-            obj = self.model.objects.get(id=object_id)
-            try:
-                obj.driver
-                option['attrs']['class'] = 'choice_taken'
-            except self.model.driver.RelatedObjectDoesNotExist:
-                pass
-        return option
-
-
-class FormMixin(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'form_field'})
-
-
-class FormSetMixin(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'formset_field'})

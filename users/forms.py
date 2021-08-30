@@ -4,9 +4,10 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
 from .models import User, Profile
+from .mixins import FormMixin
 
 
-class UserCreationForm(forms.ModelForm):
+class UserCreationForm(FormMixin):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(
         label='Password confirmation', widget=forms.PasswordInput)
@@ -29,11 +30,6 @@ class UserCreationForm(forms.ModelForm):
             user.save()
         return user
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'form_field'})
-
 
 class UserLoginForm(AuthenticationForm):
 
@@ -51,18 +47,13 @@ class UserChangeForm(forms.ModelForm):
         exclude = ('password',)
 
 
-class ProfileForm(forms.ModelForm):
+class ProfileForm(FormMixin):
     first_name = forms.CharField(max_length=24, required=False)
     last_name = forms.CharField(max_length=24, required=False)
 
     class Meta:
         model = Profile
         exclude = ('user', 'level',)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'form_field'})
 
 
 class UserLevelForm(forms.ModelForm):

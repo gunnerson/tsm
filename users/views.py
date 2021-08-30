@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.views import LoginView
@@ -8,8 +8,8 @@ from django.db.models import Q
 
 from .models import ListColShow, Profile
 from .forms import UserCreationForm, ProfileForm, UserLevelForm
-from .utils import generate_profile, admin_check
-from invent.mixins import FormSetView
+from .utils import generate_profile
+from .mixins import FormSetView, AdminCheckMixin
 
 
 def register(request):
@@ -85,7 +85,7 @@ class ListColShowListView(LoginRequiredMixin, ListView):
         return qs
 
     def post(self, *args, **kwargs):
-        qs = ListColShow.objects.filter(profile=self.request.user.profile)
+        qs = self.get_queryset()
         if self.request.POST.get('check_all', None):
             for q in qs:
                 q.show = True
@@ -134,7 +134,7 @@ class ListColShowListView(LoginRequiredMixin, ListView):
         return context
 
 
-class UsersLevelFormSetView(UserPassesTestMixin, FormSetView):
+class UsersLevelFormSetView(AdminCheckMixin, FormSetView):
     model = Profile
     form_class = UserLevelForm
     extra = 0
@@ -142,9 +142,6 @@ class UsersLevelFormSetView(UserPassesTestMixin, FormSetView):
     nav_link = 'Privileges'
     filter_bar = False
     template_name = 'users/listview.html'
-
-    def test_func(self):
-        return admin_check(self.request.user)
 
     def get_fields(self):
         context = {

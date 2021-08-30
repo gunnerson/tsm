@@ -1,36 +1,40 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
-from django.forms.models import model_to_dict
 from django.contrib.auth.decorators import login_required
 
 from .models import Truck, Trailer, Driver, Company
 from .forms import TruckForm, TrailerForm, DriverForm, CompanyForm
-from .mixins import FormSetView, ReadCheckMixin, WriteCheckMixin
-from .utils import get_summary_context
+from .mixins import FormSetView
+from users.mixins import ReadCheckMixin, WriteCheckMixin
+from .utils import get_summary_context, get_font_classes
 
 
 @login_required
 def summary(request):
     profile = request.user.profile
     context = {}
+    ours = request.GET.get('ours', None)
     query = request.GET.get('query', None)
-    if query:
-        qs = Truck.objects.search(query, 'Truck')
-        context['query'] = query
+    our_companies = Company.objects.filter(group='OU')
+    if ours:
+        if query:
+            qs = Truck.objects.search(query, 'Truck')
+            context['query'] = query
+        else:
+            qs = Truck.objects.all()
+        context['ours'] = True
     else:
-        qs = Truck.objects.all()
+        if query:
+            qs = Truck.objects.search(query, 'Truck', our_companies)
+            context['query'] = query
+        else:
+            qs = Truck.objects.filter(owner__in=our_companies)
     if not request.GET.get('term', None):
         qs = qs.exclude(status='T')
     else:
         context['term'] = True
     get_summary_context(qs, profile, context)
-    font_size = profile.font_size
-    if font_size == 'S':
-        context['font_class'] = 'font-small'
-    elif font_size == 'L':
-        context['font_class'] = 'font-large'
-    else:
-        context['font_class'] = 'font-medium'
+    get_font_classes(profile.font_size, context)
     context['btn_back'] = True
     context['filter_bar'] = True
     context['page_title'] = 'Summary'

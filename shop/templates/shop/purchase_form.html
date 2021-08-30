@@ -1,0 +1,30 @@
+{% extends "shop/base.html" %}
+
+{% block nav_bar %}
+  <li>{{ nav_link }}</li>
+{% endblock nav_bar %}
+
+{% block content %}
+<form method='post' id="data_form">
+    {% csrf_token %}
+    {{ form.as_p}}
+    {% if formset %}
+      {{ formset.management_form }}
+      <p> Parts: </p>
+      <table>
+        <tbody>
+          {% for form in formset %}
+            <tr>
+              <td> {{ form.part }}{{ form.part.errors }} </td>
+              <td> x {{ form.amount }}{{ form.amount.errors }}</td>
+            </tr>
+            {{ form.id }}
+            {{ form.non_field_errors }}
+          {% endfor %}
+        </tbody>
+      </table>
+      {{ formset.non_form_errors }}
+    {% endif %}
+  </form>
+{% endblock content %}
+

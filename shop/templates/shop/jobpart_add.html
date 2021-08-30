@@ -1,0 +1,31 @@
+{% extends "shop/base.html" %}
+
+{% block nav_bar %}
+  <li><a href="{% url 'shop:jobs' %}">Jobs</a> > </li>
+  <li>{{ nav_link }}</li>
+{% endblock nav_bar %}
+
+{% block content %}
+  <form method="post" id="data_form">
+    {% csrf_token %}
+    {% for object in object_list %}
+      <p>
+        <label for="{{ object.id }}">{{ object }}: {{ object.name }}</label>
+        <input type="checkbox" name="{{ object.id }}" class="colBox form_field checkbox_input" {% if object.id in checked %}checked{% endif %}>
+      </p>
+    {% endfor %}
+  </form>
+{% endblock content %}
+
+<script>
+  {% block page_js %}
+
+      const checkboxes = document.getElementsByClassName("checkbox_input")
+      for (i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].addEventListener("click", function (){
+          document.getElementById('data_form').submit();
+        });
+       };
+
+  {% endblock page_js %}
+</script>

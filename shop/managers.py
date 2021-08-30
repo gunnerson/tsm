@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.exceptions import FieldError
 from django.contrib.postgres.search import (
     SearchRank,
     SearchVector,
@@ -42,19 +41,10 @@ def db_search(queryset, query, config, *args):
 
 
 class DBSearch(models.Manager):
-    def search(self, query, model, ours=None):
+    def search(self, query, model):
         qs = self.get_queryset()
-        if ours:
-            try:
-                qs = qs.filter(owner__in=ours)
-            except FieldError:
-                pass
         if query:
-            if model in ('Truck', 'Trailer'):
-                fields = ('fleet_number', 'vin', 'license_plate')
-            elif model == 'Driver':
-                fields = ('name', 'cdl', 'phone_number', 'home_address', 'ssn')
-            elif model == 'Company':
-                fields = ('name', 'comments')
+            if model == 'Part':
+                fields = ('part_number', 'name')
             qs = db_search(qs, query, 'B', *fields)
         return qs

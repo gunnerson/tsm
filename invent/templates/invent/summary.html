@@ -59,7 +59,15 @@
                 {% endif %}
               </td>
             {% else %}
-              <td>{{ value|default_if_none:"" }}</td>
+              <td>
+                {% if value == True %}
+                  +
+                {% elif value == False %}
+                  -
+                {% else %}
+                  {{ value|default_if_none:"" }}
+                {% endif %}
+              </td>
             {% endif %}
           {% endfor %}
         </tr>

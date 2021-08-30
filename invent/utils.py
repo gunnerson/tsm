@@ -72,3 +72,13 @@ def get_summary_context(qs, profile, context):
     context['object_list'] = obj_list
     context['field_names'] = field_names
     return context
+
+
+def get_font_classes(font_size, context):
+    if font_size == 'S':
+        context['font_class'] = 'font-small'
+    elif font_size == 'L':
+        context['font_class'] = 'font-large'
+    else:
+        context['font_class'] = 'font-medium'
+    return context

@@ -58,7 +58,6 @@ class DriverForm(FormSetMixin):
         )
         self.fields["truck"].widget.attrs.update({'class': 'formset_field'})
         self.fields["trailer"].widget.attrs.update({'class': 'formset_field'})
-        self.fields["home_address"].widget.attrs.update({'rows': 1})
 
 
 class CompanyForm(FormSetMixin):
