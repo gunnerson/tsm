@@ -1,0 +1,47 @@
+{% extends "shop/base.html" %}
+
+{% block nav_bar %}
+  <li>{{ nav_link }}</li>
+{% endblock nav_bar %}
+
+{% block content %}
+<form method='post' id="data_form">
+    {% csrf_token %}
+    {{ form.as_p}}
+    {% if job_formset %}
+      {{ job_formset.management_form }}
+      <p> Jobs: </p>
+      <table>
+        <tbody>
+          {% for form in job_formset %}
+            <tr>
+              <td> {{ form.job }}{{ form.job.errors }} </td>
+              <td> x {{ form.amount }}{{ form.amount.errors }}</td>
+            </tr>
+            {{ form.id }}
+            {{ form.non_field_errors }}
+          {% endfor %}
+        </tbody>
+      </table>
+      {{ job_formset.non_form_errors }}
+    {% endif %}
+    {% if part_formset %}
+      {{ part_formset.management_form }}
+      <p> Parts: </p>
+      <table>
+        <tbody>
+          {% for form in part_formset %}
+            <tr>
+              <td> {{ form.part }}{{ form.part.errors }} </td>
+              <td> x {{ form.amount }}{{ form.amount.errors }}</td>
+            </tr>
+            {{ form.id }}
+            {{ form.non_field_errors }}
+          {% endfor %}
+        </tbody>
+      </table>
+      {{ part_formset.non_form_errors }}
+    {% endif %}
+  </form>
+{% endblock content %}
+

@@ -4,6 +4,7 @@ from django import forms
 from django.forms import modelformset_factory, BaseModelFormSet
 from django.core.exceptions import FieldError
 
+from .models import Company
 from users.utils import gen_field_ver_name
 from users.models import ListColShow
 
@@ -58,19 +59,28 @@ class FormSetView():
         return context
 
     def get_queryset(self):
-        qs = self.model.objects.all()
-        if self.filter_bar:
-            query = self.request.GET.get('query', None)
-            if query:
-                qs = self.model.objects.search(
-                    query,
-                    self.model.__name__,
-                )
-            if not self.request.GET.get('term', None):
-                try:
-                    qs = qs.exclude(status='T')
-                except FieldError:
-                    pass
+        request = self.request
+        ours = request.GET.get('ours', None)
+        our_companies = Company.objects.filter(group='OU')
+        if ours:
+            qs = self.model.objects.all()
+        else:
+            try:
+                qs = self.model.objects.filter(owner__in=our_companies)
+            except FieldError:
+                qs = self.model.objects.all()
+        query = self.request.GET.get('query', None)
+        if query:
+            qs = self.model.objects.search(
+                query,
+                self.model.__name__,
+                our_companies,
+            )
+        if not self.request.GET.get('term', None):
+            try:
+                qs = qs.exclude(status='T')
+            except FieldError:
+                pass
         return qs
 
     def get_form_kwargs(self):
@@ -106,6 +116,7 @@ class FormSetView():
         if self.filter_bar:
             context['filter_bar'] = True
             context['query'] = self.request.GET.get('query', None)
+            context['ours'] = self.request.GET.get('ours', None)
             context['term'] = self.request.GET.get('term', None)
         return context
 

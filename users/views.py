@@ -85,7 +85,7 @@ class ListColShowListView(LoginRequiredMixin, ListView):
         return qs
 
     def post(self, *args, **kwargs):
-        qs = ListColShow.objects.filter(profile=self.request.user.profile)
+        qs = self.get_queryset()
         if self.request.POST.get('check_all', None):
             for q in qs:
                 q.show = True

@@ -403,6 +403,7 @@ ul {
 }
 
 .formset_field {
+  padding-left: 3px;
   outline: none;
   border: none;
   color: var(--main-font-color);
@@ -437,11 +438,15 @@ td .errorlist {
 }
 
 .summary-link-head {
-  z-index: 2;
+  z-index: 2!important;
 }
 
 .summary-link-next:hover {
   cursor: pointer;
+}
+
+.filter-item {
+  padding-left: 20px;
 }
 
 .filter-button:hover {

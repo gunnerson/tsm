@@ -4,7 +4,9 @@ from .views import (
     OrderListView,
     OrderView,
     JobFormSetView,
-    JobPartsSetView,
+    JobPartListView,
+    PartFormSetView,
+    PurchaseView,
 )
 
 app_name = "shop"
@@ -18,6 +20,12 @@ urlpatterns = [
          name='order'),
     path('jobs/', JobFormSetView.as_view(),
          name='jobs'),
-    path('jobs/<int:pk>/parts', JobPartsSetView.as_view(),
+    path('jobs/<int:pk>/parts', JobPartListView.as_view(),
          name='job_parts'),
+    path('parts/', PartFormSetView.as_view(),
+         name='parts'),
+    path('parts/purchase/create', PurchaseView.as_view(is_create=True),
+         name='create_purchase'),
+    path('parts/purchase/', PurchaseView.as_view(),
+         name='purchase'),
 ]

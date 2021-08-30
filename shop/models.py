@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.timezone import now
 
+from .managers import DBSearch
 from invent.models import Truck, Trailer, Company
 from invent.choices import mechanic_choices
 
@@ -34,8 +35,9 @@ class Order(models.Model):
         ordering = ['-id']
 
     def __str__(self):
-        return (self.truck.__str__() + ' #' + str(self.id) if self.truck else
-                self.trailer.__str__() + ' #' + str(self.id))
+        return ('Truck ' + self.truck.__str__() + ': Order #' + str(self.id)
+                if self.truck else 'Trailer ' + self.trailer.__str__() +
+                ': Order #' + str(self.id))
 
     def get_absolute_url(self):
         return reverse('shop:order', kwargs={'pk': self.id})
@@ -48,6 +50,8 @@ class Part(models.Model):
     stock_unit = models.CharField(max_length=10, blank=True)
     trucks = models.ManyToManyField(Truck, blank=True)
     trailers = models.ManyToManyField(Trailer, blank=True)
+
+    objects = DBSearch()
 
     class Meta:
         ordering = ['part_number']
@@ -87,12 +91,7 @@ class OrderJob(models.Model):
         on_delete=models.CASCADE,
         related_name='job_items',
     )
-    man_hours = models.DecimalField(
-        max_digits=4,
-        decimal_places=1,
-        null=True,
-        blank=True,
-    )
+    amount = models.PositiveSmallIntegerField(default=1)
 
 
 class OrderPart(models.Model):

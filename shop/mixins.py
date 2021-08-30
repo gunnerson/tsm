@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseNotAllowed
 from django.views.generic.edit import UpdateView
+from django import forms
 from django.forms import modelformset_factory, BaseModelFormSet
 from django.core.exceptions import FieldError
 
@@ -120,3 +121,18 @@ class FormSetView():
         else:
             return self.render_to_response(
                 self.get_context_data(formset=formset))
+
+
+class OrderSelect(forms.Select):
+
+    def __init__(self, *args, **kwargs):
+        self.exclude = kwargs.pop('exclude')
+        return super().__init__(*args, **kwargs)
+
+    def create_option(self, name, value, label, selected, index, subindex=None,
+                      attrs=None):
+        option = super().create_option(name, value, label, selected, index,
+                                       subindex, attrs)
+        if option['value'] in self.exclude:
+            option['attrs']['style'] = 'display: none;'
+        return option
