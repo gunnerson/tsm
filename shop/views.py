@@ -17,7 +17,8 @@ class OrderListView(ReadCheckMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['btn_back'] = True
+        context['btn_new'] = True
+        context['create_url'] = 'shop:create_order'
         context['btn_custom'] = True
         context['page_title'] = 'Work orders'
         context['nav_link'] = 'Orders'

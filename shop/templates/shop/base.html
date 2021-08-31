@@ -2,7 +2,10 @@
 {% load static %}
 
 {% block header %}
-  <li id="navItem1">
+  <li>
+    <a href="{% url 'invent:summary' %}">Safety</a>
+  </li>
+    <li id="navItem1">
     <a href="{% url 'shop:orders' %}">Orders</a>
   </li>
   <li id="navItem2">
@@ -16,7 +19,7 @@
   </li>
 {% endblock header %}
 
-{% block page_title %}
+{% block toolbar %}
   {% if filter_bar %}
       <form method="GET" id="filter-form">
         <button type="submit" class="search-button filter-button" id="search-button">
@@ -25,12 +28,7 @@
         <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
       </form>
   {% endif %}
-{% endblock page_title %}
-
-{% block nav_bar_main %}
-  <li><a href="{% url 'index' %}">Home</a> > </li>
-  {% block nav_bar %}{% endblock nav_bar %}
-{% endblock nav_bar_main %}
+{% endblock toolbar %}
 
 <script>
   {% block main_js %}
