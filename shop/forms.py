@@ -75,9 +75,15 @@ class PartForm(FormSetMixin):
         fields = '__all__'
 
 
-class PurchaseForm(forms.ModelForm):
+class PurchaseForm(FormMixin):
     class Meta:
         model = Purchase
+        fields = '__all__'
+
+
+class PurchaseItemForm(forms.ModelForm):
+    class Meta:
+        model = PurchaseItem
         fields = '__all__'
 
     def __init__(self, *args, exclude=None, **kwargs):
@@ -86,11 +92,7 @@ class PurchaseForm(forms.ModelForm):
             queryset=Part.objects.all(),
             widget=OrderSelect(exclude=exclude),
         )
+        self.fields["price"].widget.attrs.update({'placeholder': 'Price'})
+        self.fields["amount"].widget.attrs.update({'placeholder': 'Amount'})
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})
-
-
-class PurchaseItemForm(FormSetMixin):
-    class Meta:
-        model = PurchaseItem
-        fields = '__all__'

@@ -13,11 +13,8 @@ class FormSetView():
     model = None
     form_class = None
     formset = BaseModelFormSet
-    btn_back = True
     btn_save = True
     filter_bar = True
-    page_title = 'List of records'
-    nav_link = 'List'
     detail_url = ''
     template_name = 'invent/listview.html'
     redirect_url = '.'
@@ -99,10 +96,7 @@ class FormSetView():
 
     def get_context_data(self, *args, **kwargs):
         context = {
-            'btn_back': self.btn_back,
             'btn_save': self.btn_save,
-            'page_title': self.page_title,
-            'nav_link': self.nav_link,
             'detail_url': self.detail_url,
         }
         try:

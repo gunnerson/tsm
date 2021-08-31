@@ -53,6 +53,6 @@ def get_purchase_forms(order, data=None):
     exclude_ids = []
     for q in qs:
         if q.part.id not in exclude_ids:
-            exclude_ids.append(q.job.id)
-    return ModelFormset(data, queryset=qs, prefix='purchases',
+            exclude_ids.append(q.part.id)
+    return ModelFormset(data, queryset=qs,
                         form_kwargs={'exclude': exclude_ids})

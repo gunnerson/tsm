@@ -19,9 +19,6 @@ class OrderListView(ReadCheckMixin, ListView):
         context = super().get_context_data(*args, **kwargs)
         context['btn_new'] = True
         context['create_url'] = 'shop:create_order'
-        context['btn_custom'] = True
-        context['page_title'] = 'Work orders'
-        context['nav_link'] = 'Orders'
         return context
 
 
@@ -65,15 +62,9 @@ class OrderView(WriteCheckMixin, ObjectView):
     def get_context_data(
             self, *args, job_formset=None, part_formset=None, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['btn_back'] = True
         context['btn_save'] = True
-        if self.is_create:
-            context['page_title'] = 'Create new work order'
-            context['nav_link'] = 'New order'
-        else:
+        if not self.is_create:
             order = self.get_object()
-            context['page_title'] = 'Update ' + order.__str__()
-            context['nav_link'] = 'Update order'
             context['job_formset'] = (
                 job_formset if job_formset else get_job_forms(order))
             context['part_formset'] = (
@@ -89,8 +80,6 @@ class OrderView(WriteCheckMixin, ObjectView):
 class JobFormSetView(WriteCheckMixin, FormSetView):
     model = Job
     form_class = JobForm
-    page_title = 'List of standart jobs'
-    nav_link = 'Jobs'
     detail_url = 'shop:job_parts'
     fields = ('name', 'man_hours')
     field_names = ('Description', 'Man-hours')
@@ -119,11 +108,8 @@ class JobPartListView(ReadCheckMixin, ListView):
         for q in qs:
             if q in job.parts.all():
                 context['checked'].append(q.id)
-        context['btn_back'] = True
         context['btn_save'] = True
         context['filter_bar'] = True
-        context['page_title'] = 'Add parts'
-        context['nav_link'] = 'Parts'
         return context
 
     def post(self, *args, **kwargs):
@@ -140,11 +126,20 @@ class JobPartListView(ReadCheckMixin, ListView):
 class PartFormSetView(WriteCheckMixin, FormSetView):
     model = Part
     form_class = PartForm
-    page_title = 'List of parts'
-    nav_link = 'Parts'
     filter_bar = True
     fields = ('part_number', 'name', 'stock', 'stock_unit')
     field_names = ('Part number', 'Description', 'In Stock', 'Units')
+
+
+class PurchaseListView(ReadCheckMixin, ListView):
+    model = Purchase
+    template_name = 'shop/purchase_list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['btn_new'] = True
+        context['create_url'] = 'shop:create_purchase'
+        return context
 
 
 class PurchaseView(WriteCheckMixin, ObjectView):
@@ -165,7 +160,7 @@ class PurchaseView(WriteCheckMixin, ObjectView):
                         except AssertionError:
                             pass
                     elif inst.part_id:
-                        inst.order = self.object
+                        inst.purchase = self.object
                         inst.save()
             else:
                 return self.render_to_response(
@@ -174,20 +169,10 @@ class PurchaseView(WriteCheckMixin, ObjectView):
 
     def get_context_data(self, *args, formset=None, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['btn_back'] = True
         context['btn_save'] = True
-        if self.is_create:
-            context['page_title'] = 'Create new purchase order'
-            context['nav_link'] = 'New purchase'
-        else:
+        if not self.is_create:
             order = self.get_object()
-            context['page_title'] = 'Update ' + order.__str__()
-            context['nav_link'] = 'Update order'
             context['formset'] = (
                 formset if formset else get_purchase_forms(order))
         return context
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update(is_create=self.is_create)
-        return kwargs

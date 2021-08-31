@@ -20,11 +20,8 @@ class FormSetView():
     model = None
     form_class = None
     formset = BaseModelFormSet
-    btn_back = True
     btn_save = True
     filter_bar = False
-    page_title = 'List of records'
-    nav_link = 'List'
     detail_url = ''
     template_name = 'shop/listview.html'
     redirect_url = '.'
@@ -83,10 +80,7 @@ class FormSetView():
 
     def get_context_data(self, *args, **kwargs):
         context = {
-            'btn_back': self.btn_back,
             'btn_save': self.btn_save,
-            'page_title': self.page_title,
-            'nav_link': self.nav_link,
             'detail_url': self.detail_url,
         }
         try:
@@ -133,6 +127,9 @@ class OrderSelect(forms.Select):
                       attrs=None):
         option = super().create_option(name, value, label, selected, index,
                                        subindex, attrs)
-        if option['value'] in self.exclude:
-            option['attrs']['style'] = 'display: none;'
+        try:
+            if option['value'] in self.exclude:
+                option['attrs']['style'] = 'display: none;'
+        except TypeError:
+            pass
         return option

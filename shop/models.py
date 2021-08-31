@@ -116,9 +116,19 @@ class Purchase(models.Model):
     class Meta:
         ordering = ['-date']
 
+    def __str__(self):
+        return self.vendor.__str__() + ' / ' + str(self.date)
+
+    def get_absolute_url(self):
+        return reverse('shop:purchase', kwargs={'pk': self.id})
+
 
 class PurchaseItem(models.Model):
-    purchase = models.ForeignKey(Purchase, on_delete=models.CASCADE)
+    purchase = models.ForeignKey(
+        Purchase,
+        on_delete=models.CASCADE,
+        blank=True,
+    )
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
     price = models.DecimalField(
         max_digits=7,

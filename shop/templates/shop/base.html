@@ -15,6 +15,9 @@
     <a href="{% url 'shop:parts' %}">Parts</a>
   </li>
   <li id="navItem4">
+    <a href="{% url 'shop:purchases' %}">Purchases</a>
+  </li>
+  <li id="navItem5">
     <a href="">Accounting</a>
   </li>
 {% endblock header %}
@@ -40,8 +43,10 @@
       document.getElementById("navItem2").classList.add('active');
     } else if (section == "parts") {
       document.getElementById("navItem3").classList.add('active');
-    } else if (section == "accounting") {
+    } else if (section == "purchases") {
       document.getElementById("navItem4").classList.add('active');
+    } else if (section == "accounting") {
+      document.getElementById("navItem5").classList.add('active');
     };
 
     {% if filter_bar %}

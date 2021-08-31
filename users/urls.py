@@ -22,7 +22,7 @@ urlpatterns = [
          name="logout"),
     path('register/', register, name="register"),
     path('generate_profile/', generate_su_profile, name="generate_su_profile"),
-    path('settings/<int:pk>', ProfileUpdateView.as_view(
+    path('settings/<int:pk>/', ProfileUpdateView.as_view(
         template_name='users/preferences.html'),
         name="profile"),
     path('columns/', ListColShowListView.as_view(
