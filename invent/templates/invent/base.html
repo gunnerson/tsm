@@ -2,6 +2,9 @@
 {% load static %}
 
 {% block header %}
+  <li>
+    <a href="{% url 'shop:orders' %}">Shop</a>
+  </li>
   <li id="navItem1">
     <a href="{% url 'invent:summary' %}">Summary</a>
   </li>
@@ -19,7 +22,7 @@
   </li>
 {% endblock header %}
 
-{% block page_title %}
+{% block toolbar %}
   {% if filter_bar %}
       <form method="GET" id="filter-form">
         <button type="submit" class="search-button filter-button" id="search-button">
@@ -36,13 +39,7 @@
         </div>
       </form>
   {% endif %}
-{% endblock page_title %}
-
-{% block nav_bar_main %}
-  <li><a href="{% url 'index' %}">Home</a> > </li>
-  {% block nav_bar %}{% endblock nav_bar %}
-{% endblock nav_bar_main %}
-
+{% endblock toolbar %}
 
 <script>
   {% block main_js %}

@@ -1,10 +1,6 @@
 {% extends "invent/base.html" %}
 {% load static %}
 
-{% block nav_bar %}
-  <li>{{ nav_link }}</li>
-{% endblock nav_bar %}
-
 {% block content %}
   <form method='post' id="data_form">
     {% csrf_token %}

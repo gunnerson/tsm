@@ -8,9 +8,47 @@
   <li id="navItem2">
     <a href="{% url 'shop:orders' %}">Shop</a>
   </li>
+  <li id="navItem3">
+    <a href="{% url 'users:profile' user.profile.id %}">Settings</a>
+  </li>
+  <li id="navItem4">
+    <a href="{% url 'users:listcolshow' %}">Table columns</a>
+  </li>
+  {% if user.profile.level == 'A' %}
+    <li id="navItem5">
+      <a href="{% url 'users:update_level' %}">Users</a>
+    </li>
+  {% endif %}
+  {% if user.is_superuser %}
+    <li id="navItem6">
+      <a href="{% url 'admin:index' %}">Admin page</a>
+    </li>
+    <li id="navItem7">
+      <a href="{% url 'users:generate_su_profile' %}">Generate profile</a>
+    </li>
+  {% endif %}
 {% endblock header %}
 
 {% block nav_bar_main %}
   <li><a href="{% url 'index' %}">Home</a> > </li>
   {% block nav_bar %}{% endblock nav_bar %}
 {% endblock nav_bar_main %}
+
+
+<script>
+  {% block main_js %}
+
+    var section = window.location.toString().replace(/^https?:\/\//, '').split('/')[1];
+    if (section == "settings") {
+      document.getElementById("navItem3").classList.add('active');
+    } else if (section == "columns") {
+      document.getElementById("navItem4").classList.add('active');
+    } else if (section == "access") {
+      document.getElementById("navItem5").classList.add('active');
+    };
+
+    {% block page_js %}{% endblock page_js %}
+
+  {% endblock main_js %}
+</script>
+

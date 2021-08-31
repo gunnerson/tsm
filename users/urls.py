@@ -22,12 +22,12 @@ urlpatterns = [
          name="logout"),
     path('register/', register, name="register"),
     path('generate_profile/', generate_su_profile, name="generate_su_profile"),
-    path('user/settings/<int:pk>', ProfileUpdateView.as_view(
+    path('settings/<int:pk>', ProfileUpdateView.as_view(
         template_name='users/preferences.html'),
         name="profile"),
-    path('user/settings/table_columns', ListColShowListView.as_view(
+    path('columns/', ListColShowListView.as_view(
         template_name='users/listcolshow.html'),
         name="listcolshow"),
-    path('account/users/', UsersLevelFormSetView.as_view(),
+    path('access/', UsersLevelFormSetView.as_view(),
          name="update_level"),
 ]

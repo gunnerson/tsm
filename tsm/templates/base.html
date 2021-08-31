@@ -36,37 +36,14 @@
         </div>
       </div>
 
-      <div id="left-content">
-          <ul>
-            {% if btn_back %}
-              <li>
-                <a href="" onClick="window.location.replace(document.referrer);return false;" role="button">Back</a>
-              </li>
-            {% endif %}
-            {% block custom-button %}{% endblock custom-button %}
-            {% if btn_save %}
-              <li>
-                <button type="submit" form="data_form">+ Save changes</a>
-              </li>
-            {% endif %}
-          </ul>
-      </div>
-
-      <div id="left-content-hide">
-        <button id="left-content-hide-button" class="left-content-hide" type="button"><</button>
-        <button id="left-content-show-button" class="left-content-hide" type="button" style="display: none;">></button>
-      </div>
-
-      <div id="address-panel">
-        <div class="page-title">
-          <span>{{ page_title }}</span>
-          {% block page_title %}{% endblock page_title %}
-        </div>
-        <div class="address-line">
-          <ol>
-              {% block nav_bar_main %}{% endblock nav_bar_main %}
-          </ol>
-        </div>
+      <div id="toolbar">
+        {% if btn_save %}
+          <button type="submit" form="data_form"><img src="{% static 'img/save.png' %}"></button>
+        {% endif %}
+        {% if btn_new %}
+          <a href="{% url create_url %}"><img src="{% static 'img/new.png' %}"></a>
+        {% endif %}
+        {% block toolbar %}{% endblock toolbar %}
       </div>
 
       <div id="main-content">
@@ -86,22 +63,6 @@
       };
 
       docReady(function() {
-
-        document.getElementById("left-content-hide-button").addEventListener('click', function() {
-          document.getElementById("main-content").style.marginLeft = "10px";
-          document.getElementById("left-content").style.display = "none";
-          document.getElementById("address-panel").style.left = "0px";
-          document.getElementById("left-content-hide-button").style.display = "none";
-          document.getElementById("left-content-show-button").style.display = "inline-block";
-        }, false);
-
-        document.getElementById("left-content-show-button").addEventListener('click', function() {
-          document.getElementById("main-content").style.marginLeft = "200px";
-          document.getElementById("left-content").style.display = "inline-block";
-          document.getElementById("address-panel").style.left = "199px";
-          document.getElementById("left-content-show-button").style.display = "none";
-          document.getElementById("left-content-hide-button").style.display = "inline-block";
-        }, false);
 
         {% block main_js %}{% endblock main_js %}
 
