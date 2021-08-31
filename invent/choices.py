@@ -10,6 +10,7 @@ def level():
     ]
     return choices
 
+
 def year_choices():
     choices = []
     for r in range(1980, date.today().year + 2):
@@ -156,4 +157,3 @@ def us_states_choices():
         ('WY', 'Wyoming'),
     ]
     return choices
-

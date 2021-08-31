@@ -20,14 +20,8 @@
 
 
 html, body {
-  height: 100%;
   color: var(--main-font-color);
   background-color: var(--main-bg-color);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
 }
 
 #wrapper {
@@ -49,6 +43,11 @@ a {
   padding-top: 5px;
   overflow: hidden;
   background-color: var(--main-bg-color);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 #header a {
@@ -132,8 +131,10 @@ ul {
 }
 
 #toolbar img {
-  height: 22px;
-  background-color: white;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 28px;
 }
 
 #toolbar img:hover {
@@ -142,14 +143,17 @@ ul {
   border-radius: 3px;
 }
 
-#filter-form{
+#filter-form {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  justify-content: start;
+  align-content: center;
 }
 
 .search-input {
   position: relative;
+  top: 50%;
+  transform: translateY(-50%);
   left: -30px;
   padding-left: 36px;
   border-radius:22px;
@@ -167,17 +171,20 @@ ul {
   background: transparent;
   border: none;
   outline: none;
+  position: relative;
 }
 
-.search-button:hover {
+.search-button img:hover {
   cursor: pointer;
+  border: none!important;
 }
 
 .search-button img{
   margin-left: 20px;
   position: relative;
-  top: 2px;
-  height: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 22px!important;
   z-index: 1;
 }
 
@@ -190,7 +197,7 @@ ul {
 }
 
 #main-content {
-  margin-top: 77px;
+  margin-top: 68px;
   padding: 20px;
   height: 100%;
   position: relative;
@@ -266,7 +273,7 @@ ul {
 
 .listview-table thead th{
   position: sticky;
-  top: 77px;
+  top: 68px;
   background-color: var(--content-bg-color);
   text-align: center;
   padding: 1px 5px;
@@ -321,7 +328,7 @@ ul {
 
 .formset-table thead th{
   position: sticky;
-  top: 77px;
+  top: 68px;
   background-color: var(--content-bg-color);
   text-align: center;
   padding: 1px 5px;
@@ -348,6 +355,7 @@ ul {
   left: 0;
   background-color: inherit;
   border-left: 1px solid var(--border-color);
+  z-index: 1;
 }
 
 .formset-table tr td:last-child {
@@ -355,10 +363,13 @@ ul {
 }
 
 .formset-table img {
-  margin-left: 5px;
-  padding-right: 5px;
   height: 16px;
 }
+
+.formset-table img:hover {
+  border: 1px solid var(--border-color);
+}
+
 
 .formset_field {
   padding-left: 3px;

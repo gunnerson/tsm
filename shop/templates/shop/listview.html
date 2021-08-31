@@ -21,7 +21,7 @@
                 {{ field }}
                 {% if field.value and detail_url %}
                   <td class="formset_field">
-                    <a href="{% url detail_url field.value %}">
+                    <a href="{% url detail_url field.value %}" title="Add parts">
                       <img src="{% static 'img/parts.png' %}">
                       {{ field }}
                     </a>

@@ -24,7 +24,7 @@
       <a href="{% url 'admin:index' %}">Admin page</a>
     </li>
     <li id="navItem7">
-      <a href="{% url 'users:generate_su_profile' %}">Generate profile</a>
+      <a href="{% url 'users:generate_su_profile' %}" onclick="return confirm('This will reset your column settings');">Generate profile</a>
     </li>
   {% endif %}
 {% endblock header %}
