@@ -38,10 +38,10 @@
 
       <div id="toolbar">
         {% if btn_save %}
-          <button type="submit" form="data_form"><img src="{% static 'img/save.png' %}"></button>
+          <button type="submit" form="data_form" title="Save"><img src="{% static 'img/save.png' %}"></button>
         {% endif %}
         {% if btn_new %}
-          <a href="{% url create_url %}"><img src="{% static 'img/new.png' %}"></a>
+          <a href="{% url create_url %}" title="New"><img src="{% static 'img/new.png' %}"></a>
         {% endif %}
         {% block toolbar %}{% endblock toolbar %}
       </div>
