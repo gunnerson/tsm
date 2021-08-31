@@ -21,6 +21,7 @@ class FormSetView():
     form_class = None
     formset = BaseModelFormSet
     btn_save = True
+    search_bar = False
     filter_bar = False
     detail_url = ''
     template_name = 'shop/listview.html'
@@ -92,6 +93,7 @@ class FormSetView():
         else:
             context['formset'] = self.get_modelformset()
         if self.filter_bar:
+            context['search_bar'] = True
             context['filter_bar'] = True
             context['query'] = self.request.GET.get('query', None)
             context['term'] = self.request.GET.get('term', None)

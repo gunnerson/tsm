@@ -23,14 +23,18 @@
 {% endblock header %}
 
 {% block toolbar %}
-  {% if filter_bar %}
-      <form method="GET" id="filter-form">
+  <form method="GET" id="filter-form">
+    {% if search_bar %}
         <button type="submit" class="search-button filter-button" id="search-button">
           <img src="{% static 'img/search.png' %}">
         </button>
         <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
-      </form>
-  {% endif %}
+    {% endif %}
+    {% if filter_bar %}
+        {% block filter_bar %}{% endblock filter_bar %}
+    {% endif %}
+  </form>
+
 {% endblock toolbar %}
 
 <script>
@@ -49,15 +53,15 @@
       document.getElementById("navItem5").classList.add('active');
     };
 
-    {% if filter_bar %}
+    {% if filter_bar or search_bar %}
       function submitForm() {
-        let query = document.getElementById('search-input').value;
-        if (query) {
+        try {
+          let query = document.getElementById('search-input').value;
           let pattern = /^[^!&|:]+$/
           if(pattern.test(query)) {
             document.getElementById('filter-form').submit();
           };
-        } else {
+        } catch (ex) {
           document.getElementById('filter-form').submit();
         };
       };

@@ -1,5 +1,12 @@
 {% extends "shop/base.html" %}
 
+{% block filter_bar %}
+  <div class="filter-item">
+    <input type="checkbox" name="closed" id="check_closed" class="filter-button" {% if closed %}checked{% endif %}>
+    <label for="check_closed" class="filter-button">Show closed</label>
+  </div>
+{% endblock filter_bar %}
+
 {% block content %}
   <table class="order-table">
     {% for object in object_list %}

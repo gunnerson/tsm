@@ -3,6 +3,7 @@ from django.urls import path
 from .views import (
     OrderListView,
     OrderView,
+    OrderPrintView,
     JobFormSetView,
     JobPartListView,
     PartFormSetView,
@@ -19,6 +20,8 @@ urlpatterns = [
          name='create_order'),
     path('orders/<int:pk>/', OrderView.as_view(),
          name='order'),
+    path('orders/<int:pk>/print', OrderPrintView.as_view(),
+         name='order_print'),
     path('jobs/', JobFormSetView.as_view(),
          name='jobs'),
     path('jobs/<int:pk>/parts/', JobPartListView.as_view(),

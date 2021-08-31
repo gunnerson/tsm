@@ -39,6 +39,11 @@ class Profile(models.Model):
         default='M',
     )
     labor_rate = models.PositiveSmallIntegerField(default=100)
+    parts_surcharge = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        default=1.1,
+    )
 
     def __str__(self):
         return str(self.user)

@@ -79,6 +79,15 @@ class PurchaseForm(FormMixin):
     class Meta:
         model = Purchase
         fields = '__all__'
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def __init__(self, *args, is_create=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not is_create:
+            self.fields['vendor'].disabled = True
+            self.fields['date'].disabled = True
 
 
 class PurchaseItemForm(forms.ModelForm):
@@ -92,7 +101,9 @@ class PurchaseItemForm(forms.ModelForm):
             queryset=Part.objects.all(),
             widget=OrderSelect(exclude=exclude),
         )
-        self.fields["price"].widget.attrs.update({'placeholder': 'Price'})
-        self.fields["amount"].widget.attrs.update({'placeholder': 'Amount'})
+        self.fields["price"].widget.attrs.update(
+            {'placeholder': 'Price', 'style': 'width:12ch'})
+        self.fields["amount"].widget.attrs.update(
+            {'placeholder': 'Amount', 'style': 'width:12ch'})
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})

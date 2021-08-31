@@ -135,6 +135,8 @@ ul {
   top: 50%;
   transform: translateY(-50%);
   height: 28px;
+  background-color: white;
+  margin-right: 10px;
 }
 
 #toolbar img:hover {
@@ -148,6 +150,7 @@ ul {
   flex-direction: row;
   justify-content: start;
   align-content: center;
+  margin-left: 20px;
 }
 
 .search-input {

@@ -62,6 +62,11 @@ class Part(models.Model):
     def get_absolute_url(self):
         return reverse('shop:part', kwargs={'pk': self.id})
 
+    @property
+    def price(self):
+        last_purchase = self.purchaseitem_set.last()
+        return last_purchase.price
+
 
 class Job(models.Model):
     name = models.CharField(max_length=50)
@@ -112,6 +117,12 @@ class Purchase(models.Model):
         limit_choices_to={'group': 'VE'},
     )
     date = models.DateField()
+    total = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         ordering = ['-date']

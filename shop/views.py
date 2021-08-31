@@ -1,5 +1,6 @@
 from django.shortcuts import redirect
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
+from django.db import IntegrityError
 
 from .models import Order, Part, Job, OrderPart, Purchase, PurchaseItem
 from .forms import OrderForm, JobForm, PartForm, OrderPartForm, PurchaseForm, PurchaseItemForm
@@ -13,11 +14,18 @@ class OrderListView(ReadCheckMixin, ListView):
     template_name = 'shop/order_list.html'
 
     def get_queryset(self):
-        return self.model.objects.filter(closed=None)
+        if self.request.GET.get('closed', None):
+            qs = self.model.objects.all()
+        else:
+            qs = self.model.objects.filter(closed=None)
+        return qs
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        if self.request.GET.get('closed', None):
+            context['closed'] = True
         context['btn_new'] = True
+        context['filter_bar'] = True
         context['create_url'] = 'shop:create_order'
         return context
 
@@ -45,14 +53,22 @@ class OrderView(WriteCheckMixin, ObjectView):
                         inst.save()
                 for f in part_formset:
                     inst = f.save(commit=False)
-                    if inst.amount == 0:
-                        try:
-                            inst.delete()
-                        except AssertionError:
-                            pass
-                    elif inst.part_id:
-                        inst.order = self.object
+                    inst.order = self.object
+                    if not inst.id and inst.part_id:
                         inst.save()
+                        inst.part.stock -= inst.amount
+                        inst.part.save(update_fields=['stock'])
+                    elif inst.id and inst.part_id:
+                        before_inst = OrderPart.objects.get(id=inst.id)
+                        inst.part.stock -= inst.amount - before_inst.amount
+                        inst.part.save(update_fields=['stock'])
+                        if inst.amount == 0:
+                            try:
+                                inst.delete()
+                            except AssertionError:
+                                pass
+                        else:
+                            inst.save()
             else:
                 return self.render_to_response(
                     self.get_context_data(form=form, job_formset=job_formset,
@@ -69,12 +85,20 @@ class OrderView(WriteCheckMixin, ObjectView):
                 job_formset if job_formset else get_job_forms(order))
             context['part_formset'] = (
                 part_formset if part_formset else get_part_forms(order))
+            context['btn_print'] = True
+            context['print_url'] = 'shop:order_print'
+            context['print_id'] = order.id
         return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update(is_create=self.is_create)
         return kwargs
+
+
+class OrderPrintView(WriteCheckMixin, DetailView):
+    model = Order
+    template_name = 'shop/order_print.html'
 
 
 class JobFormSetView(WriteCheckMixin, FormSetView):
@@ -109,7 +133,7 @@ class JobPartListView(ReadCheckMixin, ListView):
             if q in job.parts.all():
                 context['checked'].append(q.id)
         context['btn_save'] = True
-        context['filter_bar'] = True
+        context['search_bar'] = True
         return context
 
     def post(self, *args, **kwargs):
@@ -126,7 +150,7 @@ class JobPartListView(ReadCheckMixin, ListView):
 class PartFormSetView(WriteCheckMixin, FormSetView):
     model = Part
     form_class = PartForm
-    filter_bar = True
+    search_bar = True
     fields = ('part_number', 'name', 'stock', 'stock_unit')
     field_names = ('Part number', 'Description', 'In Stock', 'Units')
 
@@ -154,14 +178,22 @@ class PurchaseView(WriteCheckMixin, ObjectView):
             if formset.is_valid():
                 for f in formset:
                     inst = f.save(commit=False)
-                    if inst.amount == 0:
-                        try:
-                            inst.delete()
-                        except AssertionError:
-                            pass
-                    elif inst.part_id:
-                        inst.purchase = self.object
+                    inst.purchase = self.object
+                    if not inst.id and inst.part_id:
                         inst.save()
+                        inst.part.stock += inst.amount
+                        inst.part.save(update_fields=['stock'])
+                    elif inst.id and inst.part_id:
+                        before_inst = PurchaseItem.objects.get(id=inst.id)
+                        inst.part.stock += inst.amount - before_inst.amount
+                        inst.part.save(update_fields=['stock'])
+                        if inst.amount == 0:
+                            try:
+                                inst.delete()
+                            except AssertionError:
+                                pass
+                        else:
+                            inst.save()
             else:
                 return self.render_to_response(
                     self.get_context_data(form=form, formset=formset))
@@ -176,3 +208,7 @@ class PurchaseView(WriteCheckMixin, ObjectView):
                 formset if formset else get_purchase_forms(order))
         return context
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update(is_create=self.is_create)
+        return kwargs
