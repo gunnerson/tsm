@@ -412,3 +412,11 @@ td .errorlist {
 .order-table tr td{
   padding: 5px 5px;
 }
+
+.income {
+  background-color: #66ff0034;
+}
+
+.expenses {
+  background-color: #ff000034;
+}

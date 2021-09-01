@@ -1,6 +1,7 @@
 from django import forms
 
-from .models import Order, Job, Part, OrderJob, OrderPart, Purchase, PurchaseItem
+from .models import Order, Job, Part, OrderJob, OrderPart, Purchase, \
+    PurchaseItem, Balance
 from .mixins import OrderSelect
 from invent.mixins import FormMixin, FormSetMixin
 
@@ -112,3 +113,27 @@ class PurchaseItemForm(forms.ModelForm):
             {'placeholder': 'Amount', 'style': 'width:12ch'})
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})
+
+
+class BalanceForm(FormSetMixin):
+    class Meta:
+        model = Balance
+        fields = '__all__'
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'comments': forms.TextInput(attrs={'size': 60}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            if self.instance.total > 0:
+                for f in self.fields:
+                    self.fields[f].widget.attrs.update(
+                        {'class': 'formset_field income'})
+            else:
+                for f in self.fields:
+                    self.fields[f].widget.attrs.update(
+                        {'class': 'formset_field expenses'})
+        except TypeError:
+            pass

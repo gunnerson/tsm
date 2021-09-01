@@ -1,9 +1,9 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
-from django.db import IntegrityError
+from datetime import date
 
-from .models import Order, Part, Job, OrderPart, Purchase, PurchaseItem
-from .forms import OrderForm, JobForm, PartForm, OrderPartForm, PurchaseForm, PurchaseItemForm
+from .models import Order, Part, Job, OrderPart, Purchase, PurchaseItem, Balance
+from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm
 from .utils import get_job_forms, get_part_forms, get_purchase_forms
 from .mixins import ObjectView, FormSetView
 from users.mixins import ReadCheckMixin, WriteCheckMixin
@@ -62,8 +62,11 @@ class OrderView(WriteCheckMixin, ObjectView):
                         else:
                             f.add_error('amount', 'Not enough in stock')
                             return self.render_to_response(
-                                self.get_context_data(form=form, job_formset=job_formset,
-                                                      part_formset=part_formset))
+                                self.get_context_data(
+                                    form=form,
+                                    job_formset=job_formset,
+                                    part_formset=part_formset,
+                                ))
                     elif inst.id and inst.part_id:
                         before_inst = OrderPart.objects.get(id=inst.id)
                         inst.part.stock -= inst.amount - before_inst.amount
@@ -230,3 +233,28 @@ class PurchaseView(WriteCheckMixin, ObjectView):
         kwargs = super().get_form_kwargs()
         kwargs.update(is_create=self.is_create)
         return kwargs
+
+
+class BalanceFormSetView(WriteCheckMixin, FormSetView):
+    model = Balance
+    form_class = BalanceForm
+    fields = ('date', 'category', 'total', 'comments')
+    field_names = ('Date', 'Category', 'Total', 'Comments')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        qs = self.get_queryset()
+        running_total = 0
+        this_month = 0
+        last_month = 0
+        today = date.today()
+        for q in qs:
+            running_total += q.total
+            if q.date.month == today.month:
+                this_month += q.total
+            elif q.date.month == today.month - 1:
+                last_month += q.total
+        context['running_total'] = running_total
+        context['this_month'] = this_month
+        context['last_month'] = last_month
+        return context

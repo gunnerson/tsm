@@ -19,13 +19,6 @@ def year_choices():
     return choices
 
 
-def mechanic_choices():
-    choices = [
-        ('VP', 'Vadim'),
-    ]
-    return choices
-
-
 def truck_make_choices():
     choices = [
         ('FL', 'Freighliner'),
@@ -93,6 +86,18 @@ def size_choices():
         ('S', 'Small'),
         ('M', 'Medium'),
         ('L', 'Large'),
+    ]
+    return choices
+
+
+def category_choices():
+    choices = [
+        ('I', '+Invoice'),
+        ('B', '-Building'),
+        ('S', '-Salaries'),
+        ('T', '-Tools'),
+        ('S', '-Services'),
+        ('P', '-Parts'),
     ]
     return choices
 
