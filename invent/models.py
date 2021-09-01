@@ -300,7 +300,6 @@ class Company(models.Model):
     group = models.CharField(
         max_length=2,
         choices=company_group_choices(),
-        default='GN',
     )
     address_line_1 = models.CharField(max_length=30, blank=True)
     address_line_2 = models.CharField(max_length=10, blank=True)
