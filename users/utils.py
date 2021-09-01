@@ -10,7 +10,10 @@ def write_check(user):
 
 
 def read_check(user):
-    return user.profile.level in ('A', 'W', 'R')
+    try:
+        return user.profile.level in ('A', 'W', 'R')
+    except AttributeError:
+        return False
 
 
 def not_empty(param):
@@ -39,7 +42,7 @@ def generate_listcolshow(profile, model):
         exclude = ('id')
     elif model == Company:
         exclude = ('id', 'driver', 'owned_trucks', 'insured_trucks', 'order',
-                   'owned_trailers', 'insured_trailers', 'purchase', 'profile',)
+                   'owned_trailers', 'insured_trailers', 'purchase', 'profile')
     for f in fields:
         if f.name not in exclude:
             try:

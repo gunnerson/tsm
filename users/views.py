@@ -28,22 +28,8 @@ def register(request):
             )
             login(request, authenticated_user)
             return redirect('users:profile', new_profile.id)
-    context = {
-        'form': form,
-        'btn_back': True,
-        'page_title': 'Register new user account',
-        'nav_link': 'Register',
-    }
+    context = {'form': form}
     return render(request, 'users/register.html', context)
-
-
-class UserLoginView(LoginView):
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['page_title'] = 'Login to your account'
-        context['btn_back'] = True
-        context['nav_link'] = 'Login'
-        return context
 
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
@@ -69,11 +55,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['btn_back'] = True
         context['btn_save'] = True
-        context['page_title'] = 'Account settings'
-        context['nav_link'] = 'Preferences'
-        context['write_check'] = True
         return context
 
 
@@ -126,11 +108,7 @@ class ListColShowListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['btn_back'] = True
         context['btn_save'] = True
-        context['page_title'] = 'Select summary columns'
-        context['nav_link'] = 'Columns'
-        context['write_check'] = True
         return context
 
 

@@ -1,28 +1,5 @@
 {% extends "users/base.html" %}
 
-{% block custom-button %}
-    <li>
-      <a href="{% url 'users:listcolshow' %}">Table columns</a>
-    </li>
-    {% if user.profile.level == 'A' %}
-      <li>
-        <a href="{% url 'users:update_level' %}">Users</a>
-      </li>
-    {% endif %}
-    {% if user.is_superuser %}
-      <li>
-        <a href="{% url 'admin:index' %}">Admin page</a>
-      </li>
-      <li>
-        <a href="{% url 'users:generate_su_profile' %}">Generate profile</a>
-      </li>
-    {% endif %}
-{% endblock custom-button %}
-
-{% block nav_bar %}
-  <li>Profile</li>
-{% endblock nav_bar %}
-
 {% block content %}
   <form method='post' id="data_form">
     {% csrf_token %}

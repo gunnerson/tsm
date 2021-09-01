@@ -1,11 +1,10 @@
 from django.urls import path
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth.views import LoginView, LogoutView
 
 from .forms import UserLoginForm
 from .utils import generate_su_profile
 from .views import (
     register,
-    UserLoginView,
     ProfileUpdateView,
     ListColShowListView,
     UsersLevelFormSetView,
@@ -14,7 +13,7 @@ from .views import (
 app_name = "users"
 
 urlpatterns = [
-    path('login/', UserLoginView.as_view(
+    path('login/', LoginView.as_view(
         template_name='users/login.html',
         authentication_form=UserLoginForm),
         name="login"),
