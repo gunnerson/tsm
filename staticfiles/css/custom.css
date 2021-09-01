@@ -386,6 +386,10 @@ ul {
   outline: none;
 }
 
+.formset_field img {
+  margin-right: 10px;
+}
+
 td .errorlist {
   font-size: 0.8rem;
   text-align: left;
@@ -419,4 +423,32 @@ td .errorlist {
 
 .expenses {
   background-color: #ff000034;
+}
+
+div.gallery {
+  margin: 5px;
+  border: 1px solid #ccc;
+  float: left;
+  width: 180px;
+  position: relative;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+}
+
+.gallery-checkbox {
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }

@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Order, Job, Part, OrderJob, OrderPart, Purchase, \
-    PurchaseItem, Balance
+    PurchaseItem, Balance, Inspection
 from .mixins import OrderSelect
 from invent.mixins import FormMixin, FormSetMixin
 
@@ -137,3 +137,28 @@ class BalanceForm(FormSetMixin):
                         {'class': 'formset_field expenses'})
         except TypeError:
             pass
+
+
+class InspectionForm(FormMixin):
+    class Meta:
+        model = Inspection
+        fields = '__all__'
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'comments': forms.Textarea(attrs={'rows': 1}),
+        }
+
+    def __init__(self, *args, is_create=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not is_create:
+            self.fields['truck'].disabled = True
+            self.fields['trailer'].disabled = True
+
+    def clean(self):
+        cleaned_data = super().clean()
+        truck = cleaned_data.get("truck")
+        trailer = cleaned_data.get("trailer")
+        if (truck and trailer) or (not truck and not trailer):
+            msg = forms.ValidationError(('Select either truck or trailer'),
+                                        code='invalid')
+            self.add_error('trailer', msg)

@@ -5,23 +5,17 @@
   <li>
     <a href="{% url 'invent:summary' %}">Safety</a>
   </li>
-    <li id="navItem1">
-    <a href="{% url 'shop:orders' %}">Orders</a>
+  <li>
+    <a href="{% url 'shop:orders' %}">Shop</a>
   </li>
-  <li id="navItem5">
-    <a href="{% url 'shop:inspections' %}">Inspections</a>
+    <li id="navItem1">
+    <a href="">Trucks</a>
   </li>
   <li id="navItem2">
-    <a href="{% url 'shop:jobs' %}">Jobs</a>
+    <a href="">Trailers</a>
   </li>
   <li id="navItem3">
-    <a href="{% url 'shop:parts' %}">Parts</a>
-  </li>
-  <li id="navItem4">
-    <a href="{% url 'shop:purchases' %}">Purchases</a>
-  </li>
-  <li id="navItem6">
-    <a href="{% url 'shop:balance' %}">Accounting</a>
+    <a href="">Drivers</a>
   </li>
 {% endblock header %}
 
@@ -44,18 +38,12 @@
   {% block main_js %}
 
     var section = window.location.toString().replace(/^https?:\/\//, '').split('/')[1];
-    if (section == "orders") {
+    if (section == "trucks") {
       document.getElementById("navItem1").classList.add('active');
-    } else if (section == "jobs") {
+    } else if (section == "trailers") {
       document.getElementById("navItem2").classList.add('active');
-    } else if (section == "parts") {
+    } else if (section == "drivers") {
       document.getElementById("navItem3").classList.add('active');
-    } else if (section == "purchases") {
-      document.getElementById("navItem4").classList.add('active');
-    } else if (section == "inspections") {
-      document.getElementById("navItem5").classList.add('active');
-    } else if (section == "accounting") {
-      document.getElementById("navItem6").classList.add('active');
     };
 
     {% if filter_bar or search_bar %}

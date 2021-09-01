@@ -2,9 +2,12 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from datetime import date
 
-from .models import Order, Part, Job, OrderPart, Purchase, PurchaseItem, Balance
-from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm
-from .utils import get_job_forms, get_part_forms, get_purchase_forms
+from .models import Order, Part, Job, OrderPart, Purchase, PurchaseItem, \
+    Balance, Inspection
+from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
+    InspectionForm
+from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
+    link_with_part
 from .mixins import ObjectView, FormSetView
 from users.mixins import ReadCheckMixin, WriteCheckMixin
 
@@ -59,6 +62,7 @@ class OrderView(WriteCheckMixin, ObjectView):
                             inst.save()
                             inst.part.stock -= inst.amount
                             inst.part.save(update_fields=['stock'])
+                            link_with_part(inst)
                         else:
                             f.add_error('amount', 'Not enough in stock')
                             return self.render_to_response(
@@ -73,11 +77,13 @@ class OrderView(WriteCheckMixin, ObjectView):
                         inst.part.save(update_fields=['stock'])
                         if inst.amount == 0:
                             try:
+                                link_with_part(inst, True)
                                 inst.delete()
                             except AssertionError:
                                 pass
                         else:
                             inst.save()
+                            link_with_part(inst)
             else:
                 return self.render_to_response(
                     self.get_context_data(form=form, job_formset=job_formset,
@@ -97,6 +103,12 @@ class OrderView(WriteCheckMixin, ObjectView):
             context['btn_print'] = True
             context['print_url'] = 'shop:order_print'
             context['print_id'] = order.id
+            context['btn_image'] = True
+            context['image_url'] = 'docs:order_image'
+            context['image_id'] = order.id
+            context['btn_gallery'] = True
+            context['gallery_url'] = 'docs:order_images'
+            context['gallery_id'] = order.id
         return context
 
     def get_form_kwargs(self):
@@ -258,3 +270,38 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
         context['this_month'] = this_month
         context['last_month'] = last_month
         return context
+
+
+class InspectionListView(ReadCheckMixin, ListView):
+    model = Inspection
+    template_name = 'shop/inspection_list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['btn_new'] = True
+        context['create_url'] = 'shop:create_inspection'
+        return context
+
+
+class InspectionView(WriteCheckMixin, ObjectView):
+    model = Inspection
+    form_class = InspectionForm
+    template_name = 'shop/inspection_form.html'
+
+    def get_context_data(
+            self, *args, job_formset=None, part_formset=None, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        inst = self.get_object()
+        context['btn_save'] = True
+        context['btn_image'] = True
+        context['image_url'] = 'docs:inspection_image'
+        context['image_id'] = inst.id
+        context['btn_gallery'] = True
+        context['gallery_url'] = 'docs:inspection_images'
+        context['gallery_id'] = inst.id
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update(is_create=self.is_create)
+        return kwargs

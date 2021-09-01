@@ -21,13 +21,6 @@ class Order(models.Model):
         null=True,
         blank=True,
     )
-    customer = models.ForeignKey(
-        Company,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        limit_choices_to={'group': 'CS'},
-    )
     opened = models.DateField(null=True, blank=True, default=now)
     mechanic = models.ForeignKey(
         'Mechanic',
@@ -37,7 +30,7 @@ class Order(models.Model):
     )
     mileage = models.PositiveIntegerField(null=True, blank=True)
     closed = models.DateField(null=True, blank=True)
-    comments = models.TextField(null=True, blank=True)
+    comments = models.TextField(blank=True)
 
     class Meta:
         ordering = ['-id']
@@ -207,3 +200,52 @@ class Balance(models.Model):
 
     class Meta:
         ordering = ['-date', '-id']
+
+
+class Inspection(models.Model):
+    truck = models.ForeignKey(
+        Truck,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='truck_pms',
+    )
+    trailer = models.ForeignKey(
+        Trailer,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='trailer_pms',
+    )
+    date = models.DateField(null=True, blank=True, default=now)
+    mechanic = models.ForeignKey(
+        Mechanic,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    mileage = models.PositiveIntegerField(null=True, blank=True)
+    comments = models.TextField(blank=True)
+    tires = models.DecimalField(
+        max_digits=2,
+        decimal_places=0,
+        null=True,
+        blank=True,
+    )
+    brakes = models.DecimalField(
+        max_digits=2,
+        decimal_places=0,
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        ordering = ['-id']
+
+    def __str__(self):
+        return ('Truck ' + self.truck.__str__() + ': DOT #' + str(self.id)
+                if self.truck else 'Trailer ' + self.trailer.__str__() +
+                ': DOT #' + str(self.id))
+
+    def get_absolute_url(self):
+        return reverse('shop:inspection', kwargs={'pk': self.id})

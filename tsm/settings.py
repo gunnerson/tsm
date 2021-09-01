@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'users',
     'invent',
     'shop',
+    'docs',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +133,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [(BASE_DIR / 'staticfiles'), ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.environ.get('DJANGO_MEDIA_ROOT')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

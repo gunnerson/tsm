@@ -82,3 +82,17 @@ def get_font_classes(font_size, context):
     else:
         context['font_class'] = 'font-medium'
     return context
+
+
+def model_to_dict(instance, fields=None, exclude=None):
+    opts = instance._meta
+    data = {}
+    for f in opts.concrete_fields:
+        if not getattr(f, 'editable', False):
+            continue
+        if fields and f.name not in fields:
+            continue
+        if exclude and f.name in exclude:
+            continue
+        data[gen_field_ver_name(f.verbose_name)] = f.value_from_object(instance)
+    return data
