@@ -45,6 +45,11 @@ class Profile(models.Model):
         decimal_places=2,
         default=1.1,
     )
+    tax = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        default=0.1,
+    )
     shop_header = models.ForeignKey(
         Company,
         on_delete=models.SET_NULL,

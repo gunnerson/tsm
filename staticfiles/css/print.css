@@ -69,6 +69,18 @@ td:not(:last-child){
   border-right: 1px solid var(--border-color);
 }
 
+#print-button {
+  background: white;
+  position: absolute;
+  left: 50%;
+  top: 30px;
+}
+
+#print-button:hover {
+  cursor: pointer;
+}
+
 @media print {
    body {margin: 0;}
+   #print-button {display: none;}
 }

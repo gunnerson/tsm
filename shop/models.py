@@ -50,6 +50,22 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse('shop:order', kwargs={'pk': self.id})
 
+    def parts_total(self, user):
+        parts_total = 0
+        parts = self.orderpart_set.all()
+        surcharge = user.profile.parts_surcharge
+        for p in parts:
+            parts_total += p.part.price * surcharge * p.amount
+        return parts_total
+
+    @property
+    def labor_total(self):
+        labor_total = 0
+        jobs = self.orderjob_set.all()
+        for j in jobs:
+            labor_total += j.job.man_hours * j.amount
+        return labor_total
+
 
 class Part(models.Model):
     part_number = models.CharField(max_length=30)

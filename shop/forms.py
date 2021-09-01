@@ -75,6 +75,10 @@ class PartForm(FormSetMixin):
         model = Part
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['stock'].disabled = True
+
 
 class PurchaseForm(FormMixin):
     class Meta:

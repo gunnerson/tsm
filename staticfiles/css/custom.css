@@ -157,7 +157,7 @@ ul {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-  left: -30px;
+  left: -36px;
   padding-left: 36px;
   border-radius:22px;
   width: 20rem;
@@ -183,12 +183,12 @@ ul {
 }
 
 .search-button img{
-  margin-left: 20px;
   position: relative;
   top: 50%;
   transform: translateY(-50%);
   height: 22px!important;
   z-index: 1;
+  background: transparent!important;
 }
 
 .filter-item {

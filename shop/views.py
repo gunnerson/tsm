@@ -55,9 +55,15 @@ class OrderView(WriteCheckMixin, ObjectView):
                     inst = f.save(commit=False)
                     inst.order = self.object
                     if not inst.id and inst.part_id:
-                        inst.save()
-                        inst.part.stock -= inst.amount
-                        inst.part.save(update_fields=['stock'])
+                        if inst.part.stock >= inst.amount:
+                            inst.save()
+                            inst.part.stock -= inst.amount
+                            inst.part.save(update_fields=['stock'])
+                        else:
+                            f.add_error('amount', 'Not enough in stock')
+                            return self.render_to_response(
+                                self.get_context_data(form=form, job_formset=job_formset,
+                                                      part_formset=part_formset))
                     elif inst.id and inst.part_id:
                         before_inst = OrderPart.objects.get(id=inst.id)
                         inst.part.stock -= inst.amount - before_inst.amount
@@ -99,6 +105,18 @@ class OrderView(WriteCheckMixin, ObjectView):
 class OrderPrintView(WriteCheckMixin, DetailView):
     model = Order
     template_name = 'shop/order_print.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        user = self.request.user
+        order = self.get_object()
+        parts_total = order.parts_total(user)
+        context['parts_total'] = parts_total
+        context['tax'] = parts_total * user.profile.tax
+        context['labor_total'] = order.labor_total * user.profile.labor_rate
+        context['total'] = parts_total + \
+            context['tax'] + context['labor_total']
+        return context
 
 
 class JobFormSetView(WriteCheckMixin, FormSetView):
