@@ -53,7 +53,7 @@ def company_group_choices():
         ('LO', 'Logistics'),
         ('IN', 'Insurance'),
         ('VE', 'Vendors'),
-        ('GN', 'General'),
+        ('CS', 'Customers'),
     ]
     return choices
 

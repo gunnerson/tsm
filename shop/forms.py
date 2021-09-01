@@ -13,6 +13,7 @@ class OrderForm(FormMixin):
             'opened': forms.DateInput(attrs={'type': 'date'}),
             'closed': forms.DateInput(attrs={'type': 'date'}),
             'jobs': forms.CheckboxSelectMultiple(),
+            'comments': forms.Textarea(attrs={'rows': 1}),
         }
 
     def __init__(self, *args, is_create=None, **kwargs):

@@ -1,187 +1,116 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>A simple, clean, and responsive HTML invoice template</title>
 
-    <style>
-      .invoice-box {
-        max-width: 800px;
-        margin: auto;
-        padding: 30px;
-        border: 1px solid #eee;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-        font-size: 16px;
-        line-height: 24px;
-        font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
-        color: #555;
-      }
+<head>
+  <link rel="stylesheet" href="{% static 'css/print.css' %}" />
+</head>
 
-      .invoice-box table {
-        width: 100%;
-        line-height: inherit;
-        text-align: left;
-      }
+<body>
 
-      .invoice-box table td {
-        padding: 5px;
-        vertical-align: top;
-      }
+  <div class="container">
 
-      .invoice-box table tr td:nth-child(2) {
-        text-align: right;
-      }
+    <div class="row">
+      <div class="col">
+        <p>{{ user.profile.shop_header }}</p>
+        <p>{{ user.profile.shop_header.address_line_1 }}</p>
+        <p>{{ user.profile.shop_header.address_line_2 }}</p>
+        <p>{{ user.profile.shop_header.city }}, {{ user.profile.shop_header.state }} {{ user.profile.shop_header.zip_code }}</p>
+        <p>{{ user.profile.shop_header.phone_number }}</p>
+      </div>
+      <div class="col">
+        <p><strong>Invoice #</strong> {{ object.id }}</p>
+        <p><strong>Invoice Date:</strong></p>
+        <p>{{ object.opened }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col"></div>
+      <div class="col">
+        <p>{{ object.customer }}</p>
+        <p>{{ object.customer.address_line_1 }}</p>
+        <p>{{ object.customer.address_line_2 }}</p>
+        <p>{{ object.customer.city }}, {{ object.customer.state }} {{ object.customer.zip_code }}</p>
+        <p>{{ object.customer.phone_number }}</p>
+      </div>
+      <div class="col">
+        <p><strong>Make: </strong>{{ object.truck.get_make_display|default_if_none:"_______________" }}{{ object.trailer.get_make_display|default_if_none:"_______________" }}</p>
+        <p><strong>VIN: </strong>{{ object.truck.vin|default_if_none:"_______________" }}{{ object.trailer.vin|default_if_none:"_______________" }}</p>
+        {% if object.truck %}
+          <p><strong>Odometer: </strong>{{ object.truck.mileage|default_if_none:"__________" }}</p>
+        {% endif %}
+      </div>
+    </div>
 
-      .invoice-box table tr.top table td {
-        padding-bottom: 20px;
-      }
-
-      .invoice-box table tr.top table td.title {
-        font-size: 45px;
-        line-height: 45px;
-        color: #333;
-      }
-
-      .invoice-box table tr.information table td {
-        padding-bottom: 40px;
-      }
-
-      .invoice-box table tr.heading td {
-        background: #eee;
-        border-bottom: 1px solid #ddd;
-        font-weight: bold;
-      }
-
-      .invoice-box table tr.details td {
-        padding-bottom: 20px;
-      }
-
-      .invoice-box table tr.item td {
-        border-bottom: 1px solid #eee;
-      }
-
-      .invoice-box table tr.item.last td {
-        border-bottom: none;
-      }
-
-      .invoice-box table tr.total td:nth-child(2) {
-        border-top: 2px solid #eee;
-        font-weight: bold;
-      }
-
-      @media only screen and (max-width: 600px) {
-        .invoice-box table tr.top table td {
-          width: 100%;
-          display: block;
-          text-align: center;
-        }
-
-        .invoice-box table tr.information table td {
-          width: 100%;
-          display: block;
-          text-align: center;
-        }
-      }
-
-      /** RTL **/
-      .invoice-box.rtl {
-        direction: rtl;
-        font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
-      }
-
-      .invoice-box.rtl table {
-        text-align: right;
-      }
-
-      .invoice-box.rtl table tr td:nth-child(2) {
-        text-align: left;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="invoice-box">
-      <table cellpadding="0" cellspacing="0">
-        <tr class="top">
-          <td colspan="2">
-            <table>
-              <tr>
-                <td class="title">
-                  <img src="https://www.sparksuite.com/images/logo.png" style="width: 100%; max-width: 300px" />
-                </td>
-
-                <td>
-                  Invoice #: 123<br />
-                  Created: January 1, 2015<br />
-                  Due: February 1, 2015
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <tr class="information">
-          <td colspan="2">
-            <table>
-              <tr>
-                <td>
-                  Sparksuite, Inc.<br />
-                  12345 Sunny Road<br />
-                  Sunnyville, CA 12345
-                </td>
-
-                <td>
-                  Acme Corp.<br />
-                  John Doe<br />
-                  john@example.com
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-
-        <tr class="heading">
-          <td>Payment Method</td>
-
-          <td>Check #</td>
-        </tr>
-
-        <tr class="details">
-          <td>Check</td>
-
-          <td>1000</td>
-        </tr>
-
-        <tr class="heading">
-          <td>Item</td>
-
-          <td>Price</td>
-        </tr>
-
-        <tr class="item">
-          <td>Website design</td>
-
-          <td>$300.00</td>
-        </tr>
-
-        <tr class="item">
-          <td>Hosting (3 months)</td>
-
-          <td>$75.00</td>
-        </tr>
-
-        <tr class="item last">
-          <td>Domain name (1 year)</td>
-
-          <td>$10.00</td>
-        </tr>
-
-        <tr class="total">
-          <td></td>
-
-          <td>Total: $385.00</td>
-        </tr>
+    <div class="row">
+      <table>
+        <thead>
+          <tr>
+            <th>SERVICE and LABOR</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for job in object.orderjob_set.all %}
+            <tr>
+              <td>{{ job.job }}</td>
+              <td style="width: 10%; text-align: center;">{{ job.amount }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
       </table>
     </div>
-  </body>
+
+    <div class="row">
+      <table>
+        <thead>
+          <tr>
+            <th>
+              <span>PARTS and MATERIAL</span>
+            </th>
+            <th>Price</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for part in object.orderpart_set.all %}
+            <tr>
+              <td>{{ part.part }}</td>
+              <td style="width: 20%; text-align: right;">$ {{ part.part.price }}</td>
+              <td style="width: 20%; text-align: center;">{{ part.amount }} {{ part.part.stock_unit }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <br>
+
+    <div class="row">
+      <div class="col" style="border: 1px solid #d2d2d2; width:80%; padding: 5px 5px;">
+        <p>Comments:{{ object.comments|default_if_none:"" }}</p>
+      </div>
+      <div class="col">
+        <p><strong>Parts total: </strong>{{ object.parts_total|default_if_none:"_______" }}</p>
+        <p><strong>Tax: </strong>{{ object.tax|default_if_none:"_______" }}</p>
+        <p><strong>Labor total: </strong>{{ object.labor_total|default_if_none:"_______" }}</p>
+        <p><strong>TOTAL: </strong>{{ object.labor_total|default_if_none:"_______" }}</p>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+      <div class="col">
+        <p>I agree that all work has been performed to my satisfaction</p>
+        <p style="padding: 15px 0;">Signature:_____________________________</p>
+        <p>Date:__________________</p>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
 </html>

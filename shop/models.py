@@ -20,6 +20,13 @@ class Order(models.Model):
         null=True,
         blank=True,
     )
+    customer = models.ForeignKey(
+        Company,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={'group': 'CS'},
+    )
     opened = models.DateField(null=True, blank=True, default=now)
     mechanic = models.CharField(
         max_length=2,
@@ -30,6 +37,7 @@ class Order(models.Model):
     )
     mileage = models.PositiveIntegerField(null=True, blank=True)
     closed = models.DateField(null=True, blank=True)
+    comments = models.TextField(null=True, blank=True)
 
     class Meta:
         ordering = ['-id']
