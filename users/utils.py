@@ -38,8 +38,8 @@ def generate_listcolshow(profile, model):
     elif model == Driver:
         exclude = ('id')
     elif model == Company:
-        exclude = ('id', 'driver', 'owned_trucks', 'insured_trucks',
-                   'owned_trailers', 'insured_trailers', 'purchase')
+        exclude = ('id', 'driver', 'owned_trucks', 'insured_trucks', 'order',
+                   'owned_trailers', 'insured_trailers', 'purchase', 'profile',)
     for f in fields:
         if f.name not in exclude:
             try:
