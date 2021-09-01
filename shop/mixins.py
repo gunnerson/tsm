@@ -92,11 +92,11 @@ class FormSetView():
             context['formset'] = kwargs['formset']
         else:
             context['formset'] = self.get_modelformset()
-        if self.filter_bar:
-            context['search_bar'] = True
-            context['filter_bar'] = True
+        if self.search_bar:
+            context['search_bar'] = self.search_bar
             context['query'] = self.request.GET.get('query', None)
-            context['term'] = self.request.GET.get('term', None)
+        if self.filter_bar:
+            context['filter_bar'] = self.search_bar
         return context
 
     def render_to_response(self, context):

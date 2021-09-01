@@ -2,6 +2,15 @@
 {% load static %}
 
 {% block content %}
+
+  {% if running_total %}
+    <p><strong>Running TOTAL: ${{running_total}}</strong>
+    <p><strong>This month: ${{this_month}}</strong>
+    <p><strong>Last month: ${{last_month}}</strong>
+    <br>
+    <br>
+  {% endif %}
+
   <form method='post' id="data_form">
     {% csrf_token %}
     {{ formset.management_form }}

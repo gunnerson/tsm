@@ -4,7 +4,8 @@ from django.utils.timezone import now
 
 from .managers import DBSearch
 from invent.models import Truck, Trailer, Company
-from invent.choices import mechanic_choices
+from users.models import Profile
+from invent.choices import category_choices
 
 
 class Order(models.Model):
@@ -28,12 +29,11 @@ class Order(models.Model):
         limit_choices_to={'group': 'CS'},
     )
     opened = models.DateField(null=True, blank=True, default=now)
-    mechanic = models.CharField(
-        max_length=2,
-        choices=mechanic_choices(),
+    mechanic = models.ForeignKey(
+        'Mechanic',
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        default='VP',
     )
     mileage = models.PositiveIntegerField(null=True, blank=True)
     closed = models.DateField(null=True, blank=True)
@@ -76,6 +76,11 @@ class Part(models.Model):
     trailers = models.ManyToManyField(Trailer, blank=True)
 
     objects = DBSearch()
+    # Create index:
+    # ALTER TABLE shop_part
+    #     ADD COLUMN textsearchable_index_col tsvector
+    #                GENERATED ALWAYS AS (to_tsvector('english', coalesce(part_number, '') || ' ' || coalesce(name, ''))) STORED;
+    # CREATE INDEX partsearch_idx ON shop_part USING GIN (textsearchable_index_col);
 
     class Meta:
         ordering = ['part_number']
@@ -172,3 +177,35 @@ class PurchaseItem(models.Model):
         blank=True,
     )
     amount = models.PositiveSmallIntegerField()
+
+
+class Mechanic(models.Model):
+    profile = models.OneToOneField(
+        Profile,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    name = models.CharField(max_length=30)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+class Balance(models.Model):
+    date = models.DateField()
+    category = models.CharField(
+        max_length=2,
+        choices=category_choices(),
+    )
+    total = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+    )
+    comments = models.CharField(max_length=50, blank=True)
+
+    class Meta:
+        ordering = ['-date', '-id']
