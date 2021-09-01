@@ -134,8 +134,8 @@ ul {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-  height: 28px;
-  background-color: white;
+  height: 24px;
+  background-color: inherit;
   margin-right: 10px;
 }
 

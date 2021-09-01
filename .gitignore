@@ -2,6 +2,7 @@
 *.pot
 *.pyc
 *.bak
+LPT.lnk
 __pycache__
 db.sqlite3
 media
