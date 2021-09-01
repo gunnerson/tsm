@@ -161,9 +161,7 @@ class Truck(models.Model):
     )
     objects = DBSearch()
     # Create index:
-    # ALTER TABLE invent_truck
-    #     ADD COLUMN textsearchable_index_col tsvector
-    #                GENERATED ALWAYS AS (to_tsvector('english', coalesce(fleet_number, '') || ' ' || coalesce(license_plate, '') || ' ' || coalesce(vin, ''))) STORED;
+    # ALTER TABLE invent_truck ADD COLUMN textsearchable_index_col tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce(fleet_number, '') || ' ' || coalesce(license_plate, '') || ' ' || coalesce(vin, ''))) STORED;
     # CREATE INDEX trucksearch_idx ON invent_truck USING GIN (textsearchable_index_col);
 
     class Meta:
@@ -275,9 +273,7 @@ class Trailer(models.Model):
 
     objects = DBSearch()
     # Create index:
-    # ALTER TABLE invent_trailer
-    #     ADD COLUMN textsearchable_index_col tsvector
-    #                GENERATED ALWAYS AS (to_tsvector('english', coalesce(fleet_number, '') || ' ' || coalesce(license_plate, '') || ' ' || coalesce(vin, ''))) STORED;
+    # ALTER TABLE invent_trailer ADD COLUMN textsearchable_index_col tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce(fleet_number, '') || ' ' || coalesce(license_plate, '') || ' ' || coalesce(vin, ''))) STORED;
     # CREATE INDEX trailersearch_idx ON invent_trailer USING GIN (textsearchable_index_col);
 
     class Meta:
@@ -328,9 +324,7 @@ class Company(models.Model):
 
     objects = DBSearch()
     # Create index:
-    # ALTER TABLE invent_company
-    #     ADD COLUMN textsearchable_index_col tsvector
-    #                GENERATED ALWAYS AS (to_tsvector('english', coalesce(name, '') || ' ' || coalesce(comments, ''))) STORED;
+    # ALTER TABLE invent_company ADD COLUMN textsearchable_index_col tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce(name, '') || ' ' || coalesce(comments, ''))) STORED;
     # CREATE INDEX companysearch_idx ON invent_company USING GIN (textsearchable_index_col);
 
     class Meta:
@@ -455,9 +449,7 @@ class Driver(models.Model):
 
     objects = DBSearch()
     # Create index:
-    # ALTER TABLE invent_driver
-    #     ADD COLUMN textsearchable_index_col tsvector
-    #                GENERATED ALWAYS AS (to_tsvector('english', coalesce(name, '') || ' ' || coalesce(cdl, '') || ' ' || coalesce(phone_number, '') || ' ' || coalesce(home_address, '') || ' ' || coalesce(ssn, ''))) STORED;
+    # ALTER TABLE invent_driver ADD COLUMN textsearchable_index_col tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce(name, '') || ' ' || coalesce(cdl, '') || ' ' || coalesce(phone_number, '') || ' ' || coalesce(ssn, ''))) STORED;
     # CREATE INDEX driversearch_idx ON invent_driver USING GIN (textsearchable_index_col);
 
     def __str__(self):

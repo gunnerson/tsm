@@ -53,7 +53,7 @@ class DBSearch(models.Manager):
             if model in ('Truck', 'Trailer'):
                 fields = ('fleet_number', 'vin', 'license_plate')
             elif model == 'Driver':
-                fields = ('name', 'cdl', 'phone_number', 'home_address', 'ssn')
+                fields = ('name', 'cdl', 'phone_number', 'ssn')
             elif model == 'Company':
                 fields = ('name', 'comments')
             qs = db_search(qs, query, 'B', *fields)
