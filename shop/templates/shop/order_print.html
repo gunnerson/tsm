@@ -36,11 +36,11 @@
     <div class="row" style="justify-content:flex-end;">
       <div class="col" style="padding-right: 20px;"><strong>BILL TO:</strong></div>
       <div class="col" style="padding-right: 20px;">
-        <p>{{ object.customer|default_if_none:"" }}</p>
-        <p>{{ object.customer.address_line_1 }}</p>
-        <p>{{ object.customer.address_line_2 }}</p>
-        <p>{{ object.customer.city }} {{ object.customer.state }} {{ object.customer.zip_code }}</p>
-        <p>{{ object.customer.phone_number }}</p>
+        <p>{{ object.truck.owner|default_if_none:"" }}{{ object.trailer.owner|default_if_none:"" }}</p>
+        <p>{{ object.truck.owner.address_line_1 }}{{ object.trailer.owner.address_line_1 }}</p>
+        <p>{{ object.truck.owner.address_line_2 }}{{ object.trailer.owner.address_line_2 }}</p>
+        <p>{{ object.truck.owner.city }} {{ object.truck.owner.state }} {{ object.truck.owner.zip_code }}{{ object.trailer.owner.city }} {{ object.trailer.owner.state }} {{ object.trailer.owner.zip_code }}</p>
+        <p>{{ object.truck.owner.phone_number }}{{ object.trailer.owner.phone_number }}</p>
       </div>
       <div class="col">
         <p><strong>Make: </strong>{{ object.truck.get_make_display|default_if_none:"_______________" }}{{ object.trailer.get_make_display|default_if_none:"_______________" }}</p>

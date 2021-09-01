@@ -1,5 +1,10 @@
 {% extends "invent/base.html" %}
 
 {% block content %}
+  {% for key, value in fields.items %}
+    {% if value %}
+    <p><b>{{ key }}:</b> {{ value }}</p>
+    {% endif %}
+  {% endfor %}
 {% endblock content %}
 

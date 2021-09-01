@@ -14,6 +14,7 @@ class TruckForm(FormSetMixin):
             'inspection': forms.DateInput(attrs={'type': 'date'}),
             'start_date': forms.DateInput(attrs={'type': 'date'}),
             'term_date': forms.DateInput(attrs={'type': 'date'}),
+            'last_pm_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
 

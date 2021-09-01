@@ -10,6 +10,8 @@ from .views import (
     PurchaseListView,
     PurchaseView,
     BalanceFormSetView,
+    InspectionListView,
+    InspectionView,
 )
 
 app_name = "shop"
@@ -37,4 +39,10 @@ urlpatterns = [
          name='purchase'),
     path('accounting/', BalanceFormSetView.as_view(),
          name='balance'),
+    path('inspections/', InspectionListView.as_view(),
+         name='inspections'),
+    path('inspections/create/', InspectionView.as_view(is_create=True),
+         name='create_inspection'),
+    path('inspections/<int:pk>/', InspectionView.as_view(),
+         name='inspection'),
 ]

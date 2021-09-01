@@ -4,9 +4,9 @@
   <table class="order-table">
     {% for object in object_list %}
       <tr>
-        <td><a href="{% url 'shop:purchase' object.id %}">{{ object }}</a></td>
+        <td><a href="{% url 'shop:inspection' object.id %}">{{ object }}</a></td>
+        <td>{{ object.date }}</td>
       </tr>
     {% endfor %}
-  </table>
 {% endblock content %}
 

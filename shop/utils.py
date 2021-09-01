@@ -56,3 +56,16 @@ def get_purchase_forms(order, data=None):
             exclude_ids.append(q.part.id)
     return ModelFormset(data, queryset=qs,
                         form_kwargs={'exclude': exclude_ids})
+
+
+def link_with_part(inst, remove=None):
+    if remove:
+        if inst.order.truck:
+            inst.part.trucks.remove(inst.order.truck)
+        elif inst.order.trailer:
+            inst.part.trailers.remove(inst.order.trailer)
+    else:
+        if inst.order.truck:
+            inst.part.trucks.add(inst.order.truck)
+        elif inst.order.trailer:
+            inst.part.trailers.add(inst.order.trailer)

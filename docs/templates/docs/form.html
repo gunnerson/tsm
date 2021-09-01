@@ -1,0 +1,9 @@
+{% extends "docs/base.html" %}
+
+{% block content %}
+<form method='post' id="data_form" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p}}
+  </form>
+{% endblock content %}
+

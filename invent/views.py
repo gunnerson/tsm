@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import user_passes_test
 
 from .models import Truck, Trailer, Driver, Company
 from .forms import TruckForm, TrailerForm, DriverForm, CompanyForm
-from .mixins import FormSetView
-from .utils import get_summary_context, get_font_classes
+from .mixins import FormSetView, InfoView
+from .utils import get_summary_context, get_font_classes, model_to_dict
 from users.mixins import ReadCheckMixin, WriteCheckMixin
 from users.utils import read_check
 
@@ -16,7 +16,7 @@ def summary(request):
     context = {}
     ours = request.GET.get('ours', None)
     query = request.GET.get('query', None)
-    our_companies = Company.objects.filter(group='OU')
+    our_companies = Company.objects.filter(group__in=('OU', 'LO'))
     if ours:
         if query:
             qs = Truck.objects.search(query, 'Truck')
@@ -64,17 +64,33 @@ class CompanyFormSetView(WriteCheckMixin, FormSetView):
     detail_url = 'invent:company'
 
 
-class TruckDetailView(ReadCheckMixin, DetailView):
+class TruckDetailView(ReadCheckMixin, InfoView):
     model = Truck
+    image_url = 'docs:truck_image'
+    gallery_url = 'docs:truck_images'
 
 
-class TrailerDetailView(ReadCheckMixin, DetailView):
+class TrailerDetailView(ReadCheckMixin, InfoView):
     model = Trailer
+    image_url = 'docs:trailer_image'
+    gallery_url = 'docs:trailer_images'
 
 
 class DriverDetailView(ReadCheckMixin, DetailView):
     model = Driver
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        inst = self.get_object()
+        context['fields'] = model_to_dict(inst, exclude=('id'))
+        return context
+
 
 class CompanyDetailView(ReadCheckMixin, DetailView):
     model = Company
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        inst = self.get_object()
+        context['fields'] = model_to_dict(inst, exclude=('id'))
+        return context

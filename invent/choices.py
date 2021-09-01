@@ -43,7 +43,7 @@ def trailer_make_choices():
 def company_group_choices():
     choices = [
         ('OU', 'Ours'),
-        ('LO', 'Logistics'),
+        ('LO', 'Owners'),
         ('IN', 'Insurance'),
         ('VE', 'Vendors'),
         ('CS', 'Customers'),

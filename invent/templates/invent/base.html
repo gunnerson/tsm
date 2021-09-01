@@ -24,20 +24,20 @@
 
 {% block toolbar %}
   {% if filter_bar %}
-      <form method="GET" id="filter-form">
-        <button type="submit" class="search-button filter-button" id="search-button">
-          <img src="{% static 'img/search.png' %}">
-        </button>
-        <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
-        <div class="filter-item">
-          <input type="checkbox" name="term" id="check_term" class="filter-button" {% if term %}checked{% endif %}>
-          <label for="check_term" class="filter-button">Show terminated</label>
-        </div>
-        <div class="filter-item">
-          <input type="checkbox" name="ours" id="check_ours" class="filter-button" {% if ours %}checked{% endif %}>
-          <label for="check_ours" class="filter-button">Show non-company</label>
-        </div>
-      </form>
+    <form method="GET" id="filter-form">
+      <button type="submit" class="search-button filter-button" id="search-button">
+        <img src="{% static 'img/search.png' %}">
+      </button>
+      <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
+      <div class="filter-item">
+        <input type="checkbox" name="term" id="check_term" class="filter-button" {% if term %}checked{% endif %}>
+        <label for="check_term" class="filter-button">Show terminated</label>
+      </div>
+      <div class="filter-item">
+        <input type="checkbox" name="ours" id="check_ours" class="filter-button" {% if ours %}checked{% endif %}>
+        <label for="check_ours" class="filter-button">Show non-company</label>
+      </div>
+    </form>
   {% endif %}
 {% endblock toolbar %}
 

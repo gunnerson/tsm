@@ -3,7 +3,9 @@ from django.http import HttpResponseNotAllowed
 from django import forms
 from django.forms import modelformset_factory, BaseModelFormSet
 from django.core.exceptions import FieldError
+from django.views.generic import DetailView
 
+from .utils import model_to_dict
 from .models import Company
 from users.utils import gen_field_ver_name
 from users.models import ListColShow
@@ -58,7 +60,7 @@ class FormSetView():
     def get_queryset(self):
         request = self.request
         ours = request.GET.get('ours', None)
-        our_companies = Company.objects.filter(group='OU')
+        our_companies = Company.objects.filter(group__in=('OU', 'LO'))
         if ours:
             qs = self.model.objects.all()
         else:
@@ -167,3 +169,20 @@ class FormSetMixin(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'formset_field'})
+
+
+class InfoView(DetailView):
+    image_url = None
+    gallery_url = None
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        inst = self.get_object()
+        context['fields'] = model_to_dict(inst, exclude=('id'))
+        context['btn_image'] = True
+        context['image_url'] = self.image_url
+        context['image_id'] = inst.id
+        context['btn_gallery'] = True
+        context['gallery_url'] = self.gallery_url
+        context['gallery_id'] = inst.id
+        return context
