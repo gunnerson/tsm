@@ -8,12 +8,14 @@
   <li id="navItem2">
     <a href="{% url 'shop:orders' %}">Shop</a>
   </li>
-  <li id="navItem3">
-    <a href="{% url 'users:profile' user.profile.id %}">Settings</a>
-  </li>
-  <li id="navItem4">
-    <a href="{% url 'users:listcolshow' %}">Table columns</a>
-  </li>
+  {% if user.is_authenticated %}
+    <li id="navItem3">
+      <a href="{% url 'users:profile' user.profile.id %}">Settings</a>
+    </li>
+    <li id="navItem4">
+      <a href="{% url 'users:listcolshow' %}">Table columns</a>
+    </li>
+  {% endif %}
   {% if user.profile.level == 'A' %}
     <li id="navItem5">
       <a href="{% url 'users:update_level' %}">Users</a>
@@ -28,12 +30,6 @@
     </li>
   {% endif %}
 {% endblock header %}
-
-{% block nav_bar_main %}
-  <li><a href="{% url 'index' %}">Home</a> > </li>
-  {% block nav_bar %}{% endblock nav_bar %}
-{% endblock nav_bar_main %}
-
 
 <script>
   {% block main_js %}

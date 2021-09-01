@@ -1,15 +1,16 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 
 from .models import Truck, Trailer, Driver, Company
 from .forms import TruckForm, TrailerForm, DriverForm, CompanyForm
 from .mixins import FormSetView
-from users.mixins import ReadCheckMixin, WriteCheckMixin
 from .utils import get_summary_context, get_font_classes
+from users.mixins import ReadCheckMixin, WriteCheckMixin
+from users.utils import read_check
 
 
-@login_required
+@user_passes_test(read_check, login_url='index')
 def summary(request):
     profile = request.user.profile
     context = {}
