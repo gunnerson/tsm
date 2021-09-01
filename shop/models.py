@@ -76,6 +76,11 @@ class Part(models.Model):
     trailers = models.ManyToManyField(Trailer, blank=True)
 
     objects = DBSearch()
+    # Create index:
+    # ALTER TABLE shop_part
+    #     ADD COLUMN textsearchable_index_col tsvector
+    #                GENERATED ALWAYS AS (to_tsvector('english', coalesce(part_number, '') || ' ' || coalesce(name, ''))) STORED;
+    # CREATE INDEX partsearch_idx ON shop_part USING GIN (textsearchable_index_col);
 
     class Meta:
         ordering = ['part_number']
