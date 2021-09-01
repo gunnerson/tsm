@@ -4,6 +4,9 @@
 <form method='post' id="data_form">
     {% csrf_token %}
     {{ form.as_p}}
+    <br>
+    <hr>
+    <br>
     {% if job_formset %}
       {{ job_formset.management_form }}
       <p> Jobs: </p>

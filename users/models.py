@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 
+from invent.models import Company
 from .utils import gen_list_ver_name, gen_field_ver_name
 from .managers import UserManager
 from invent.choices import size_choices, level
@@ -39,6 +40,23 @@ class Profile(models.Model):
         default='M',
     )
     labor_rate = models.PositiveSmallIntegerField(default=100)
+    parts_surcharge = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        default=1.1,
+    )
+    tax = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        default=0.1,
+    )
+    shop_header = models.ForeignKey(
+        Company,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={'group': 'OU'},
+    )
 
     def __str__(self):
         return str(self.user)

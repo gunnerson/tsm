@@ -1,0 +1,11 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+  <table class="order-table">
+    {% for object in object_list %}
+      <tr>
+        <td><a href="{% url 'shop:purchase' object.id %}">{{ object }}</a></td>
+      </tr>
+    {% endfor %}
+{% endblock content %}
+

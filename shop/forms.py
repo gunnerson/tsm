@@ -13,6 +13,7 @@ class OrderForm(FormMixin):
             'opened': forms.DateInput(attrs={'type': 'date'}),
             'closed': forms.DateInput(attrs={'type': 'date'}),
             'jobs': forms.CheckboxSelectMultiple(),
+            'comments': forms.Textarea(attrs={'rows': 1}),
         }
 
     def __init__(self, *args, is_create=None, **kwargs):
@@ -74,10 +75,29 @@ class PartForm(FormSetMixin):
         model = Part
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['stock'].disabled = True
 
-class PurchaseForm(forms.ModelForm):
+
+class PurchaseForm(FormMixin):
     class Meta:
         model = Purchase
+        fields = '__all__'
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def __init__(self, *args, is_create=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not is_create:
+            self.fields['vendor'].disabled = True
+            self.fields['date'].disabled = True
+
+
+class PurchaseItemForm(forms.ModelForm):
+    class Meta:
+        model = PurchaseItem
         fields = '__all__'
 
     def __init__(self, *args, exclude=None, **kwargs):
@@ -86,11 +106,9 @@ class PurchaseForm(forms.ModelForm):
             queryset=Part.objects.all(),
             widget=OrderSelect(exclude=exclude),
         )
+        self.fields["price"].widget.attrs.update(
+            {'placeholder': 'Price', 'style': 'width:12ch'})
+        self.fields["amount"].widget.attrs.update(
+            {'placeholder': 'Amount', 'style': 'width:12ch'})
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})
-
-
-class PurchaseItemForm(FormSetMixin):
-    class Meta:
-        model = PurchaseItem
-        fields = '__all__'

@@ -43,6 +43,9 @@
         {% if btn_new %}
           <a href="{% url create_url %}" title="New"><img src="{% static 'img/new.png' %}"></a>
         {% endif %}
+        {% if btn_print %}
+          <a href="{% url print_url print_id %}" title="For print"><img src="{% static 'img/print.png' %}"></a>
+        {% endif %}
         {% block toolbar %}{% endblock toolbar %}
       </div>
 

@@ -1,43 +1,86 @@
-/* Styles go here */
-
-.page-header, .page-header-space {
-  height: 100px;
+:root {
+  --border-color: #d2d2d2;
 }
 
-.page-footer, .page-footer-space {
-  height: 50px;
-
+html, body {
+  height: 100%;
 }
 
-.page-footer {
+body {
+  font-family: 'Verdana', sans-serif;
+  font-size: 0.7rem;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+.col {
+  align-self: flex-start;
+}
+
+.footer {
   position: fixed;
   bottom: 0;
   width: 100%;
-  border-top: 1px solid black; /* for demo */
-  background: yellow; /* for demo */
 }
 
-.page-header {
-  position: fixed;
-  top: 0mm;
+p {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+table {
+  border: 1px solid var(--border-color);
+  border-spacing: 0;
   width: 100%;
-  border-bottom: 1px solid black; /* for demo */
-  background: yellow; /* for demo */
+  margin-top: 20px;
 }
 
-.page {
-  page-break-after: always;
+th {
+  border-bottom: 1px solid var(--border-color);
+  padding: 5px 5px;
 }
 
-@page {
-  margin: 20mm
+th:not(:last-child){
+  border-right: 1px solid var(--border-color);
+}
+
+td {
+  padding: 2px 2px;
+}
+
+tr:not(:last-child) td{
+  border-bottom: 1px solid var(--border-color);
+}
+
+td:not(:last-child){
+  border-right: 1px solid var(--border-color);
+}
+
+#print-button {
+  background: white;
+  position: absolute;
+  left: 50%;
+  top: 30px;
+}
+
+#print-button:hover {
+  cursor: pointer;
 }
 
 @media print {
-   thead {display: table-header-group;} 
-   tfoot {display: table-footer-group;}
-   
-   button {display: none;}
-   
    body {margin: 0;}
+   #print-button {display: none;}
 }
