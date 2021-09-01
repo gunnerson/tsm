@@ -76,11 +76,19 @@ td:not(:last-child){
   top: 30px;
 }
 
-#print-button:hover {
+#back-button {
+  background: white;
+  position: absolute;
+  left: 50%;
+  top: 60px;
+}
+
+#print-button:hover , #back-button:hover {
   cursor: pointer;
 }
 
 @media print {
    body {margin: 0;}
    #print-button {display: none;}
+   #back-button {display: none;}
 }

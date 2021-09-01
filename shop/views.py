@@ -165,7 +165,7 @@ class JobPartListView(ReadCheckMixin, ListView):
                 job.parts.add(q)
             else:
                 job.parts.remove(q)
-        return redirect('./parts')
+        return redirect('.')
 
 
 class PartFormSetView(WriteCheckMixin, FormSetView):

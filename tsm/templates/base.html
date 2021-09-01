@@ -38,15 +38,23 @@
       </div>
 
       <div id="toolbar">
+        <a href="{% url 'index' %}" title="Home"><img src="{% static 'img/home.png' %}"></a>
+        <a href="" onClick="window.history.back();return false;" title="Back"><img src="{% static 'img/back.png' %}"></a>
+        <a href="" onClick="window.history.forward();return false;" title="Forward"><img src="{% static 'img/forward.png' %}"></a>
+        <a href="" onClick="location.reload();return false;" title="Reload"><img src="{% static 'img/reload.png' %}"></a>
         {% if btn_save %}
+          &nbsp;|&nbsp;&nbsp;&nbsp;
           <button type="submit" form="data_form" title="Save"><img src="{% static 'img/save.png' %}"></button>
         {% endif %}
         {% if btn_new %}
+          &nbsp;|&nbsp;&nbsp;&nbsp;
           <a href="{% url create_url %}" title="New"><img src="{% static 'img/new.png' %}"></a>
         {% endif %}
         {% if btn_print %}
+          &nbsp;|&nbsp;&nbsp;&nbsp;
           <a href="{% url print_url print_id %}" title="For print"><img src="{% static 'img/print.png' %}"></a>
         {% endif %}
+        &nbsp;|
         {% block toolbar %}{% endblock toolbar %}
       </div>
 
