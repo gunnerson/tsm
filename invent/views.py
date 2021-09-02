@@ -68,12 +68,16 @@ class TruckDetailView(ReadCheckMixin, InfoView):
     model = Truck
     image_url = 'docs:truck_image'
     gallery_url = 'docs:truck_images'
+    doc_url = 'docs:truck_doc'
+    files_url = 'docs:truck_files'
 
 
 class TrailerDetailView(ReadCheckMixin, InfoView):
     model = Trailer
     image_url = 'docs:trailer_image'
     gallery_url = 'docs:trailer_images'
+    doc_url = 'docs:trailer_doc'
+    files_url = 'docs:trailer_files'
 
 
 class DriverDetailView(ReadCheckMixin, DetailView):
@@ -83,6 +87,11 @@ class DriverDetailView(ReadCheckMixin, DetailView):
         context = super().get_context_data(*args, **kwargs)
         inst = self.get_object()
         context['fields'] = model_to_dict(inst, exclude=('id'))
+        context['inst_id'] = inst.id
+        context['btn_doc'] = True
+        context['doc_url'] = 'docs:driver_doc'
+        context['btn_files'] = True
+        context['files_url'] = 'docs:driver_files'
         return context
 
 
@@ -93,4 +102,9 @@ class CompanyDetailView(ReadCheckMixin, DetailView):
         context = super().get_context_data(*args, **kwargs)
         inst = self.get_object()
         context['fields'] = model_to_dict(inst, exclude=('id'))
+        context['inst_id'] = inst.id
+        context['btn_doc'] = True
+        context['doc_url'] = 'docs:company_doc'
+        context['btn_files'] = True
+        context['files_url'] = 'docs:company_files'
         return context

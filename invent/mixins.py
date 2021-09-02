@@ -174,15 +174,20 @@ class FormSetMixin(forms.ModelForm):
 class InfoView(DetailView):
     image_url = None
     gallery_url = None
+    doc_url = None
+    files_url = None
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         inst = self.get_object()
         context['fields'] = model_to_dict(inst, exclude=('id'))
+        context['inst_id'] = inst.id
         context['btn_image'] = True
         context['image_url'] = self.image_url
-        context['image_id'] = inst.id
         context['btn_gallery'] = True
         context['gallery_url'] = self.gallery_url
-        context['gallery_id'] = inst.id
+        context['btn_doc'] = True
+        context['doc_url'] = self.doc_url
+        context['btn_files'] = True
+        context['files_url'] = self.files_url
         return context

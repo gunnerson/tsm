@@ -56,10 +56,16 @@
           <a href="{% url print_url print_id %}" title="For print"><img src="{% static 'img/print.png' %}"></a>
         {% endif %}
         {% if btn_image %}
-          <a href="{% url image_url image_id %}" title="Upload image"><img src="{% static 'img/photo.png' %}"></a>
+          <a href="{% url image_url inst_id %}" title="Upload image"><img src="{% static 'img/photo.png' %}"></a>
+        {% endif %}
+        {% if btn_doc %}
+          <a href="{% url doc_url inst_id %}" title="Upload document"><img src="{% static 'img/doc_import.png' %}"></a>
         {% endif %}
         {% if btn_gallery %}
-          <a href="{% url gallery_url gallery_id %}" title="Show images"><img src="{% static 'img/image.png' %}"></a>
+          <a href="{% url gallery_url inst_id %}" title="Show images"><img src="{% static 'img/image.png' %}"></a>
+        {% endif %}
+        {% if btn_files %}
+          <a href="{% url files_url inst_id %}" title="Show documents"><img src="{% static 'img/folder.png' %}"></a>
         {% endif %}
         {% if btn_key %}
           <a href="{% url key_url key_id %}" title="Back to key"><img src="{% static 'img/key.png' %}"></a>

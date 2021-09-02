@@ -1,0 +1,16 @@
+{% extends "docs/base.html" %}
+
+{% block content %}
+  <form method="post" id="data_form">
+    {% csrf_token %}
+    {% for object in object_list %}
+      <div class="gallery">
+        <a target="_blank" href="{{ MEDIA_URL }}{{ object.file.url }}">
+          <div class="desc">{{ object.description }}</div>
+        </a>
+        <input type="checkbox" class="gallery-checkbox" name="{{ object.id }}" />
+      </div>
+    {% endfor %}
+  </form>
+{% endblock content %}
+
