@@ -102,6 +102,17 @@ def category_choices():
     return choices
 
 
+def file_category_choices():
+    choices = [
+        ('IN', 'Insurance'),
+        ('RG', 'Registration'),
+        ('DI', 'DOT Inspection'),
+        ('BL', 'Bills'),
+        ('GN', 'General'),
+    ]
+    return choices
+
+
 def us_states_choices():
     choices = [
         ('AL', 'Alabama'),

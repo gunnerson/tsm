@@ -9,12 +9,19 @@
     <a href="{% url 'shop:orders' %}">Shop</a>
   </li>
     <li id="navItem1">
-    <a href="">Trucks</a>
+    <a href="">Orders</a>
   </li>
   <li id="navItem2">
-    <a href="">Trailers</a>
+    <a href="">Inspections</a>
+  </li>
   </li>
   <li id="navItem3">
+    <a href="">Trucks</a>
+  </li>
+  <li id="navItem4">
+    <a href="">Trailers</a>
+  </li>
+  <li id="navItem5">
     <a href="">Drivers</a>
   </li>
 {% endblock header %}
@@ -38,12 +45,16 @@
   {% block main_js %}
 
     var section = window.location.toString().replace(/^https?:\/\//, '').split('/')[1];
-    if (section == "trucks") {
+    if (section == "orders") {
       document.getElementById("navItem1").classList.add('active');
-    } else if (section == "trailers") {
+    } else if (section == "inspections") {
       document.getElementById("navItem2").classList.add('active');
-    } else if (section == "drivers") {
+    } else if (section == "trucks") {
       document.getElementById("navItem3").classList.add('active');
+    } else if (section == "trailers") {
+      document.getElementById("navItem4").classList.add('active');
+    } else if (section == "drivers") {
+      document.getElementById("navItem5").classList.add('active');
     };
 
     {% if filter_bar or search_bar %}
