@@ -452,3 +452,50 @@ div.desc {
   top: 5px;
   right: 5px;
 }
+
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+#header {
+  position: static;
+  overflow: inherit;
+}
+
+#toolbar {
+  position: relative;
+  overflow: inherit;
+  margin-top: 50px;
+}
+
+.listview-table thead th{
+  position: inherit;
+}
+
+.listview-table tr td:nth-child(2) {
+  position: inherit;
+}
+
+.listview-table tr th:first-child {
+  position: inherit;
+}
+
+.formset-table thead th{
+  position: inherit;
+}
+
+.formset-table tr th:first-child {
+  position: inherit;
+}
+
+.formset-table tr td:first-child {
+  position: inherit;
+}
+
+}
+
