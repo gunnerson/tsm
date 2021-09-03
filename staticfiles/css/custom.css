@@ -457,20 +457,20 @@ div.desc {
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
 #wrapper {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
+  display: block;
+  overflow: visible;
 }
 
 #header {
-  position: static;
-  overflow: inherit;
+  position: relative;
+  overflow: visible;
+  height: auto;
 }
 
 #toolbar {
   position: relative;
-  overflow: inherit;
-  margin-top: 50px;
+  overflow: visible;
+  height: auto;
 }
 
 .listview-table thead th{
