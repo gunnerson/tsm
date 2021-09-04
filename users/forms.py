@@ -53,7 +53,7 @@ class ProfileForm(FormMixin):
 
     class Meta:
         model = Profile
-        exclude = ('user', 'level',)
+        exclude = ('user', 'level', 'home_latitude', 'home_longitude')
 
 
 class UserLevelForm(forms.ModelForm):
