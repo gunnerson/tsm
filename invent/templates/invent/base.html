@@ -1,28 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block header %}
-  <li>
-    <a href="{% url 'shop:orders' %}">Shop</a>
-  </li>
-  <li id="navItem1">
-    <a href="{% url 'invent:summary' %}">Summary</a>
-  </li>
-  <li id="navItem2">
-    <a href="{% url 'invent:list_trucks' %}">Trucks</a>
-  </li>
-  <li id="navItem3">
-    <a href="{% url 'invent:list_trailers' %}">Trailers</a>
-  </li>
-  <li id="navItem4">
-    <a href="{% url 'invent:list_drivers' %}">Drivers</a>
-  </li>
-  <li id="navItem5">
-    <a href="{% url 'invent:list_companies' %}">Companies</a>
-  </li>
-{% endblock header %}
+{% block nav_toolbar %}
+    <a href="{% url 'invent:summary' %}" title="Summary"><img src="{% static 'img/book.png' %}" id="nav_summary" ></a>
+    <a href="{% url 'invent:list_trucks' %}" title="Trucks"><img src="{% static 'img/truck.png' %}" id="nav_trucks" ></a>
+    <a href="{% url 'invent:list_trailers' %}" title="Trailers"><img src="{% static 'img/trailer.png' %}" id="nav_trailers" ></a>
+    <a href="{% url 'invent:list_drivers' %}" title="Drivers"><img src="{% static 'img/users.png' %}" id="nav_drivers" ></a>
+    <a href="{% url 'invent:list_companies' %}" title="Companies"><img src="{% static 'img/contact.png' %}" id="nav_companies" ></a>
+{% endblock nav_toolbar %}
 
-{% block toolbar %}
+{% block toolbar_mid %}
   {% if filter_bar %}
     <form method="GET" id="filter-form">
       <button type="submit" class="search-button filter-button" id="search-button">
@@ -39,22 +26,29 @@
       </div>
     </form>
   {% endif %}
-{% endblock toolbar %}
+{% endblock toolbar_mid %}
 
 <script>
   {% block main_js %}
 
+    document.getElementById("nav_safety").classList.add('active');
+
     var section = window.location.toString().replace(/^https?:\/\//, '').split('/')[1];
     if (section == "summary") {
-      document.getElementById("navItem1").classList.add('active');
+      document.getElementById("nav_summary").classList.add('active');
+      document.title = "LPT - Summary"
     } else if (section == "trucks") {
-      document.getElementById("navItem2").classList.add('active');
+      document.getElementById("nav_trucks").classList.add('active');
+      document.title = "LPT - Trucks"
     } else if (section == "trailers") {
-      document.getElementById("navItem3").classList.add('active');
+      document.getElementById("nav_trailers").classList.add('active');
+      document.title = "LPT - Trailers"
     } else if (section == "drivers") {
-      document.getElementById("navItem4").classList.add('active');
+      document.getElementById("nav_drivers").classList.add('active');
+      document.title = "LPT - Drivers"
     } else if (section == "companies") {
-      document.getElementById("navItem5").classList.add('active');
+      document.getElementById("nav_companies").classList.add('active');
+      document.title = "LPT - Companies"
     };
 
     {% if filter_bar %}

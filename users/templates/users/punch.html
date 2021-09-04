@@ -35,7 +35,10 @@
         </div>
         <input type="hidden" name="latitude" id="latitude">
         <input type="hidden" name="longitude" id="longitude">
-        <button name="submit" class="btn" id="punch_button">PUNCH</button>
+        <div class="buttons">
+          <button name="submit" class="btn" id="punch_button">PUNCH</button>
+          <a href="{% url 'users:profile' user.profile.id %}" class="back_btn">BACK</a>
+        </div>
       </form>
     {% else %}
       <form action="{% url 'users:login' %}?next=/punch/" method="post">

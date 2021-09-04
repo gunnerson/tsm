@@ -24,6 +24,15 @@ html, body {
   background-color: var(--main-bg-color);
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style-type: none;
+}
+
 #wrapper {
   height: 100%;
   width: 100%;
@@ -31,88 +40,19 @@ html, body {
   display: block;
 }
 
-#header {
-  height: 34px;
-  display: flex;
-  justify-content: space-between;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 3;
-  padding-top: 5px;
-  overflow: hidden;
-  background-color: var(--main-bg-color);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-#header a {
-  font-size: 1.2rem;
-}
-
-#header-left {
-  padding-left: 50px;
-}
-
-#header-right {
-  padding-right: 20px;
-}
-
-#header-left li {
-  margin-left: 30px;
-  padding: 3px 10px;
-}
-
-#header-left li:hover {
-  border: 1px solid;
-  border-color: var(--border-color);
-  border-bottom: none;
-  border-top-left-radius: .25rem;
-  border-top-right-radius: .25rem;
-}
-
-#header li {
-  display: inline;
-}
-
-#header .active {
-  background-color: var(--content-bg-color);
-  border: 1px solid;
-  border-color: var(--border-color);
-  border-bottom: none;
-  border-top-left-radius: .25rem;
-  border-top-right-radius: .25rem;
-}
-
-ul {
-  list-style-type: none;
-}
-
-#header-right li {
-  margin-right: 10px;
-}
-
-#header-right a {
-  font-size: 1rem;
-}
-
 #toolbar {
   position: fixed;
-  z-index: 1;
-  height: 34px;
-  top: 34px;
+  z-index: 5;
+  top: 0px;
   right: 0;
   left: 0;
-  padding: 5px 5px;
-  padding-left: 20px;
+  padding: 3px 20px;
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: space-between;
   align-content: center;
+  align-items: center;
+  flex-wrap: wrap-reverse;
   border-bottom: 1px solid var(--border-color);
   background-color: var(--content-bg-color);
   overflow: hidden;
@@ -125,44 +65,66 @@ ul {
   color: inherit;
 }
 
-
 #toolbar button{
+  height: 24px;
   border: none;
 }
 
 #toolbar img {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
   height: 24px;
   background-color: inherit;
-  margin-right: 10px;
+  margin: 0 5px;
 }
 
 #toolbar img:hover {
   cursor: pointer;
+  border: 1px solid var(--content-bg-color);
+}
+
+#toolbar_left {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+#toolbar_left a{
+  display: flex;
+}
+
+#toolbar_right {
+  display: flex;
+  flex-direction: row;
+  align-items: center
+}
+
+#toolbar_right li {
+  margin-right: 10px;
+  font-size: 1rem;
+}
+
+
+#toolbar .active {
+  background-color: white;
   border: 1px solid var(--border-color);
-  border-radius: 3px;
+  padding: 2px;
 }
 
 #filter-form {
   display: flex;
   flex-direction: row;
-  justify-content: start;
-  align-content: center;
   margin-left: 20px;
 }
 
 .search-input {
   position: relative;
-  top: 50%;
-  transform: translateY(-50%);
   left: -36px;
   padding-left: 36px;
-  border-radius:22px;
+  border-radius: 22px;
   width: 20rem;
   height: 22px;
   border-width: 0;
+  z-index: 1;
 }
 
 .search-input:focus {
@@ -174,21 +136,18 @@ ul {
   background: transparent;
   border: none;
   outline: none;
-  position: relative;
+  height: 22px!important;
+  z-index: 2;
+}
+
+.search-button img{
+  height: 22px!important;
+  background: transparent!important;
 }
 
 .search-button img:hover {
   cursor: pointer;
   border: none!important;
-}
-
-.search-button img{
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 22px!important;
-  z-index: 1;
-  background: transparent!important;
 }
 
 .filter-item {
@@ -200,10 +159,9 @@ ul {
 }
 
 #main-content {
-  margin-top: 68px;
+  margin-top: 30px;
   padding: 20px;
   height: 100%;
-  position: relative;
   z-index: 0;
   background-color: var(--main-bg-color);
 }
@@ -276,7 +234,7 @@ ul {
 
 .listview-table thead th{
   position: sticky;
-  top: 68px;
+  top: 30px;
   background-color: var(--content-bg-color);
   text-align: center;
   padding: 1px 5px;
@@ -331,7 +289,7 @@ ul {
 
 .formset-table thead th{
   position: sticky;
-  top: 68px;
+  top: 30px;
   background-color: var(--content-bg-color);
   text-align: center;
   padding: 1px 5px;
@@ -461,16 +419,14 @@ div.desc {
   overflow: visible;
 }
 
-#header {
-  position: relative;
+#toolbar {
+  position: static;
   overflow: visible;
   height: auto;
 }
 
-#toolbar {
-  position: relative;
-  overflow: visible;
-  height: auto;
+#toolbar_mid {
+  display: none;
 }
 
 .listview-table thead th{

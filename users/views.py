@@ -134,7 +134,7 @@ class UsersLevelFormSetView(AdminCheckMixin, FormSetView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.filter(~Q(user=self.request.user))
+        return qs.exclude(Q(user=self.request.user) | Q(level='A'))
 
 
 def punch(request):
