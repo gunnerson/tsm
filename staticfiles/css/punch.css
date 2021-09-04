@@ -1,0 +1,40 @@
+:root {
+  --border-color: #d2d2d2;
+  --form-font-color: #5d5d5d;
+}
+
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--form-font-color);
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.wrapper form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.form-class {
+  margin: 10px 10px;
+  padding: .375rem .75rem;
+
+  background-color: white;
+  background-clip: padding-box;
+  border: 1px solid var(--border-color);
+  border-radius: .25rem;
+}
+
+.btn {
+  margin: 10px 10px;
+  padding: 3px 10px;
+  font-size: 1.1rem;
+}

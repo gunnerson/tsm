@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import User, Profile, ListColShow
+from .models import User, Profile, ListColShow, PunchCard
 
 admin.site.register(User)
 admin.site.register(Profile)
 admin.site.register(ListColShow)
+admin.site.register(PunchCard)
 
 
 class UserAdmin(UserAdmin):
