@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Logistics Pro Tools</title>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/punch.css' %}" />
+  </head>
+  <body>
+
+  <div class="wrapper">
+
+    {% if user.is_authenticated %}
+      <form method="POST" class="select-punch">
+        {% csrf_token %}
+        <div>
+          <input type="radio" id="punch_option1" name="punch_select" class="form-class" value="punch_in" {% if status == 'punched_out' %}checked{% endif %}>
+          <label for="punch_option1">PUNCH IN</label>
+        </div>
+        <div>
+          <input type="radio" id="punch_option2" name="punch_select" class="form-class"  value="lunch_in" {% if status == 'punched_in' %}checked{% endif %} {% if no_card %}disabled{% endif %}>
+          <label for="punch_option2">LUNCH IN</label>
+        </div>
+        <div>
+          <input type="radio" id="punch_option3" name="punch_select" class="form-class" value="lunch_out" {% if status == 'lunched_in' %}checked{% endif %} {% if no_card %}disabled{% endif %}>
+          <label for="punch_option3">LUNCH OUT</label>
+        </div>
+        <div>
+          <input type="radio" id="punch_option4" name="punch_select" class="form-class" value="punch_out" {% if status == 'lunched_out' %}checked{% endif %} {% if no_card %}disabled{% endif %}>
+          <label for="punch_option4">PUNCH OUT</label>
+        </div>
+        <button name="submit" class="btn">PUNCH</button>
+      </form>
+    {% else %}
+      <form action="{% url 'users:login' %}?next=/punch/" method="post">
+        {% csrf_token %}
+          <p>
+            <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="254" class="form-class" required id="id_username" placeholder="Email address">
+          </p>
+          <p>
+            <input type="password" name="password" autocomplete="current-password" class="form-class" required id="id_password" placeholder="Password">
+          </p>
+        <button name="submit" class="btn">Log in</button>
+      </form>
+    {% endif %}
+
+  </div>
+  </body>
+</html>

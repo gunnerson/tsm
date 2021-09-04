@@ -5,8 +5,11 @@ from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.views import LoginView
 from django.db.models import Q
+from django.http import Http404
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
-from .models import ListColShow, Profile
+from .models import ListColShow, Profile, PunchCard
 from .forms import UserCreationForm, ProfileForm, UserLevelForm
 from .utils import generate_profile
 from .mixins import FormSetView, AdminCheckMixin
@@ -134,3 +137,46 @@ class UsersLevelFormSetView(AdminCheckMixin, FormSetView):
     def get_queryset(self):
         qs = super().get_queryset()
         return qs.filter(~Q(user=self.request.user))
+
+
+def punch(request):
+    try:
+        profile = request.user.profile
+        no_card = True
+        cards = PunchCard.objects.filter(profile=profile)
+        last_card = cards.last()
+        status = 'punched_out'
+        if last_card:
+            no_card = False
+            if last_card.punch_in:
+                status = 'punched_in'
+            if last_card.lunch_in:
+                status = 'lunched_in'
+            if last_card.lunch_out:
+                status = 'lunched_out'
+            if last_card.punch_out:
+                status = 'punched_out'
+        selected = request.POST.get('punch_select', None)
+        if selected == 'punch_in':
+            PunchCard(profile=profile, punch_in=timezone.now()).save()
+            status = 'punched_in'
+            no_card = False
+        elif selected == 'lunch_in':
+            last_card.lunch_in = timezone.now()
+            last_card.save(update_fields=['lunch_in'])
+            status = 'lunched_in'
+            no_card = False
+        elif selected == 'lunch_out':
+            last_card.lunch_out = timezone.now()
+            last_card.save(update_fields=['lunch_out'])
+            status = 'lunched_out'
+            no_card = False
+        elif selected == 'punch_out':
+            last_card.punch_out = timezone.now()
+            last_card.save(update_fields=['punch_out'])
+            status = 'punched_out'
+            no_card = False
+        context = {'status': status, 'no_card': no_card}
+    except AttributeError:
+        context = {'status': 'punched_out', 'no_card': True}
+    return render(request, 'users/punch.html', context)

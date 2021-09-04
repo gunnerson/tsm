@@ -85,3 +85,11 @@ class ListColShow(models.Model):
             ),
         ]
         ordering = ['profile', '-list_name', 'order']
+
+
+class PunchCard(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    punch_in = models.DateTimeField(null=True)
+    lunch_in = models.DateTimeField(null=True, blank=True)
+    lunch_out = models.DateTimeField(null=True, blank=True)
+    punch_out = models.DateTimeField(null=True, blank=True)
