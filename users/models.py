@@ -57,6 +57,8 @@ class Profile(models.Model):
         blank=True,
         limit_choices_to={'group': 'OU'},
     )
+    home_latitude = models.FloatField(default=42.0203018)
+    home_longitude = models.FloatField(default=-88.318316)
 
     def __str__(self):
         return str(self.user)
@@ -90,6 +92,26 @@ class ListColShow(models.Model):
 class PunchCard(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     punch_in = models.DateTimeField(null=True)
+    punch_in_distance = models.DecimalField(
+        null=True,
+        max_digits=5,
+        decimal_places=1,
+    )
     lunch_in = models.DateTimeField(null=True, blank=True)
+    lunch_in_distance = models.DecimalField(
+        null=True,
+        max_digits=5,
+        decimal_places=1,
+    )
     lunch_out = models.DateTimeField(null=True, blank=True)
+    lunch_out_distance = models.DecimalField(
+        null=True,
+        max_digits=5,
+        decimal_places=1,
+    )
     punch_out = models.DateTimeField(null=True, blank=True)
+    punch_out_distance = models.DecimalField(
+        null=True,
+        max_digits=5,
+        decimal_places=1,
+    )

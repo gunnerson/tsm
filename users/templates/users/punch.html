@@ -33,7 +33,9 @@
           <input type="radio" id="punch_option4" name="punch_select" class="form-class" value="punch_out" {% if status == 'lunched_out' %}checked{% endif %} {% if no_card %}disabled{% endif %}>
           <label for="punch_option4">PUNCH OUT</label>
         </div>
-        <button name="submit" class="btn">PUNCH</button>
+        <input type="hidden" name="latitude" id="latitude">
+        <input type="hidden" name="longitude" id="longitude">
+        <button name="submit" class="btn" id="punch_button">PUNCH</button>
       </form>
     {% else %}
       <form action="{% url 'users:login' %}?next=/punch/" method="post">
@@ -47,6 +49,22 @@
         <button name="submit" class="btn">Log in</button>
       </form>
     {% endif %}
+
+  <script>
+    window.onload = function() {
+      var startPos;
+      var geoOptions = {
+        enableHighAccuracy: true,
+        maximumAge:  1 * 1000,
+      }
+      var geoSuccess = function(position) {
+        startPos = position;
+        document.getElementById('latitude').value = startPos.coords.latitude;
+        document.getElementById('longitude').value = startPos.coords.longitude;
+      };
+      navigator.geolocation.getCurrentPosition(geoSuccess);
+    };
+  </script>
 
   </div>
   </body>

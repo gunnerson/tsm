@@ -3,11 +3,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
-from django.contrib.auth.views import LoginView
 from django.db.models import Q
-from django.http import Http404
 from django.utils import timezone
-from django.contrib.auth.decorators import login_required
+from math import sqrt
 
 from .models import ListColShow, Profile, PunchCard
 from .forms import UserCreationForm, ProfileForm, UserLevelForm
@@ -126,8 +124,8 @@ class UsersLevelFormSetView(AdminCheckMixin, FormSetView):
 
     def get_fields(self):
         context = {
-            'field_names': ['user', 'level', ],
-            'verbose_field_names': ['User', 'Access level', ],
+            'field_names': ['user', 'level', 'home_latitude', 'home_longitude'],
+            'verbose_field_names': ['User', 'Access level', 'Latitude', 'Longitude'],
         }
         return context
 
@@ -157,23 +155,39 @@ def punch(request):
             if last_card.punch_out:
                 status = 'punched_out'
         selected = request.POST.get('punch_select', None)
+        user_lat = request.POST.get('latitude', None)
+        user_lon = request.POST.get('longitude', None)
+        if user_lat and user_lon:
+            shop_lat = profile.home_latitude
+            shop_lon = profile.home_longitude
+            delta_lat = abs(shop_lat - float(user_lat)) * 111319.9
+            delta_lon = abs(shop_lon - float(user_lon)) * 111319.9
+            distance = round(
+                (sqrt(delta_lat**2 + delta_lon**2) * 0.000621371), 1)
         if selected == 'punch_in':
-            PunchCard(profile=profile, punch_in=timezone.now()).save()
+            PunchCard(
+                profile=profile,
+                punch_in=timezone.now(),
+                punch_in_distance=distance,
+            ).save()
             status = 'punched_in'
             no_card = False
         elif selected == 'lunch_in':
             last_card.lunch_in = timezone.now()
-            last_card.save(update_fields=['lunch_in'])
+            last_card.lunch_in_distance = distance
+            last_card.save(update_fields=['lunch_in', 'lunch_in_distance'])
             status = 'lunched_in'
             no_card = False
         elif selected == 'lunch_out':
             last_card.lunch_out = timezone.now()
-            last_card.save(update_fields=['lunch_out'])
+            last_card.lunch_out_distance = distance
+            last_card.save(update_fields=['lunch_out', 'lunch_out_distance'])
             status = 'lunched_out'
             no_card = False
         elif selected == 'punch_out':
             last_card.punch_out = timezone.now()
-            last_card.save(update_fields=['punch_out'])
+            last_card.punch_out_distance = distance
+            last_card.save(update_fields=['punch_out', 'punch_out_distance'])
             status = 'punched_out'
             no_card = False
         context = {'status': status, 'no_card': no_card}
