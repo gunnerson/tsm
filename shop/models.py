@@ -194,13 +194,11 @@ class Mechanic(models.Model):
         null=True,
         blank=True,
     )
-    name = models.CharField(max_length=30)
-
-    class Meta:
-        ordering = ['name']
+    name = models.CharField(max_length=14, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.profile.user.first_name if self.profile.user.first_name \
+            else self.name
 
 
 class Balance(models.Model):
