@@ -20,11 +20,3 @@
   </form>
   <br>
 {% endblock content %}
-
-{% block toolbar %}
-  <a href="{% url 'users:punch' %}" title="Punch clock"><img src="{% static 'img/clock.png' %}"></a>
-  {% if user.is_superuser %}
-    <a href="{% url 'admin:index' %}" title="Admin page"><img src="{% static 'img/db.png' %}"></a>
-    <a href="{% url 'users:generate_su_profile' %}" onclick="return confirm('This will reset your column settings');" title="Generate profile"><img src="{% static 'img/app.png' %}"></a>
-  {% endif %}
-{% endblock toolbar %}

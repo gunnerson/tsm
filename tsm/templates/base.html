@@ -19,13 +19,46 @@
 
     <div id="wrapper">
 
-      <div id="header">
-        <div id="header-left">
-          <ul>
-            {% block header %}{% endblock header %}
-          </ul>
+      <div id="toolbar">
+        <div id="toolbar_left">
+          <a href="" onClick="window.history.back();return false;" title="Back"><img src="{% static 'img/back.png' %}"></a>
+          <a href="" onClick="window.history.forward();return false;" title="Forward"><img src="{% static 'img/forward.png' %}"style="margin-right:30px"></a>
+          {% comment %}<a href="" onClick="location.reload();return false;" title="Reload"><img src="{% static 'img/reload.png' %}" ></a>{% endcomment %}
+          {% if btn_save %}
+            <button type="submit" form="data_form" title="Save"><img src="{% static 'img/save.png' %}"></button>
+          {% endif %}
+          {% if btn_del %}
+            <button type="submit" form="data_form" title="Delete"><img src="{% static 'img/delete.png' %}"></button>
+          {% endif %}
+          {% if btn_new %}
+            <a href="{% url create_url %}" title="New"><img src="{% static 'img/new.png' %}"></a>
+          {% endif %}
+          {% if btn_print %}
+            <a href="{% url print_url inst_id %}" title="For print"><img src="{% static 'img/print.png' %}"></a>
+          {% endif %}
+          {% if btn_image %}
+            <a href="{% url image_url inst_id %}" title="Upload image"><img src="{% static 'img/photo.png' %}"></a>
+          {% endif %}
+          {% if btn_doc %}
+            <a href="{% url doc_url inst_id %}" title="Upload document"><img src="{% static 'img/doc_import.png' %}"></a>
+          {% endif %}
+          {% if btn_gallery %}
+            <a href="{% url gallery_url inst_id %}" title="Show images"><img src="{% static 'img/image.png' %}"></a>
+          {% endif %}
+          {% if btn_files %}
+            <a href="{% url files_url inst_id %}" title="Show documents"><img src="{% static 'img/folder.png' %}"></a>
+          {% endif %}
+          {% if btn_key %}
+            <a href="{% url key_url key_id %}" title="Back to item"><img src="{% static 'img/bookmark.png' %}"></a>
+          {% endif %}
+          <a href="{% url 'invent:summary' %}" title="Safety"><img src="{% static 'img/vault.png' %}" id="nav_safety" style="margin-left:30px"></a>
+          <a href="{% url 'shop:orders' %}" title="Shop"><img src="{% static 'img/home.png' %}" id="nav_shop" style="margin-right:30px"></a>
+          {% block nav_toolbar %}{% endblock nav_toolbar %}
         </div>
-        <div id="header-right">
+        <div id="toolbar_mid">
+          {% block toolbar_mid %}{% endblock toolbar_mid %}
+        </div>
+        <div id="toolbar_right">
           <ul>
             {% if user.is_authenticated %}
               <li>Hello, <a href="{% url 'users:profile' user.profile.id %}">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user }}{% endif %}. &nbsp</a></li>
@@ -35,43 +68,6 @@
             {% endif %}
           </ul>
         </div>
-      </div>
-
-      <div id="toolbar">
-        <a href="{% url 'index' %}" title="Home"><img src="{% static 'img/home.png' %}"></a>
-        <a href="" onClick="window.history.back();return false;" title="Back"><img src="{% static 'img/back.png' %}"></a>
-        <a href="" onClick="window.history.forward();return false;" title="Forward"><img src="{% static 'img/forward.png' %}"></a>
-        <a href="" onClick="location.reload();return false;" title="Reload"><img src="{% static 'img/reload.png' %}"></a>
-        &nbsp;|&nbsp;&nbsp;&nbsp;
-        {% if btn_save %}
-          <button type="submit" form="data_form" title="Save"><img src="{% static 'img/save.png' %}"></button>
-        {% endif %}
-        {% if btn_del %}
-          <button type="submit" form="data_form" title="Delete"><img src="{% static 'img/delete.png' %}"></button>
-        {% endif %}
-        {% if btn_new %}
-          <a href="{% url create_url %}" title="New"><img src="{% static 'img/new.png' %}"></a>
-        {% endif %}
-        {% if btn_print %}
-          <a href="{% url print_url print_id %}" title="For print"><img src="{% static 'img/print.png' %}"></a>
-        {% endif %}
-        {% if btn_image %}
-          <a href="{% url image_url inst_id %}" title="Upload image"><img src="{% static 'img/photo.png' %}"></a>
-        {% endif %}
-        {% if btn_doc %}
-          <a href="{% url doc_url inst_id %}" title="Upload document"><img src="{% static 'img/doc_import.png' %}"></a>
-        {% endif %}
-        {% if btn_gallery %}
-          <a href="{% url gallery_url inst_id %}" title="Show images"><img src="{% static 'img/image.png' %}"></a>
-        {% endif %}
-        {% if btn_files %}
-          <a href="{% url files_url inst_id %}" title="Show documents"><img src="{% static 'img/folder.png' %}"></a>
-        {% endif %}
-        {% if btn_key %}
-          <a href="{% url key_url key_id %}" title="Back to key"><img src="{% static 'img/key.png' %}"></a>
-        {% endif %}
-        &nbsp;|
-        {% block toolbar %}{% endblock toolbar %}
       </div>
 
       <div id="main-content">

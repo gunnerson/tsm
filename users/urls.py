@@ -8,7 +8,8 @@ from .views import (
     ProfileUpdateView,
     ListColShowListView,
     UsersLevelFormSetView,
-    punch
+    punch,
+    PunchCardListView,
 )
 
 app_name = "users"
@@ -31,4 +32,5 @@ urlpatterns = [
     path('access/', UsersLevelFormSetView.as_view(),
          name="update_level"),
     path('punch/', punch, name="punch"),
+    path('hours/', PunchCardListView.as_view(), name="hours"),
 ]

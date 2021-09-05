@@ -1,38 +1,39 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block header %}
-  <li id="navItem1">
-    <a href="{% url 'invent:summary' %}">Safety</a>
-  </li>
-  <li id="navItem2">
-    <a href="{% url 'shop:orders' %}">Shop</a>
-  </li>
+{% block nav_toolbar %}
   {% if user.is_authenticated %}
-    <li id="navItem3">
-      <a href="{% url 'users:profile' user.profile.id %}">Settings</a>
-    </li>
-    <li id="navItem4">
-      <a href="{% url 'users:listcolshow' %}">Table columns</a>
-    </li>
+      <a href="{% url 'users:profile' user.profile.id %}" title="Settings"><img src="{% static 'img/settings.png' %}" id="nav_settings" ></a>
+      <a href="{% url 'users:listcolshow' %}" title="Summary table"><img src="{% static 'img/list_bullets.png' %}" id="nav_listcolshow" ></a>
+      <a href="{% url 'users:punch' %}" title="Punch clock"><img src="{% static 'img/timer.png' %}" id="nav_punch" ></a>
+      <a href="{% url 'users:hours' %}" title="Work hours"><img src="{% static 'img/calendar.png' %}" id="nav_hours" ></a>
   {% endif %}
   {% if user.profile.level == 'A' %}
-    <li id="navItem5">
-      <a href="{% url 'users:update_level' %}">Users</a>
-    </li>
+      <a href="{% url 'users:update_level' %}" title="Manage users"><img src="{% static 'img/key.png' %}" id="nav_access" ></a>
   {% endif %}
-{% endblock header %}
+  {% if user.is_superuser %}
+    <a href="{% url 'admin:index' %}" title="Admin page"><img src="{% static 'img/db.png' %}" id="nav_admin" ></a>
+    <a href="{% url 'users:generate_su_profile' %}" onclick="return confirm('This will reset your column settings');" title="Generate profile"><img src="{% static 'img/app.png' %}"></a>
+  {% endif %}
+{% endblock nav_toolbar %}
+
 
 <script>
   {% block main_js %}
 
     var section = window.location.toString().replace(/^https?:\/\//, '').split('/')[1];
     if (section == "settings") {
-      document.getElementById("navItem3").classList.add('active');
+      document.getElementById("nav_settings").classList.add('active');
+      document.title = 'LPT - User settings'
     } else if (section == "columns") {
-      document.getElementById("navItem4").classList.add('active');
+      document.getElementById("nav_listcolshow").classList.add('active');
+      document.title = 'LPT - Summary settings'
     } else if (section == "access") {
-      document.getElementById("navItem5").classList.add('active');
+      document.getElementById("nav_access").classList.add('active');
+      document.title = 'LPT - Manage users'
+    } else if (section == "hours") {
+      document.getElementById("nav_hours").classList.add('active');
+      document.title = 'LPT - Work hours'
     };
 
     {% block page_js %}{% endblock page_js %}

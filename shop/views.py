@@ -96,19 +96,17 @@ class OrderView(WriteCheckMixin, ObjectView):
         context['btn_save'] = True
         if not self.is_create:
             order = self.get_object()
+            context['inst_id'] = order.id
             context['job_formset'] = (
                 job_formset if job_formset else get_job_forms(order))
             context['part_formset'] = (
                 part_formset if part_formset else get_part_forms(order))
             context['btn_print'] = True
             context['print_url'] = 'shop:order_print'
-            context['print_id'] = order.id
             context['btn_image'] = True
             context['image_url'] = 'docs:order_image'
-            context['image_id'] = order.id
             context['btn_gallery'] = True
             context['gallery_url'] = 'docs:order_images'
-            context['gallery_id'] = order.id
         return context
 
     def get_form_kwargs(self):

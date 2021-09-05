@@ -5,10 +5,11 @@ from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
 from django.db.models import Q
 from django.utils import timezone
+from datetime import datetime, timedelta
 from math import sqrt
 
 from .models import ListColShow, Profile, PunchCard
-from .forms import UserCreationForm, ProfileForm, UserLevelForm
+from .forms import UserCreationForm, ProfileForm, UserLevelForm, PunchCardForm
 from .utils import generate_profile
 from .mixins import FormSetView, AdminCheckMixin
 
@@ -134,7 +135,7 @@ class UsersLevelFormSetView(AdminCheckMixin, FormSetView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return qs.filter(~Q(user=self.request.user))
+        return qs.exclude(Q(user=self.request.user) | Q(level='A'))
 
 
 def punch(request):
@@ -194,3 +195,44 @@ def punch(request):
     except AttributeError:
         context = {'status': 'punched_out', 'no_card': True}
     return render(request, 'users/punch.html', context)
+
+
+class PunchCardListView(LoginRequiredMixin, ListView):
+    model = PunchCard
+    template_name = 'users/punchcards.html'
+
+    def get_queryset(self):
+        profile = self.request.GET.get('employee', None)
+        week_of = self.request.GET.get('week_of', None)
+        if profile and week_of:
+            dt = datetime.strptime(week_of, '%Y-%m-%d')
+            start = dt - timedelta(days=dt.weekday())
+            end = start + timedelta(days=7)
+            qs = PunchCard.objects.filter(
+                profile=profile,
+                punch_in__range=(start, end),
+            )
+        else:
+            qs = PunchCard.objects.filter(profile=self.request.user.profile)
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['btn_save'] = True
+        profile = self.request.user.profile
+        employee = self.request.GET.get('employee', None)
+        week_of = self.request.GET.get('week_of', None)
+        if week_of:
+            week_of = datetime.strptime(week_of, '%Y-%m-%d')
+        new_profile = employee if employee else profile
+        context['form'] = PunchCardForm(
+            profile=new_profile,
+            level=profile.level,
+            week_of=week_of,
+        )
+        qs = self.get_queryset()
+        week_total = 0
+        for q in qs:
+            week_total += q.get_hours
+        context['week_total'] = week_total
+        return context

@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
+from datetime import datetime
 
 from .models import User, Profile
 from .mixins import FormMixin
@@ -67,3 +68,24 @@ class UserLevelForm(forms.ModelForm):
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'formset_field'})
             self.fields[f].widget.attrs.update({'style': 'font-size: 1rem'})
+
+
+class PunchCardForm(forms.Form):
+    employee = forms.ModelChoiceField(
+        queryset=Profile.objects.all())
+    week_of = forms.DateField(
+        initial=datetime.today(),
+        widget=forms.DateInput(attrs={'type': 'date'})
+    )
+
+    def __init__(self, *args, profile=None, level=None, week_of=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        for f in self.fields:
+            self.fields[f].widget.attrs.update(
+                {'class': 'form_field filter_form'})
+        if profile:
+            self.fields['employee'].initial = profile
+        if week_of:
+            self.fields['week_of'].initial = week_of
+        if level != 'A':
+            self.fields['employee'].disabled = True
