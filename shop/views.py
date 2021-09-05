@@ -42,10 +42,6 @@ class OrderView(WriteCheckMixin, ObjectView):
 
     def form_valid(self, form):
         self.object = form.save()
-        try:
-            OrderTime(order=self.object).save()
-        except IntegrityError:
-            pass
         if not self.is_create:
             job_formset = get_job_forms(self.object, self.request.POST)
             part_formset = get_part_forms(self.object, self.request.POST)
@@ -94,6 +90,8 @@ class OrderView(WriteCheckMixin, ObjectView):
                 return self.render_to_response(
                     self.get_context_data(form=form, job_formset=job_formset,
                                           part_formset=part_formset))
+        else:
+            OrderTime(order=self.object).save()
         return redirect(self.object.get_absolute_url())
 
     def get_context_data(
