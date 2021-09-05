@@ -181,3 +181,4 @@ class OrderTimeForm(forms.Form):
         super().__init__(*args, **kwargs)
         if order:
             self.fields['order'].initial = order
+            self.fields['order'].disabled = True

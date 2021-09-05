@@ -145,6 +145,13 @@ def punch(request):
     mechanic = profile.mechanic
     cards = PunchCard.objects.filter(mechanic=mechanic)
     last_card = cards.last()
+    orders = mechanic.order_set.filter(closed=None)
+    open_order = None
+    for inst in orders:
+        last_ordertime = inst.ordertime_set.last()
+        if last_ordertime and not last_ordertime.stop:
+            open_order = last_ordertime.order
+            open_ordertime = last_ordertime
     if request.method != 'POST':
         context = {}
         no_card = True
@@ -161,15 +168,9 @@ def punch(request):
                 status = 'punched_out'
         context['status'] = status
         context['no_card'] = no_card
-        orders = mechanic.order_set.filter(closed=None)
-        open_order = None
-        for inst in orders:
-            last_ordertime = inst.ordertime_set.last()
-            if last_ordertime and not last_ordertime.stop:
-                open_order = last_ordertime.order
         if open_order:
             context['order_select'] = OrderTimeForm(
-                order=last_ordertime.order)
+                order=open_order)
             context['stop'] = True
         else:
             context['order_select'] = OrderTimeForm()
@@ -197,6 +198,9 @@ def punch(request):
             last_card.lunch_in = timezone.now()
             last_card.lunch_in_distance = distance
             last_card.save(update_fields=['lunch_in', 'lunch_in_distance'])
+            if open_ordertime:
+                open_ordertime.stop = last_card.lunch_in
+                open_ordertime.save(update_fields=['stop'])
         elif selected == 'lunch_out':
             last_card.lunch_out = timezone.now()
             last_card.lunch_out_distance = distance
@@ -205,9 +209,14 @@ def punch(request):
             last_card.punch_out = timezone.now()
             last_card.punch_out_distance = distance
             last_card.save(update_fields=['punch_out', 'punch_out_distance'])
+            if open_ordertime:
+                open_ordertime.stop = last_card.punch_out
+                open_ordertime.save(update_fields=['stop'])
         order_id = request.POST.get('order', None)
         if order_id:
             order = Order.objects.get(id=order_id)
+        else:
+            order = open_order
         submit = request.POST.get('submit', None)
         if submit == 'start':
             OrderTime(order=order, start=timezone.now()).save()

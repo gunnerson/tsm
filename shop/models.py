@@ -72,7 +72,8 @@ class OrderTime(models.Model):
     @property
     def get_time(self):
         try:
-            return self.stop - self.start
+            td = self.stop - self.start
+            return round((td.seconds / 3600), 1)
         except TypeError:
             return 0
 
