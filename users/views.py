@@ -148,10 +148,10 @@ def punch(request):
     orders = mechanic.order_set.filter(closed=None)
     open_order = None
     for inst in orders:
-        last_ordertime = inst.ordertime_set.last()
-        if last_ordertime and not last_ordertime.stop:
-            open_order = last_ordertime.order
-            open_ordertime = last_ordertime
+        ordertime = inst.ordertime
+        if ordertime.start:
+            open_order = ordertime.order
+            open_ordertime = ordertime
     if request.method != 'POST':
         context = {}
         no_card = True
@@ -199,8 +199,7 @@ def punch(request):
             last_card.lunch_in_distance = distance
             last_card.save(update_fields=['lunch_in', 'lunch_in_distance'])
             if open_ordertime:
-                open_ordertime.stop = last_card.lunch_in
-                open_ordertime.save(update_fields=['stop'])
+                open_ordertime.get_total()
         elif selected == 'lunch_out':
             last_card.lunch_out = timezone.now()
             last_card.lunch_out_distance = distance
@@ -210,8 +209,7 @@ def punch(request):
             last_card.punch_out_distance = distance
             last_card.save(update_fields=['punch_out', 'punch_out_distance'])
             if open_ordertime:
-                open_ordertime.stop = last_card.punch_out
-                open_ordertime.save(update_fields=['stop'])
+                open_ordertime.get_total()
         order_id = request.POST.get('order', None)
         if order_id:
             order = Order.objects.get(id=order_id)
@@ -219,13 +217,12 @@ def punch(request):
             order = open_order
         submit = request.POST.get('submit', None)
         if submit == 'start':
-            OrderTime(order=order, start=timezone.now()).save()
+            order.ordertime.start = timezone.now()
+            order.ordertime.save(update_fields=['start'])
             order.mechanic = mechanic
             order.save(update_fields=['mechanic'])
         elif submit == 'stop':
-            ordertime = order.ordertime_set.last()
-            ordertime.stop = timezone.now()
-            ordertime.save(update_fields=['stop'])
+            open_ordertime.get_total()
         return redirect('users:punch')
     return render(request, 'users/punch.html', context)
 
