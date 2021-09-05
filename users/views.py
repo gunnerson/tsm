@@ -162,12 +162,11 @@ def punch(request):
         context['status'] = status
         context['no_card'] = no_card
         orders = mechanic.order_set.filter(closed=None)
+        open_order = None
         for inst in orders:
             last_ordertime = inst.ordertime_set.last()
             if last_ordertime and not last_ordertime.stop:
                 open_order = last_ordertime.order
-            else:
-                open_order = None
         if open_order:
             context['order_select'] = OrderTimeForm(
                 order=last_ordertime.order)
