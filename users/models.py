@@ -90,7 +90,11 @@ class ListColShow(models.Model):
 
 
 class PunchCard(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    mechanic = models.ForeignKey(
+        'shop.Mechanic',
+        on_delete=models.CASCADE,
+        null=True,
+    )
     punch_in = models.DateTimeField(null=True)
     punch_in_distance = models.DecimalField(
         null=True,
@@ -122,7 +126,8 @@ class PunchCard(models.Model):
     @property
     def get_hours(self):
         try:
-            td = self.punch_out - self.punch_in - (self.lunch_out - self.lunch_in)
-            return round((td.seconds/3600), 1)
+            td = self.punch_out - self.punch_in - \
+                (self.lunch_out - self.lunch_in)
+            return round((td.seconds / 3600), 1)
         except TypeError:
             return 0

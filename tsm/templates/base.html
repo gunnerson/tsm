@@ -55,9 +55,6 @@
           <a href="{% url 'shop:orders' %}" title="Shop"><img src="{% static 'img/home.png' %}" id="nav_shop" style="margin-right:30px"></a>
           {% block nav_toolbar %}{% endblock nav_toolbar %}
         </div>
-        <div id="toolbar_mid">
-          {% block toolbar_mid %}{% endblock toolbar_mid %}
-        </div>
         <div id="toolbar_right">
           <ul>
             {% if user.is_authenticated %}
@@ -71,7 +68,12 @@
       </div>
 
       <div id="main-content">
-        {% block content %}{% endblock content %}
+        <div id="content_bar">
+          {% block content_bar %}{% endblock content_bar %}
+        </div>
+        <div id="content">
+          {% block content %}{% endblock content %}
+        </div>
       </div>
 
     </div>

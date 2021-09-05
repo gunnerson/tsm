@@ -10,8 +10,9 @@ body {
 
 .wrapper {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
+  align-items: center
 }
 
 .wrapper form {
@@ -51,4 +52,8 @@ body {
   border-radius: .25rem;
   background-color: rgb(239, 239, 239);
   text-decoration: none;
+}
+
+.order-punch select{
+  font: 400 1.5rem Arial;
 }

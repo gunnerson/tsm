@@ -37,8 +37,15 @@
         <input type="hidden" name="longitude" id="longitude">
         <div class="buttons">
           <button name="submit" class="btn" id="punch_button">PUNCH</button>
-          <a href="{% url 'users:profile' user.profile.id %}" class="back_btn">BACK</a>
+          {% comment %}<a href="{% url 'users:profile' user.profile.id %}" class="back_btn">BACK</a>{% endcomment %}
         </div>
+      </form>
+      <br>
+      <form method="POST" class="order-punch">
+        {% csrf_token %}
+        {{ order_select.order }} {{ order_select.order.errors }}
+        {% if start %}<button name="submit" class="btn" value='start'>START</button>{% endif %}
+        {% if stop %}<button name="submit" class="btn" value='stop'>STOP</button>{% endif %}
       </form>
     {% else %}
       <form action="{% url 'users:login' %}?next=/punch/" method="post">

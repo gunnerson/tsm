@@ -36,9 +36,8 @@ class Order(models.Model):
         ordering = ['-id']
 
     def __str__(self):
-        return ('Truck ' + self.truck.__str__() + ': Order #' + str(self.id)
-                if self.truck else 'Trailer ' + self.trailer.__str__() +
-                ': Order #' + str(self.id))
+        return ('Truck ' + self.truck.__str__() if self.truck else
+                'Trailer ' + self.trailer.__str__())
 
     def get_absolute_url(self):
         return reverse('shop:order', kwargs={'pk': self.id})
@@ -60,6 +59,24 @@ class Order(models.Model):
         return labor_total
 
 
+class OrderTime(models.Model):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    start = models.DateTimeField(null=True, blank=True)
+    stop = models.DateTimeField(null=True, blank=True)
+
+    @property
+    def get_time(self):
+        try:
+            return self.stop - self.start
+        except TypeError:
+            return 0
+
+
 class Part(models.Model):
     part_number = models.CharField(max_length=30)
     name = models.CharField(max_length=50)
@@ -77,7 +94,7 @@ class Part(models.Model):
         ordering = ['part_number']
 
     def __str__(self):
-        return self.part_number
+        return self.part_number + ' ' + self.name
 
     def get_absolute_url(self):
         return reverse('shop:part', kwargs={'pk': self.id})

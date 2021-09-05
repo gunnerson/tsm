@@ -4,6 +4,7 @@ from datetime import date
 
 from .models import Order, Part, Job, OrderPart, Purchase, PurchaseItem, \
     Balance, Inspection
+from invent.models import Truck, Trailer
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
     InspectionForm
 from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
@@ -112,6 +113,19 @@ class OrderView(WriteCheckMixin, ObjectView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update(is_create=self.is_create)
+        truck_ids = []
+        trailer_ids = []
+        if self.is_create:
+            qs = Truck.objects.all()
+            for q in qs:
+                if q.order_set.filter(closed=None):
+                    truck_ids.append(q.id)
+            kwargs.update(trucks=qs.exclude(id__in=truck_ids))
+            qs = Trailer.objects.all()
+            for q in qs:
+                if q.order_set.filter(closed=None):
+                    trailer_ids.append(q.id)
+            kwargs.update(trailers=qs.exclude(id__in=trailer_ids))
         return kwargs
 
 
@@ -290,13 +304,12 @@ class InspectionView(WriteCheckMixin, ObjectView):
             self, *args, job_formset=None, part_formset=None, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         inst = self.get_object()
+        context['inst_id'] = inst.id
         context['btn_save'] = True
         context['btn_image'] = True
         context['image_url'] = 'docs:inspection_image'
-        context['image_id'] = inst.id
         context['btn_gallery'] = True
         context['gallery_url'] = 'docs:inspection_images'
-        context['gallery_id'] = inst.id
         return context
 
     def get_form_kwargs(self):

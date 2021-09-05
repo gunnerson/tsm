@@ -1,20 +1,19 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block toolbar %}
+{% block content_bar %}
   <form method="GET" id="filter-form">
     {% if search_bar %}
-        <button type="submit" class="search-button filter-button" id="search-button">
-          <img src="{% static 'img/search.png' %}">
-        </button>
-        <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
+      <button type="submit" class="search-button filter-button" id="search-button">
+        <img src="{% static 'img/search.png' %}">
+      </button>
+      <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
     {% endif %}
     {% if filter_bar %}
-        {% block filter_bar %}{% endblock filter_bar %}
+      {% block filter_bar %}{% endblock filter_bar %}
     {% endif %}
   </form>
-
-{% endblock toolbar %}
+{% endblock content_bar %}
 
 <script>
   {% block main_js %}

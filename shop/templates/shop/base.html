@@ -10,7 +10,7 @@
     <a href="{% url 'shop:balance' %}" title="Accounting"><img src="{% static 'img/dollar.png' %}" id="nav_balance" style="margin-right:30px"></a>
 {% endblock nav_toolbar %}
 
-{% block toolbar_mid %}
+{% block content_bar %}
   <form method="GET" id="filter-form">
     {% if search_bar %}
         <button type="submit" class="search-button filter-button" id="search-button">
@@ -22,7 +22,7 @@
         {% block filter_bar %}{% endblock filter_bar %}
     {% endif %}
   </form>
-{% endblock toolbar_mid %}
+{% endblock content_bar %}
 
 <script>
   {% block main_js %}
