@@ -5,6 +5,9 @@
     {% csrf_token %}
     {{ form.as_p}}
     <br>
+    <p><strong>Clocked: </strong>{{ total_time }} h
+    <br>
+    <br>
     <hr>
     <br>
     {% if job_formset %}

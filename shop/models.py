@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.timezone import now
+from decimal import Decimal
 
 from .managers import DBSearch
 from invent.models import Truck, Trailer, Company
@@ -60,21 +61,24 @@ class Order(models.Model):
 
 
 class OrderTime(models.Model):
-    order = models.ForeignKey(
+    order = models.OneToOneField(
         Order,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
     )
     start = models.DateTimeField(null=True, blank=True)
-    stop = models.DateTimeField(null=True, blank=True)
+    total = models.DecimalField(
+        max_digits=4,
+        decimal_places=1,
+        default=0,
+    )
 
-    @property
-    def get_time(self):
-        try:
-            return self.stop - self.start
-        except TypeError:
-            return 0
+    def get_total(self):
+        td = now() - self.start
+        self.total += Decimal(round((td.seconds / 3600), 1))
+        self.start = None
+        self.save(update_fields=['total', 'start'])
 
 
 class Part(models.Model):

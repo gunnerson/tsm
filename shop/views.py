@@ -1,9 +1,10 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from datetime import date
+from django.db import IntegrityError
 
-from .models import Order, Part, Job, OrderPart, Purchase, PurchaseItem, \
-    Balance, Inspection
+from .models import Order, OrderTime, Part, Job, OrderPart, Purchase, \
+    PurchaseItem, Balance, Inspection
 from invent.models import Truck, Trailer
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
     InspectionForm
@@ -41,6 +42,10 @@ class OrderView(WriteCheckMixin, ObjectView):
 
     def form_valid(self, form):
         self.object = form.save()
+        try:
+            OrderTime(order=self.object).save()
+        except IntegrityError:
+            pass
         if not self.is_create:
             job_formset = get_job_forms(self.object, self.request.POST)
             part_formset = get_part_forms(self.object, self.request.POST)
@@ -97,6 +102,7 @@ class OrderView(WriteCheckMixin, ObjectView):
         context['btn_save'] = True
         if not self.is_create:
             order = self.get_object()
+            context['total_time'] = order.ordertime.total
             context['inst_id'] = order.id
             context['job_formset'] = (
                 job_formset if job_formset else get_job_forms(order))
