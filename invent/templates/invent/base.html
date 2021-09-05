@@ -9,7 +9,7 @@
     <a href="{% url 'invent:list_companies' %}" title="Companies"><img src="{% static 'img/contact.png' %}" id="nav_companies" ></a>
 {% endblock nav_toolbar %}
 
-{% block toolbar_mid %}
+{% block content_bar %}
   {% if filter_bar %}
     <form method="GET" id="filter-form">
       <button type="submit" class="search-button filter-button" id="search-button">
@@ -26,7 +26,7 @@
       </div>
     </form>
   {% endif %}
-{% endblock toolbar_mid %}
+{% endblock content_bar %}
 
 <script>
   {% block main_js %}

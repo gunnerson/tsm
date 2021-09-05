@@ -13,9 +13,8 @@
       <tr>
         <td><a href="{% url 'shop:order' object.id %}">{{ object }}</a></td>
         <td>{{ object.opened }}</td>
-        <td>{{ object.get_mechanic_display }}</td>
+        <td>{{ object.mechanic|default_if_none:"" }}</td>
       </tr>
     {% endfor %}
   </table>
 {% endblock content %}
-

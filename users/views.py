@@ -9,7 +9,9 @@ from datetime import datetime, timedelta
 from math import sqrt
 
 from .models import ListColShow, Profile, PunchCard
+from shop.models import Order, OrderTime
 from .forms import UserCreationForm, ProfileForm, UserLevelForm, PunchCardForm
+from shop.forms import OrderTimeForm
 from .utils import generate_profile
 from .mixins import FormSetView, AdminCheckMixin
 
@@ -139,11 +141,13 @@ class UsersLevelFormSetView(AdminCheckMixin, FormSetView):
 
 
 def punch(request):
-    try:
-        profile = request.user.profile
+    profile = request.user.profile
+    mechanic = profile.mechanic
+    cards = PunchCard.objects.filter(mechanic=mechanic)
+    last_card = cards.last()
+    if request.method != 'POST':
+        context = {}
         no_card = True
-        cards = PunchCard.objects.filter(profile=profile)
-        last_card = cards.last()
         status = 'punched_out'
         if last_card:
             no_card = False
@@ -155,6 +159,23 @@ def punch(request):
                 status = 'lunched_out'
             if last_card.punch_out:
                 status = 'punched_out'
+        context['status'] = status
+        context['no_card'] = no_card
+        orders = mechanic.order_set.filter(closed=None)
+        for inst in orders:
+            last_ordertime = inst.ordertime_set.last()
+            if last_ordertime and not last_ordertime.stop:
+                open_order = last_ordertime.order
+            else:
+                open_order = None
+        if open_order:
+            context['order_select'] = OrderTimeForm(
+                order=last_ordertime.order)
+            context['stop'] = True
+        else:
+            context['order_select'] = OrderTimeForm()
+            context['start'] = True
+    else:
         selected = request.POST.get('punch_select', None)
         user_lat = request.POST.get('latitude', None)
         user_lon = request.POST.get('longitude', None)
@@ -165,35 +186,39 @@ def punch(request):
             delta_lon = abs(shop_lon - float(user_lon)) * 111319.9
             distance = round(
                 (sqrt(delta_lat**2 + delta_lon**2) * 0.000621371), 1)
+        else:
+            distance = 404
         if selected == 'punch_in':
             PunchCard(
-                profile=profile,
+                mechanic=mechanic,
                 punch_in=timezone.now(),
                 punch_in_distance=distance,
             ).save()
-            status = 'punched_in'
-            no_card = False
         elif selected == 'lunch_in':
             last_card.lunch_in = timezone.now()
             last_card.lunch_in_distance = distance
             last_card.save(update_fields=['lunch_in', 'lunch_in_distance'])
-            status = 'lunched_in'
-            no_card = False
         elif selected == 'lunch_out':
             last_card.lunch_out = timezone.now()
             last_card.lunch_out_distance = distance
             last_card.save(update_fields=['lunch_out', 'lunch_out_distance'])
-            status = 'lunched_out'
-            no_card = False
         elif selected == 'punch_out':
             last_card.punch_out = timezone.now()
             last_card.punch_out_distance = distance
             last_card.save(update_fields=['punch_out', 'punch_out_distance'])
-            status = 'punched_out'
-            no_card = False
-        context = {'status': status, 'no_card': no_card}
-    except AttributeError:
-        context = {'status': 'punched_out', 'no_card': True}
+        order_id = request.POST.get('order', None)
+        if order_id:
+            order = Order.objects.get(id=order_id)
+        submit = request.POST.get('submit', None)
+        if submit == 'start':
+            OrderTime(order=order, start=timezone.now()).save()
+            order.mechanic = mechanic
+            order.save(update_fields=['mechanic'])
+        elif submit == 'stop':
+            ordertime = order.ordertime_set.last()
+            ordertime.stop = timezone.now()
+            ordertime.save(update_fields=['stop'])
+        return redirect('users:punch')
     return render(request, 'users/punch.html', context)
 
 
@@ -202,31 +227,32 @@ class PunchCardListView(LoginRequiredMixin, ListView):
     template_name = 'users/punchcards.html'
 
     def get_queryset(self):
-        profile = self.request.GET.get('employee', None)
+        mechanic = self.request.GET.get('mechanic', None)
         week_of = self.request.GET.get('week_of', None)
-        if profile and week_of:
+        if mechanic and week_of:
             dt = datetime.strptime(week_of, '%Y-%m-%d')
             start = dt - timedelta(days=dt.weekday())
             end = start + timedelta(days=7)
             qs = PunchCard.objects.filter(
-                profile=profile,
+                mechanic=mechanic,
                 punch_in__range=(start, end),
             )
         else:
-            qs = PunchCard.objects.filter(profile=self.request.user.profile)
+            qs = PunchCard.objects.filter(
+                mechanic=self.request.user.profile.mechanic)
         return qs
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['btn_save'] = True
         profile = self.request.user.profile
-        employee = self.request.GET.get('employee', None)
+        mechanic = self.request.GET.get('mechanic', None)
         week_of = self.request.GET.get('week_of', None)
         if week_of:
             week_of = datetime.strptime(week_of, '%Y-%m-%d')
-        new_profile = employee if employee else profile
+        new_mechanic = mechanic if mechanic else profile.mechanic
         context['form'] = PunchCardForm(
-            profile=new_profile,
+            mechanic=new_mechanic,
             level=profile.level,
             week_of=week_of,
         )

@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from datetime import datetime
 
 from .models import User, Profile
+from shop.models import Mechanic
 from .mixins import FormMixin
 
 
@@ -71,21 +72,21 @@ class UserLevelForm(forms.ModelForm):
 
 
 class PunchCardForm(forms.Form):
-    employee = forms.ModelChoiceField(
-        queryset=Profile.objects.all())
+    mechanic = forms.ModelChoiceField(
+        queryset=Mechanic.objects.all())
     week_of = forms.DateField(
         initial=datetime.today(),
         widget=forms.DateInput(attrs={'type': 'date'})
     )
 
-    def __init__(self, *args, profile=None, level=None, week_of=None, **kwargs):
+    def __init__(self, *args, mechanic=None, level=None, week_of=None, **kwargs):
         super().__init__(*args, **kwargs)
         for f in self.fields:
             self.fields[f].widget.attrs.update(
                 {'class': 'form_field filter_form'})
-        if profile:
-            self.fields['employee'].initial = profile
+        if mechanic:
+            self.fields['mechanic'].initial = mechanic
         if week_of:
             self.fields['week_of'].initial = week_of
         if level != 'A':
-            self.fields['employee'].disabled = True
+            self.fields['mechanic'].disabled = True

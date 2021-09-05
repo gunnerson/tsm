@@ -17,10 +17,19 @@ class OrderForm(FormMixin):
             'comments': forms.Textarea(attrs={'rows': 1}),
         }
 
-    def __init__(self, *args, is_create=None, **kwargs):
+    def __init__(
+            self, *args, is_create=None, trucks=None, trailers=None, **kwargs):
         super().__init__(*args, **kwargs)
         if is_create:
             self.fields['closed'].disabled = True
+            if trucks:
+                self.fields['truck'].queryset = trucks
+                self.fields['truck'].widget.attrs.update(
+                    {'class': 'form_field'})
+            if trailers:
+                self.fields['trailer'].queryset = trailers
+                self.fields['trailer'].widget.attrs.update(
+                    {'class': 'form_field'})
         else:
             self.fields['truck'].disabled = True
             self.fields['trailer'].disabled = True
@@ -162,3 +171,13 @@ class InspectionForm(FormMixin):
             msg = forms.ValidationError(('Select either truck or trailer'),
                                         code='invalid')
             self.add_error('trailer', msg)
+
+
+class OrderTimeForm(forms.Form):
+    order = forms.ModelChoiceField(
+        queryset=Order.objects.filter(closed=None))
+
+    def __init__(self, *args, order=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if order:
+            self.fields['order'].initial = order

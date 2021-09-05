@@ -28,7 +28,6 @@ DEBUG = True if os.environ.get('DJANGO_DEBUG') == 'true' else False
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_HOSTS', '127.0.0.1').split(',')
 
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

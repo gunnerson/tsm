@@ -110,6 +110,10 @@ ul {
   padding: 2px;
 }
 
+#content_bar {
+  margin-bottom: 20px;
+}
+
 #filter-form {
   display: flex;
   flex-direction: row;
@@ -118,17 +122,17 @@ ul {
 
 .search-input {
   position: relative;
-  left: -36px;
+  left: -30px;
   padding-left: 36px;
+  border: 1px solid var(--border-color);
   border-radius: 22px;
   width: 20rem;
   height: 22px;
-  border-width: 0;
   z-index: 1;
 }
 
 .search-input:focus {
-  border: none;
+  border: 1px solid var(--border-color);
   outline: none;
 }
 
@@ -138,10 +142,11 @@ ul {
   outline: none;
   height: 22px!important;
   z-index: 2;
+  padding: 2px 0;
 }
 
 .search-button img{
-  height: 22px!important;
+  height: 18px!important;
   background: transparent!important;
 }
 
@@ -413,7 +418,6 @@ div.desc {
 
 
 @media only screen and (max-width: 768px) {
-  /* For mobile phones: */
 #wrapper {
   display: block;
   overflow: visible;
@@ -423,10 +427,7 @@ div.desc {
   position: static;
   overflow: visible;
   height: auto;
-}
-
-#toolbar_mid {
-  display: none;
+  border-bottom: none;
 }
 
 .listview-table thead th{
