@@ -115,3 +115,14 @@ class PunchCard(models.Model):
         max_digits=5,
         decimal_places=1,
     )
+
+    class Meta:
+        ordering = ['punch_in']
+
+    @property
+    def get_hours(self):
+        try:
+            td = self.punch_out - self.punch_in - (self.lunch_out - self.lunch_in)
+            return round((td.seconds/3600), 1)
+        except TypeError:
+            return 0

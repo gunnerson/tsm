@@ -64,6 +64,7 @@
         startPos = position;
         document.getElementById('latitude').value = startPos.coords.latitude;
         document.getElementById('longitude').value = startPos.coords.longitude;
+        console.log(startPos.coords.latitude, startPos.coords.longitude)
       };
       navigator.geolocation.getCurrentPosition(geoSuccess);
     };

@@ -45,10 +45,8 @@ class FormSetView():
     btn_back = True
     btn_save = True
     filter_bar = True
-    page_title = 'List of records'
-    nav_link = 'List'
     detail_url = ''
-    template_name = 'invent/listview.html'
+    template_name = 'users/listview.html'
     redirect_url = '.'
     extra = 1
 
