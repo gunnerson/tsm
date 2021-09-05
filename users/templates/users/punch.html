@@ -46,6 +46,7 @@
         {{ order_select.order }} {{ order_select.order.errors }}
         {% if start %}<button name="submit" class="btn" value='start'>START</button>{% endif %}
         {% if stop %}<button name="submit" class="btn" value='stop'>STOP</button>{% endif %}
+        <input type="hidden" name="status" value="{{ status }}">
       </form>
     {% else %}
       <form action="{% url 'users:login' %}?next=/punch/" method="post">
