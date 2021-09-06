@@ -1,7 +1,6 @@
 from django.shortcuts import redirect
 from django.views.generic.edit import CreateView
 from django.views.generic import ListView
-from django.utils import timezone
 from pathlib import Path
 from django import forms
 
@@ -20,13 +19,11 @@ class ImageCreateView(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         origin_id = self.kwargs['pk']
-        self.object.origin = self.origin_model.objects.get(id=origin_id)
-        today = timezone.now()
-        date = today.strftime("%Y-%m-%d")
-        file_ext = Path(self.object.image.name).suffixes
-        self.object.image.name = 'img/{0}/{1}/{2}{3}'.format(
-            self.folder_name, origin_id, date, file_ext)
-        self.object.save()
+        origin = self.origin_model.objects.get(id=origin_id)
+        date = self.object.date
+        files = self.request.FILES.getlist('image')
+        for f in files:
+            self.model.objects.create(origin=origin, image=f, date=date)
         return redirect(self.get_redirect_url())
 
     def get_redirect_url(self):
@@ -64,9 +61,8 @@ class ImageForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["date"] = forms.DateField(
-            widget=forms.DateInput(attrs={'type': 'date'}),
-        )
+        self.fields["date"].widget = forms.DateInput(attrs={'type': 'date'})
+        self.fields["image"].widget.attrs.update({'multiple': 'True'})
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})
 

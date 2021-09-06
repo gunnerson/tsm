@@ -5,9 +5,11 @@
     {% csrf_token %}
     {{ form.as_p}}
     <br>
-    <p><strong>Clocked: </strong>{{ total_clocked }} h
-    <strong>&nbsp;&nbsp;&nbsp;Billed: </strong>{{ total_billed }} h
-    <strong>&nbsp;&nbsp;&nbsp;Parts: </strong>${{ total_parts }}
+    <p>
+      {% if total_clocked %}<strong>Clocked: </strong>{{ total_clocked }} h{% endif %}
+      {% if total_billed %}<strong>&nbsp;&nbsp;&nbsp;Billed: </strong>{{ total_billed }} h{% endif %}
+      {% if total_parts %}<strong>&nbsp;&nbsp;&nbsp;Parts: </strong>${{ total_parts }}{% endif %}
+    </p>
     <br>
     <br>
     <hr>

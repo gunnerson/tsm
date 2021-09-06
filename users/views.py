@@ -172,10 +172,12 @@ def punch(request):
             context['no_card'] = no_card
             if open_order:
                 context['order_select'] = OrderTimeForm(
-                    order=open_order)
+                    order=open_order,
+                    mechanic=mechanic,
+                )
                 context['stop'] = True
             else:
-                context['order_select'] = OrderTimeForm()
+                context['order_select'] = OrderTimeForm(mechanic=mechanic)
                 context['start'] = True
         else:
             selected = request.POST.get('punch_select', None)

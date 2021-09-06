@@ -60,7 +60,9 @@
         <button name="submit" class="btn">Log in</button>
       </form>
     {% endif %}
-
+    {% if user.is_authenticated %}
+      <a href="{% url 'users:logout' %}?next=/punch/" class="back_btn">LOG OUT</a>
+    {% endif %}
   <script>
     window.onload = function() {
       var startPos;

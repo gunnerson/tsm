@@ -37,8 +37,7 @@ class Order(models.Model):
         ordering = ['-id']
 
     def __str__(self):
-        return ('Truck ' + self.truck.__str__() if self.truck else
-                'Trailer ' + self.trailer.__str__())
+        return self.truck.__str__() if self.truck else self.trailer.__str__()
 
     def get_absolute_url(self):
         return reverse('shop:order', kwargs={'pk': self.id})
@@ -62,6 +61,10 @@ class Order(models.Model):
             labor_total += j.job.man_hours * j.amount
         return labor_total
 
+    @property
+    def taken(self):
+        return True if self.ordertime.start else False
+
 
 class OrderTime(models.Model):
     order = models.OneToOneField(
@@ -76,6 +79,9 @@ class OrderTime(models.Model):
         decimal_places=1,
         default=0,
     )
+
+    def __str__(self):
+        return self.order.__str__()
 
     def get_total(self):
         td = now() - self.start
@@ -142,6 +148,9 @@ class OrderJob(models.Model):
     )
     amount = models.PositiveSmallIntegerField(default=1)
 
+    def __str__(self):
+        return self.order + ' ' + self.job
+
 
 class OrderPart(models.Model):
     order = models.ForeignKey(
@@ -151,6 +160,9 @@ class OrderPart(models.Model):
     )
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
     amount = models.PositiveSmallIntegerField(default=1)
+
+    def __str__(self):
+        return self.order + ' ' + self.part
 
 
 class Purchase(models.Model):
@@ -172,7 +184,7 @@ class Purchase(models.Model):
         ordering = ['-date']
 
     def __str__(self):
-        return self.vendor.__str__() + ' / ' + str(self.date)
+        return self.vendor.__str__() + ' ' + str(self.date)
 
     def get_absolute_url(self):
         return reverse('shop:purchase', kwargs={'pk': self.id})
@@ -193,6 +205,9 @@ class PurchaseItem(models.Model):
     )
     amount = models.PositiveSmallIntegerField()
 
+    def __str__(self):
+        return self.purchase + ' ' + self.part
+
 
 class Mechanic(models.Model):
     profile = models.OneToOneField(
@@ -204,8 +219,7 @@ class Mechanic(models.Model):
     name = models.CharField(max_length=14, blank=True)
 
     def __str__(self):
-        return self.profile.user.first_name if self.profile.user.first_name \
-            else self.name
+        return self.name if self.name else self.profile.user.first_name
 
 
 class Balance(models.Model):
@@ -222,6 +236,9 @@ class Balance(models.Model):
 
     class Meta:
         ordering = ['-date', '-id']
+
+    def __str__(self):
+        return self.date + ' ' + self.total
 
 
 class Inspection(models.Model):
@@ -265,9 +282,7 @@ class Inspection(models.Model):
         ordering = ['-id']
 
     def __str__(self):
-        return ('Truck ' + self.truck.__str__() + ': DOT #' + str(self.id)
-                if self.truck else 'Trailer ' + self.trailer.__str__() +
-                ': DOT #' + str(self.id))
+        return self.truck.__str__() if self.truck else self.trailer.__str__()
 
     def get_absolute_url(self):
         return reverse('shop:inspection', kwargs={'pk': self.id})

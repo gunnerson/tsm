@@ -44,12 +44,14 @@ class Truck(models.Model):
     )
     license_plate = models.CharField(
         max_length=8,
+        null=True,
         blank=True,
         validators=[alphanumeric],
     )
     state = models.CharField(
         max_length=2,
         choices=us_states_choices(),
+        null=True,
         blank=True,
     )
     status = models.CharField(
@@ -159,6 +161,7 @@ class Truck(models.Model):
         blank=True,
         verbose_name='Term',
     )
+
     objects = DBSearch()
     # Create index:
     # ALTER TABLE invent_truck ADD COLUMN textsearchable_index_col tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce(fleet_number, '') || ' ' || coalesce(license_plate, '') || ' ' || coalesce(vin, ''))) STORED;
@@ -166,9 +169,15 @@ class Truck(models.Model):
 
     class Meta:
         ordering = ['fleet_number']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['license_plate', 'state'], name='unique_truck_plate'),
+            models.UniqueConstraint(
+                fields=['fleet_number', 'owner'], name='unique_truck'),
+        ]
 
     def __str__(self):
-        return self.fleet_number
+        return 'Trk#' + self.fleet_number + ' ' + self.owner.__str__()
 
     def get_absolute_url(self):
         return reverse('invent:truck', args=[str(self.id)])
@@ -214,12 +223,14 @@ class Trailer(models.Model):
     )
     license_plate = models.CharField(
         max_length=8,
+        null=True,
         blank=True,
         validators=[alphanumeric],
     )
     state = models.CharField(
         max_length=2,
         choices=us_states_choices(),
+        null=True,
         blank=True,
     )
     owner = models.ForeignKey(
@@ -278,9 +289,15 @@ class Trailer(models.Model):
 
     class Meta:
         ordering = ['fleet_number']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['license_plate', 'state'], name='unique_trailer_plate'),
+            models.UniqueConstraint(
+                fields=['fleet_number', 'owner'], name='unique_trailer'),
+        ]
 
     def __str__(self):
-        return str(self.fleet_number)
+        return 'Trl#' + self.fleet_number + ' ' + self.owner.__str__()
 
     def get_absolute_url(self):
         return reverse('invent:trailer', args=[str(self.id)])
@@ -296,7 +313,7 @@ class Trailer(models.Model):
 class Company(models.Model):
     phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
     zip_code_regex = RegexValidator(r'^\d{5}$', 'Invalid zip-code')
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=40)
     group = models.CharField(
         max_length=2,
         choices=company_group_choices(),
@@ -307,7 +324,6 @@ class Company(models.Model):
     state = models.CharField(
         max_length=2,
         choices=us_states_choices(),
-        blank=True,
     )
     zip_code = models.CharField(
         max_length=5,
@@ -330,10 +346,10 @@ class Company(models.Model):
         verbose_name_plural = 'Companies'
         ordering = ['name']
         constraints = [models.UniqueConstraint(
-            fields=['group', 'name'], name='unique_company')]
+            fields=['name', 'state'], name='unique_company')]
 
     def __str__(self):
-        return str(self.name)
+        return self.name + ' (' + self.state + ')'
 
     def get_absolute_url(self):
         return reverse('contacts:company', args=[str(self.id)])
@@ -403,10 +419,13 @@ class Driver(models.Model):
     phone_number = models.CharField(
         validators=[phone_number_regex],
         max_length=16,
+        null=True,
         blank=True,
     )
     email = models.EmailField(
+        null=True,
         blank=True,
+        unique=True,
     )
     address_line_1 = models.CharField(max_length=30, blank=True)
     address_line_2 = models.CharField(max_length=10, blank=True)
@@ -424,7 +443,8 @@ class Driver(models.Model):
     ssn = models.CharField(
         validators=[ssn_regex],
         max_length=11,
-        blank=True
+        blank=True,
+        unique=True,
     )
     last_mvr = models.DateField(
         null=True,
@@ -450,6 +470,11 @@ class Driver(models.Model):
     # Create index:
     # ALTER TABLE invent_driver ADD COLUMN textsearchable_index_col tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce(name, '') || ' ' || coalesce(cdl, '') || ' ' || coalesce(phone_number, '') || ' ' || coalesce(ssn, ''))) STORED;
     # CREATE INDEX driversearch_idx ON invent_driver USING GIN (textsearchable_index_col);
+
+    class Meta:
+        ordering = ['name']
+        constraints = [models.UniqueConstraint(
+            fields=['name', 'phone_number'], name='unique_driver')]
 
     def __str__(self):
         return self.name
