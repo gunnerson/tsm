@@ -1,21 +1,7 @@
 from .mixins import ImageForm, FileForm
 
-from .models import OrderImage, InspectionImage, TruckImage, TrailerImage, \
-    TruckDocument, TrailerDocument, DriverDocument, CompanyDocument
-
-
-class OrderImageForm(ImageForm):
-
-    class Meta:
-        model = OrderImage
-        exclude = ('origin',)
-
-
-class InspectionImageForm(ImageForm):
-
-    class Meta:
-        model = InspectionImage
-        exclude = ('origin',)
+from .models import TruckImage, TrailerImage, TruckDocument, TrailerDocument, \
+    DriverDocument, CompanyDocument
 
 
 class TruckImageForm(ImageForm):

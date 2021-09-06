@@ -174,11 +174,17 @@ class InspectionForm(FormMixin):
 
 
 class OrderTimeForm(forms.Form):
-    order = forms.ModelChoiceField(
-        queryset=Order.objects.filter(closed=None))
+    order = forms.ModelChoiceField(queryset=None)
 
-    def __init__(self, *args, order=None, **kwargs):
+    def __init__(self, *args, order=None, mechanic=None, **kwargs):
         super().__init__(*args, **kwargs)
+        qs = Order.objects.filter(closed=None)
+        taken_ids = []
+        for q in qs:
+            if q.taken and (q.mechanic != mechanic):
+                taken_ids.append(q.id)
+        qs = qs.exclude(id__in=taken_ids)
+        self.fields['order'].queryset = qs
         if order:
             self.fields['order'].initial = order
             self.fields['order'].disabled = True

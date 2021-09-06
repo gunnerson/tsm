@@ -111,9 +111,12 @@ class OrderView(WriteCheckMixin, ObjectView):
             context['btn_print'] = True
             context['print_url'] = 'shop:order_print'
             context['btn_image'] = True
-            context['image_url'] = 'docs:order_image'
-            context['btn_gallery'] = True
-            context['gallery_url'] = 'docs:order_images'
+            if order.truck:
+                context['image_url'] = 'docs:truck_image'
+                context['image_id'] = order.truck.id
+            else:
+                context['image_url'] = 'docs:trailer_image'
+                context['image_id'] = order.trailer.id
         return context
 
     def get_form_kwargs(self):

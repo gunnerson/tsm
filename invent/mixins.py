@@ -184,6 +184,7 @@ class InfoView(DetailView):
         context['inst_id'] = inst.id
         context['btn_image'] = True
         context['image_url'] = self.image_url
+        context['image_id'] = inst.id
         context['btn_gallery'] = True
         context['gallery_url'] = self.gallery_url
         context['btn_doc'] = True

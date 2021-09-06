@@ -1,13 +1,16 @@
 from django.db import models
 from django.utils.timezone import now
 
-from shop.models import Order, Inspection
 from invent.models import Truck, Trailer, Driver, Company
 from invent.choices import file_category_choices
 
 
+def img_upload_directory(instance, filename):
+    return 'img/{0}/{1}_{2}'.format(instance.origin, instance.date, filename)
+
+
 class Image(models.Model):
-    image = models.ImageField()
+    image = models.ImageField(upload_to=img_upload_directory)
     date = models.DateField(default=now)
 
     class Meta:
@@ -15,14 +18,6 @@ class Image(models.Model):
 
     def __str__(self):
         return str(self.image.url)
-
-
-class OrderImage(Image):
-    origin = models.ForeignKey(Order, on_delete=models.CASCADE)
-
-
-class InspectionImage(Image):
-    origin = models.ForeignKey(Inspection, on_delete=models.CASCADE)
 
 
 class TruckImage(Image):
