@@ -100,7 +100,9 @@ class OrderView(WriteCheckMixin, ObjectView):
         context['btn_save'] = True
         if not self.is_create:
             order = self.get_object()
-            context['total_time'] = order.ordertime.total
+            context['total_clocked'] = order.ordertime.total
+            context['total_billed'] = order.labor_total
+            context['total_parts'] = order.parts_total(self.request.user)
             context['inst_id'] = order.id
             context['job_formset'] = (
                 job_formset if job_formset else get_job_forms(order))

@@ -141,90 +141,95 @@ class UsersLevelFormSetView(AdminCheckMixin, FormSetView):
 
 
 def punch(request):
-    profile = request.user.profile
-    mechanic = profile.mechanic
-    cards = PunchCard.objects.filter(mechanic=mechanic)
-    last_card = cards.last()
-    orders = mechanic.order_set.filter(closed=None)
-    open_order = None
-    open_ordertime = None
-    for inst in orders:
-        ordertime = inst.ordertime
-        if ordertime.start:
-            open_order = ordertime.order
-            open_ordertime = ordertime
-    if request.method != 'POST':
+    try:
+        profile = request.user.profile
+        mechanic = profile.mechanic
+        cards = PunchCard.objects.filter(mechanic=mechanic)
+        last_card = cards.last()
+        orders = mechanic.order_set.filter(closed=None)
+        open_order = None
+        open_ordertime = None
+        for inst in orders:
+            ordertime = inst.ordertime
+            if ordertime.start:
+                open_order = ordertime.order
+                open_ordertime = ordertime
+        if request.method != 'POST':
+            context = {}
+            no_card = True
+            status = 'punched_out'
+            if last_card:
+                no_card = False
+                if last_card.punch_in:
+                    status = 'punched_in'
+                if last_card.lunch_in:
+                    status = 'lunched_in'
+                if last_card.lunch_out:
+                    status = 'lunched_out'
+                if last_card.punch_out:
+                    status = 'punched_out'
+            context['status'] = status
+            context['no_card'] = no_card
+            if open_order:
+                context['order_select'] = OrderTimeForm(
+                    order=open_order)
+                context['stop'] = True
+            else:
+                context['order_select'] = OrderTimeForm()
+                context['start'] = True
+        else:
+            selected = request.POST.get('punch_select', None)
+            user_lat = request.POST.get('latitude', None)
+            user_lon = request.POST.get('longitude', None)
+            order_id = request.POST.get('order', None)
+            submit = request.POST.get('submit', None)
+            status = request.POST.get('status', None)
+            order = Order.objects.get(id=order_id) if order_id else open_order
+            if user_lat and user_lon:
+                shop_lat = profile.home_latitude
+                shop_lon = profile.home_longitude
+                delta_lat = abs(shop_lat - float(user_lat)) * 111319.9
+                delta_lon = abs(shop_lon - float(user_lon)) * 111319.9
+                distance = round(
+                    (sqrt(delta_lat**2 + delta_lon**2) * 0.000621371), 1)
+            else:
+                distance = 404
+            if selected == 'punch_in' or (status == 'punched_out'
+                                          and submit == 'start'):
+                PunchCard(
+                    mechanic=mechanic,
+                    punch_in=timezone.now(),
+                    punch_in_distance=distance,
+                ).save()
+            elif selected == 'lunch_in':
+                last_card.lunch_in = timezone.now()
+                last_card.lunch_in_distance = distance
+                last_card.save(update_fields=['lunch_in', 'lunch_in_distance'])
+                if open_ordertime:
+                    open_ordertime.get_total()
+            elif selected == 'lunch_out' or (status == 'lunched_in'
+                                             and submit == 'start'):
+                last_card.lunch_out = timezone.now()
+                last_card.lunch_out_distance = distance
+                last_card.save(
+                    update_fields=['lunch_out', 'lunch_out_distance'])
+            elif selected == 'punch_out':
+                last_card.punch_out = timezone.now()
+                last_card.punch_out_distance = distance
+                last_card.save(
+                    update_fields=['punch_out', 'punch_out_distance'])
+                if open_ordertime:
+                    open_ordertime.get_total()
+            if submit == 'start':
+                order.ordertime.start = timezone.now()
+                order.ordertime.save(update_fields=['start'])
+                order.mechanic = mechanic
+                order.save(update_fields=['mechanic'])
+            elif submit == 'stop':
+                open_ordertime.get_total()
+            return redirect('users:punch')
+    except AttributeError:
         context = {}
-        no_card = True
-        status = 'punched_out'
-        if last_card:
-            no_card = False
-            if last_card.punch_in:
-                status = 'punched_in'
-            if last_card.lunch_in:
-                status = 'lunched_in'
-            if last_card.lunch_out:
-                status = 'lunched_out'
-            if last_card.punch_out:
-                status = 'punched_out'
-        context['status'] = status
-        context['no_card'] = no_card
-        if open_order:
-            context['order_select'] = OrderTimeForm(
-                order=open_order)
-            context['stop'] = True
-        else:
-            context['order_select'] = OrderTimeForm()
-            context['start'] = True
-    else:
-        selected = request.POST.get('punch_select', None)
-        user_lat = request.POST.get('latitude', None)
-        user_lon = request.POST.get('longitude', None)
-        order_id = request.POST.get('order', None)
-        submit = request.POST.get('submit', None)
-        status = request.POST.get('status', None)
-        order = Order.objects.get(id=order_id) if order_id else open_order
-        if user_lat and user_lon:
-            shop_lat = profile.home_latitude
-            shop_lon = profile.home_longitude
-            delta_lat = abs(shop_lat - float(user_lat)) * 111319.9
-            delta_lon = abs(shop_lon - float(user_lon)) * 111319.9
-            distance = round(
-                (sqrt(delta_lat**2 + delta_lon**2) * 0.000621371), 1)
-        else:
-            distance = 404
-        if selected == 'punch_in' or (status == 'punched_out'
-                                      and submit == 'start'):
-            PunchCard(
-                mechanic=mechanic,
-                punch_in=timezone.now(),
-                punch_in_distance=distance,
-            ).save()
-        elif selected == 'lunch_in':
-            last_card.lunch_in = timezone.now()
-            last_card.lunch_in_distance = distance
-            last_card.save(update_fields=['lunch_in', 'lunch_in_distance'])
-            if open_ordertime:
-                open_ordertime.get_total()
-        elif selected == 'lunch_out' or (status == 'lunched_in'
-                                         and submit == 'start'):
-            last_card.lunch_out = timezone.now()
-            last_card.lunch_out_distance = distance
-            last_card.save(update_fields=['lunch_out', 'lunch_out_distance'])
-        elif selected == 'punch_out':
-            last_card.punch_out = timezone.now()
-            last_card.punch_out_distance = distance
-            last_card.save(update_fields=['punch_out', 'punch_out_distance'])
-            if open_ordertime:
-                open_ordertime.get_total()
-        if submit == 'start':
-            order.ordertime.start = timezone.now()
-            order.ordertime.save(update_fields=['start'])
-            order.mechanic = mechanic
-            order.save(update_fields=['mechanic'])
-        elif submit == 'stop':
-            open_ordertime.get_total()
-        return redirect('users:punch')
     return render(request, 'users/punch.html', context)
 
 

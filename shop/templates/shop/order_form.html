@@ -5,7 +5,9 @@
     {% csrf_token %}
     {{ form.as_p}}
     <br>
-    <p><strong>Clocked: </strong>{{ total_time }} h
+    <p><strong>Clocked: </strong>{{ total_clocked }} h
+    <strong>&nbsp;&nbsp;&nbsp;Billed: </strong>{{ total_billed }} h
+    <strong>&nbsp;&nbsp;&nbsp;Parts: </strong>${{ total_parts }}
     <br>
     <br>
     <hr>
