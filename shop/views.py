@@ -316,9 +316,12 @@ class InspectionView(WriteCheckMixin, ObjectView):
         context['inst_id'] = inst.id
         context['btn_save'] = True
         context['btn_image'] = True
-        context['image_url'] = 'docs:inspection_image'
-        context['btn_gallery'] = True
-        context['gallery_url'] = 'docs:inspection_images'
+        if inst.truck:
+                context['image_url'] = 'docs:truck_image'
+                context['image_id'] = inst.truck.id
+        else:
+            context['image_url'] = 'docs:trailer_image'
+            context['image_id'] = inst.trailer.id
         return context
 
     def get_form_kwargs(self):

@@ -428,6 +428,7 @@ div.desc {
   overflow: visible;
   height: auto;
   border-bottom: none;
+  padding: 5px;
 }
 
 .listview-table thead th{
