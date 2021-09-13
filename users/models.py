@@ -3,6 +3,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
+from datetime import timedelta
 
 from invent.models import Company
 from .utils import gen_list_ver_name, gen_field_ver_name
@@ -100,24 +101,28 @@ class PunchCard(models.Model):
         null=True,
         max_digits=5,
         decimal_places=1,
+        blank=True,
     )
     lunch_in = models.DateTimeField(null=True, blank=True)
     lunch_in_distance = models.DecimalField(
         null=True,
         max_digits=5,
         decimal_places=1,
+        blank=True,
     )
     lunch_out = models.DateTimeField(null=True, blank=True)
     lunch_out_distance = models.DecimalField(
         null=True,
         max_digits=5,
         decimal_places=1,
+        blank=True,
     )
     punch_out = models.DateTimeField(null=True, blank=True)
     punch_out_distance = models.DecimalField(
         null=True,
         max_digits=5,
         decimal_places=1,
+        blank=True,
     )
 
     class Meta:
@@ -125,9 +130,18 @@ class PunchCard(models.Model):
 
     @property
     def get_hours(self):
-        try:
-            td = self.punch_out - self.punch_in - \
-                (self.lunch_out - self.lunch_in)
+        if self.lunch_in and self.lunch_out:
+            lunch = self.lunch_out - self.lunch_in
+        elif ((self.lunch_in and not self.lunch_out)
+              or (self.lunch_out and not self.lunch_in)):
+            lunch = timedelta(minutes=30)
+        else:
+            lunch = timedelta()
+        if self.punch_out:
+            td = self.punch_out - self.punch_in - lunch
             return round((td.seconds / 3600), 1)
-        except TypeError:
+        elif self.punch_in and self.lunch_in:
+            td = self.lunch_in - self.punch_in
+            return round((td.seconds / 3600), 1)
+        else:
             return 0
