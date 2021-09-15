@@ -240,19 +240,19 @@ class PunchCardListView(LoginRequiredMixin, ListView):
     template_name = 'users/punchcards.html'
 
     def get_queryset(self):
-        mechanic = self.request.GET.get('mechanic', None)
+        mechanic = self.request.GET.get(
+            'mechanic', self.request.user.profile.mechanic)
         week_of = self.request.GET.get('week_of', None)
-        if mechanic and week_of:
+        if week_of:
             dt = datetime.strptime(week_of, '%Y-%m-%d')
-            start = dt - timedelta(days=dt.weekday())
-            end = start + timedelta(days=7)
-            qs = PunchCard.objects.filter(
-                mechanic=mechanic,
-                punch_in__range=(start, end),
-            )
         else:
-            qs = PunchCard.objects.filter(
-                mechanic=self.request.user.profile.mechanic)
+            dt = timezone.now()
+        start = dt - timedelta(days=dt.weekday())
+        end = start + timedelta(days=7)
+        qs = PunchCard.objects.filter(
+            mechanic=mechanic,
+            punch_in__range=(start, end),
+        )
         return qs
 
     def get_context_data(self, *args, **kwargs):
