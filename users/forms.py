@@ -73,7 +73,7 @@ class UserLevelForm(forms.ModelForm):
 
 class PunchCardForm(forms.Form):
     mechanic = forms.ModelChoiceField(
-        queryset=Mechanic.objects.all())
+        queryset=Mechanic.objects.all(), empty_label=None)
     week_of = forms.DateField(
         initial=datetime.today(),
         widget=forms.DateInput(attrs={'type': 'date'})
