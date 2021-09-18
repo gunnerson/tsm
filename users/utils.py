@@ -37,12 +37,12 @@ def generate_listcolshow(profile, model):
     fields = model._meta.get_fields()
     i = 1
     if model == Truck or model == Trailer:
-        exclude = ('id', 'driver', 'order', 'part')
+        exclude = ('id', 'driver', 'order', 'part', 'inspection')
     elif model == Driver:
         exclude = ('id')
     elif model == Company:
         exclude = ('id', 'driver', 'owned_trucks', 'insured_trucks', 'order',
-                   'owned_trailers', 'insured_trailers', 'purchase', 'profile')
+                   'owned_trailers', 'insured_trailers', 'purchase', 'profile',)
     for f in fields:
         if f.name not in exclude:
             try:
