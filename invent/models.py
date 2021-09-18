@@ -311,7 +311,6 @@ class Trailer(models.Model):
 
 
 class Company(models.Model):
-    phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
     zip_code_regex = RegexValidator(r'^\d{5}$', 'Invalid zip-code')
     name = models.CharField(max_length=40)
     group = models.CharField(
@@ -331,7 +330,6 @@ class Company(models.Model):
         validators=[zip_code_regex],
     )
     phone_number = models.CharField(
-        validators=[phone_number_regex],
         max_length=16,
         blank=True,
     )
@@ -354,9 +352,14 @@ class Company(models.Model):
     def get_absolute_url(self):
         return reverse('contacts:company', args=[str(self.id)])
 
+    def save(self, *args, **kwargs):
+        if self.phone_number:
+            dg = ''.join(i for i in self.phone_number if i.isdigit())
+            self.phone_number = '(' + dg[:3] + ') ' + dg[3:6] + '-' + dg[6:]
+        super().save(*args, **kwargs)
+
 
 class Driver(models.Model):
-    phone_number_regex = RegexValidator(regex=r"^\+?1?\d{8,15}$")
     zip_code_regex = RegexValidator(r'^\d{5}$', 'Invalid zip-code')
     ssn_regex = RegexValidator(
         regex=r"^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$")
@@ -417,15 +420,14 @@ class Driver(models.Model):
         verbose_name='Term date',
     )
     phone_number = models.CharField(
-        validators=[phone_number_regex],
         max_length=16,
         null=True,
         blank=True,
     )
     email = models.EmailField(
-        null=True,
+        # null=True,
         blank=True,
-        unique=True,
+        # unique=True,
     )
     address_line_1 = models.CharField(max_length=30, blank=True)
     address_line_2 = models.CharField(max_length=10, blank=True)
@@ -481,6 +483,12 @@ class Driver(models.Model):
 
     def get_absolute_url(self):
         return reverse('invent:driver', args=[str(self.id)])
+
+    def save(self, *args, **kwargs):
+        if self.phone_number:
+            dg = ''.join(i for i in self.phone_number if i.isdigit())
+            self.phone_number = '(' + dg[:3] + ') ' + dg[3:6] + '-' + dg[6:]
+        super().save(*args, **kwargs)
 
 
 class PasswordGroup(models.Model):

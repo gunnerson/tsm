@@ -312,16 +312,17 @@ class InspectionView(WriteCheckMixin, ObjectView):
     def get_context_data(
             self, *args, job_formset=None, part_formset=None, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        inst = self.get_object()
-        context['inst_id'] = inst.id
         context['btn_save'] = True
-        context['btn_image'] = True
-        if inst.truck:
+        if not self.is_create:
+            inst = self.get_object()
+            context['inst_id'] = inst.id
+            context['btn_image'] = True
+            if inst.truck:
                 context['image_url'] = 'docs:truck_image'
                 context['image_id'] = inst.truck.id
-        else:
-            context['image_url'] = 'docs:trailer_image'
-            context['image_id'] = inst.trailer.id
+            else:
+                context['image_url'] = 'docs:trailer_image'
+                context['image_id'] = inst.trailer.id
         return context
 
     def get_form_kwargs(self):
