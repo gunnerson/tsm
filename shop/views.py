@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from datetime import date
-from django.db import IntegrityError
+# from django.db import IntegrityError
 
 from .models import Order, OrderTime, Part, Job, OrderPart, Purchase, \
     PurchaseItem, Balance, Inspection
@@ -108,6 +108,8 @@ class OrderView(WriteCheckMixin, ObjectView):
                 job_formset if job_formset else get_job_forms(order))
             context['part_formset'] = (
                 part_formset if part_formset else get_part_forms(order))
+            context['btn_budget'] = True
+            context['budget_url'] = 'shop:order_budget'
             context['btn_print'] = True
             context['print_url'] = 'shop:order_print'
             context['btn_image'] = True
@@ -258,6 +260,9 @@ class PurchaseView(WriteCheckMixin, ObjectView):
         context['btn_save'] = True
         if not self.is_create:
             order = self.get_object()
+            context['btn_budget'] = True
+            context['budget_url'] = 'shop:purchase_budget'
+            context['inst_id'] = order.id
             context['formset'] = (
                 formset if formset else get_purchase_forms(order))
         return context
@@ -329,3 +334,44 @@ class InspectionView(WriteCheckMixin, ObjectView):
         kwargs = super().get_form_kwargs()
         kwargs.update(is_create=self.is_create)
         return kwargs
+
+
+def budget_invoice(request, pk):
+    order = Order.objects.get(id=pk)
+    user = request.user
+    parts_total = order.parts_total(user)
+    tax = parts_total * user.profile.tax
+    labor_total = order.labor_total * user.profile.labor_rate
+    total = parts_total + tax + labor_total
+    check_existing = Balance.objects.filter(
+        date=order.closed,
+        category='I',
+        total=total,
+        comments=order,
+    )
+    if not check_existing and order.closed:
+        Balance(
+            date=order.closed,
+            category='I',
+            total=total,
+            comments=order,
+        ).save()
+    return redirect(order.get_absolute_url())
+
+
+def budget_purchase(request, pk):
+    purchase = Purchase.objects.get(id=pk)
+    check_existing = Balance.objects.filter(
+        date=purchase.date,
+        category='P',
+        total=-purchase.total,
+        comments=purchase,
+    )
+    if not check_existing and purchase.total:
+        Balance(
+            date=purchase.date,
+            category='P',
+            total=-purchase.total,
+            comments=purchase,
+        ).save()
+    return redirect(purchase.get_absolute_url())
