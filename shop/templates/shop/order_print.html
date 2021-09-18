@@ -72,28 +72,30 @@
       </table>
     </div>
 
-    <div class="row">
-      <table>
-        <thead>
-          <tr>
-            <th>
-              <span>PARTS and MATERIAL</span>
-            </th>
-            <th>Price</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for part in object.orderpart_set.all %}
+    {% if object.orderpart_set.all %}
+      <div class="row">
+        <table>
+          <thead>
             <tr>
-              <td>{{ part.part }}</td>
-              <td style="width: 20%; text-align: right;">${{ part.part.price|surcharge:user|floatformat:2 }}</td>
-              <td style="width: 20%; text-align: center;">{{ part.amount }} {{ part.part.stock_unit }}</td>
+              <th>
+                <span>PARTS and MATERIAL</span>
+              </th>
+              <th>Price</th>
+              <th>Amount</th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {% for part in object.orderpart_set.all %}
+              <tr>
+                <td>{{ part.part }}</td>
+                <td style="width: 20%; text-align: right;">${{ part.part.price|surcharge:user|floatformat:2 }}</td>
+                <td style="width: 20%; text-align: center;">{{ part.amount }} {{ part.part.stock_unit }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
 
     <br>
 
