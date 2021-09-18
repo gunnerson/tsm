@@ -238,7 +238,7 @@ class Balance(models.Model):
         ordering = ['-date', '-id']
 
     def __str__(self):
-        return self.date + ' ' + self.total
+        return str(self.date) + ' ' + str(self.total)
 
 
 class Inspection(models.Model):

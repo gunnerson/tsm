@@ -36,6 +36,9 @@
           {% if btn_print %}
             <a href="{% url print_url inst_id %}" title="For print"><img src="{% static 'img/print.png' %}"></a>
           {% endif %}
+          {% if btn_budget %}
+            <a href="{% url budget_url inst_id %}" title="To budget"><img src="{% static 'img/money.png' %}"></a>
+          {% endif %}
           {% if btn_image %}
             <a href="{% url image_url image_id %}" title="Upload image"><img src="{% static 'img/photo.png' %}"></a>
           {% endif %}
