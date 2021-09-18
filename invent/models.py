@@ -323,6 +323,7 @@ class Company(models.Model):
     state = models.CharField(
         max_length=2,
         choices=us_states_choices(),
+        blank=True,
     )
     zip_code = models.CharField(
         max_length=5,
@@ -331,6 +332,9 @@ class Company(models.Model):
     )
     phone_number = models.CharField(
         max_length=16,
+        blank=True,
+    )
+    email = models.EmailField(
         blank=True,
     )
     comments = models.TextField(blank=True)
