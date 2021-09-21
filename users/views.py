@@ -5,7 +5,7 @@ from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
 from django.db.models import Q
 from django.utils import timezone
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from math import sqrt
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -250,7 +250,7 @@ class PunchCardListView(LoginRequiredMixin, ListView):
         if week_of:
             dt = datetime.strptime(week_of, '%Y-%m-%d')
         else:
-            dt = datetime.today()
+            dt = timezone.now().date()
         start = dt - timedelta(days=dt.weekday())
         end = start + timedelta(days=7)
         qs = PunchCard.objects.filter(
