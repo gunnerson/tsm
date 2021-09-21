@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.utils import timezone
 from datetime import datetime, timedelta
 from math import sqrt
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import ListColShow, Profile, PunchCard
 from shop.models import Order, OrderTime
@@ -240,13 +241,16 @@ class PunchCardListView(LoginRequiredMixin, ListView):
     template_name = 'users/punchcards.html'
 
     def get_queryset(self):
-        mechanic = self.request.GET.get(
-            'mechanic', self.request.user.profile.mechanic)
+        try:
+            mechanic = self.request.GET.get(
+                'mechanic', self.request.user.profile.mechanic)
+        except ObjectDoesNotExist:
+            mechanic = None
         week_of = self.request.GET.get('week_of', None)
         if week_of:
             dt = datetime.strptime(week_of, '%Y-%m-%d')
         else:
-            dt = timezone.now()
+            dt = datetime.today()
         start = dt - timedelta(days=dt.weekday())
         end = start + timedelta(days=7)
         qs = PunchCard.objects.filter(
@@ -263,7 +267,10 @@ class PunchCardListView(LoginRequiredMixin, ListView):
         week_of = self.request.GET.get('week_of', None)
         if week_of:
             week_of = datetime.strptime(week_of, '%Y-%m-%d')
-        new_mechanic = mechanic if mechanic else profile.mechanic
+        try:
+            new_mechanic = mechanic if mechanic else profile.mechanic
+        except ObjectDoesNotExist:
+            new_mechanic = None
         context['form'] = PunchCardForm(
             mechanic=new_mechanic,
             level=profile.level,
