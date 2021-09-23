@@ -245,7 +245,8 @@ class PunchCardListView(LoginRequiredMixin, ListView):
             mechanic = self.request.GET.get(
                 'mechanic', self.request.user.profile.mechanic)
         except ObjectDoesNotExist:
-            mechanic = None
+            mechanic = self.request.GET.get(
+                'mechanic', None)
         week_of = self.request.GET.get('week_of', None)
         if week_of:
             dt = datetime.strptime(week_of, '%Y-%m-%d')
