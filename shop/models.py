@@ -149,7 +149,7 @@ class OrderJob(models.Model):
     amount = models.PositiveSmallIntegerField(default=1)
 
     def __str__(self):
-        return self.order + ' ' + self.job
+        return self.order.__str__() + ' ' + self.job.__str__()
 
 
 class OrderPart(models.Model):
@@ -162,7 +162,7 @@ class OrderPart(models.Model):
     amount = models.PositiveSmallIntegerField(default=1)
 
     def __str__(self):
-        return self.order + ' ' + self.part
+        return self.order.__str__() + ' ' + self.part.__str__()
 
 
 class Purchase(models.Model):
