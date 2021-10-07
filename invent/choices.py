@@ -34,6 +34,7 @@ def truck_make_choices():
 def trailer_make_choices():
     choices = [
         ('HY', 'Hyundai'),
+        ('GD', 'Great Dane'),
         ('UT', 'Utility'),
         ('WB', 'Wabash'),
     ]
@@ -93,11 +94,13 @@ def size_choices():
 def category_choices():
     choices = [
         ('I', '+Invoice'),
+        ('R', '+Refund'),
         ('B', '-Building'),
         ('S', '-Salaries'),
         ('T', '-Tools'),
         ('S', '-Services'),
         ('P', '-Parts'),
+        ('E', '-Shop Supplies'),
     ]
     return choices
 
