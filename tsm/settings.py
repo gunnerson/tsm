@@ -201,5 +201,4 @@ LOGGING = {
 AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'invent:summary'
-
-
+DATA_UPLOAD_MAX_NUMBER_FIELDS = None

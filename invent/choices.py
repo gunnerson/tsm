@@ -36,6 +36,7 @@ def trailer_make_choices():
         ('HY', 'Hyundai'),
         ('GD', 'Great Dane'),
         ('UT', 'Utility'),
+        ('VN', 'Vanguard'),
         ('WB', 'Wabash'),
     ]
     return choices
