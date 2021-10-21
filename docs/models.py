@@ -35,7 +35,7 @@ class Document(models.Model):
         choices=file_category_choices(),
         default="GN",
     )
-    description = models.CharField(max_length=50, default=True)
+    description = models.CharField(max_length=50, blank=True)
 
     class Meta:
         abstract = True
