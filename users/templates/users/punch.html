@@ -18,7 +18,7 @@
       <form method="POST" class="select-punch">
         {% csrf_token %}
         <div>
-          <input type="radio" id="punch_option1" name="punch_select" class="form-class" value="punch_in" {% if status == 'punched_out' %}checked{% endif %}>
+          <input type="radio" id="punch_option1" name="punch_select" class="form-class" value="punch_in" {% if status == 'punched_out' %}checked{% endif %} {% if status in ('punched_in', 'lunched_in', 'lunched_out') %}disabled{% endif %}>
           <label for="punch_option1">PUNCH IN</label>
         </div>
         <div>
