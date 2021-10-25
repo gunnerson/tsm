@@ -285,6 +285,7 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
         running_total = 0        
         total_tools = 0
         total_parts = 0
+        total_building = 0
         total_supplies = 0
         total_salaries = 0
         total_income = 0
