@@ -282,19 +282,55 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         qs = self.get_queryset()
-        running_total = 0
+        running_total = 0        
+        total_tools = 0
+        total_parts = 0
+        total_supplies = 0
+        total_salaries = 0
+        total_income = 0
         this_month = 0
+        this_month_income = 0
+        this_month_salaries = 0
         last_month = 0
+        last_month_income = 0
+        last_month_salaries = 0
         today = date.today()
         for q in qs:
             running_total += q.total
+            if q.category == 'T':
+                total_tools += q.total
+            elif q.category == 'P':
+                total_parts += q.total
+            elif q.category == 'E':
+                total_supplies += q.total
+            elif q.category == 'S':
+                total_salaries += q.total
+            elif q.category == 'I':
+                total_income += q.total
             if q.date.month == today.month:
                 this_month += q.total
+                if q.category == 'I':
+                    this_month_income += q.total
+                elif q.category == 'S':
+                    this_month_salaries += q.total
             elif q.date.month == today.month - 1:
                 last_month += q.total
+                if q.category == 'I':
+                    last_month_income += q.total
+                elif q.category == 'S':
+                    last_month_salaries += q.total
         context['running_total'] = running_total
+        context['total_tools'] = total_tools
+        context['total_parts'] = total_parts
+        context['total_supplies'] = total_supplies
+        context['total_salaries'] = total_salaries
+        context['total_income'] = total_income
         context['this_month'] = this_month
+        context['this_month_income'] = this_month_income
+        context['this_month_salaries'] = this_month_salaries
         context['last_month'] = last_month
+        context['last_month_income'] = last_month_income
+        context['last_month_salaries'] = last_month_salaries
         return context
 
 
