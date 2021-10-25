@@ -177,7 +177,7 @@ class Truck(models.Model):
         ]
 
     def __str__(self):
-        return 'Trk#' + self.fleet_number + ' ' + self.owner.__str__()
+        return 'Trk#' + self.fleet_number + ' ' + self.owner.__str__().split()[0]
 
     def get_absolute_url(self):
         return reverse('invent:truck', args=[str(self.id)])
@@ -297,7 +297,7 @@ class Trailer(models.Model):
         ]
 
     def __str__(self):
-        return 'Trl#' + self.fleet_number + ' ' + self.owner.__str__()
+        return 'Trl#' + self.fleet_number + ' ' + self.owner.__str__().split()[0]
 
     def get_absolute_url(self):
         return reverse('invent:trailer', args=[str(self.id)])
