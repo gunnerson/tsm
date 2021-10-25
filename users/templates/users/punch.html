@@ -18,15 +18,15 @@
       <form method="POST" class="select-punch">
         {% csrf_token %}
         <div>
-          <input type="radio" id="punch_option1" name="punch_select" class="form-class" value="punch_in" {% if status == 'punched_out' %}checked{% endif %} {% if status in ('punched_in', 'lunched_in', 'lunched_out') %}disabled{% endif %}>
+          <input type="radio" id="punch_option1" name="punch_select" class="form-class" value="punch_in" {% if status == 'punched_out' %}checked{% endif %} {% if status == 'punched_in' or status == 'lunched_in' or status == 'lunched_out') %}disabled{% endif %}>
           <label for="punch_option1">PUNCH IN</label>
         </div>
         <div>
-          <input type="radio" id="punch_option2" name="punch_select" class="form-class"  value="lunch_in" {% if status == 'punched_in' %}checked{% endif %} {% if no_card %}disabled{% endif %}>
+          <input type="radio" id="punch_option2" name="punch_select" class="form-class"  value="lunch_in" {% if status == 'punched_in' %}checked{% endif %} {% if no_card %}disabled{% endif %} {% if status == 'lunched_in' or status == 'lunched_out') %}disabled{% endif %}>
           <label for="punch_option2">LUNCH IN</label>
         </div>
         <div>
-          <input type="radio" id="punch_option3" name="punch_select" class="form-class" value="lunch_out" {% if status == 'lunched_in' %}checked{% endif %} {% if no_card %}disabled{% endif %}>
+          <input type="radio" id="punch_option3" name="punch_select" class="form-class" value="lunch_out" {% if status == 'lunched_in' %}checked{% endif %} {% if no_card %}disabled{% endif %} {% if status == 'lunched_out') %}disabled{% endif %}>
           <label for="punch_option3">LUNCH OUT</label>
         </div>
         <div>
