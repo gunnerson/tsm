@@ -307,6 +307,8 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
                 total_salaries += q.total
             elif q.category == 'I':
                 total_income += q.total
+            elif q.category == 'B':
+                total_building += q.total
             if q.date.month == today.month:
                 this_month += q.total
                 if q.category == 'I':
@@ -330,6 +332,7 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
         context['running_total'] = running_total
         context['total_tools'] = total_tools
         context['total_parts'] = total_parts
+        context['total_building'] = total_building
         context['total_supplies'] = total_supplies
         context['total_salaries'] = total_salaries
         context['total_income'] = total_income
