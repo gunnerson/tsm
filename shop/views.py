@@ -239,10 +239,16 @@ class PurchaseView(WriteCheckMixin, ObjectView):
                         inst.save()
                         inst.part.stock += inst.amount
                         inst.part.save(update_fields=['stock'])
+                        if inst.price > inst.part.price:
+                            inst.part.price = inst.price
+                            inst.part.save(update_fields=['price'])                      
                     elif inst.id and inst.part_id:
                         before_inst = PurchaseItem.objects.get(id=inst.id)
                         inst.part.stock += inst.amount - before_inst.amount
                         inst.part.save(update_fields=['stock'])
+                        if inst.price > inst.part.price:
+                            inst.part.price = inst.price
+                            inst.part.save(update_fields=['price'])   
                         if inst.amount == 0:
                             try:
                                 inst.delete()

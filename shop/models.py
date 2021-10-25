@@ -97,6 +97,12 @@ class Part(models.Model):
     stock_unit = models.CharField(max_length=10, blank=True)
     trucks = models.ManyToManyField(Truck, blank=True)
     trailers = models.ManyToManyField(Trailer, blank=True)
+    price = models.DecimalField(
+        max_digits=7,
+        decimal_places=2,
+        null=True,
+        blank=True,
+    )
 
     objects = DBSearch()
     # Create index:
@@ -113,7 +119,7 @@ class Part(models.Model):
         return reverse('shop:part', kwargs={'pk': self.id})
 
     @property
-    def price(self):
+    def get_price(self):
         last_purchase = self.purchaseitem_set.last()
         return last_purchase.price
 
