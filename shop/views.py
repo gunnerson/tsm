@@ -321,12 +321,12 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
                     last_month_salaries += q.total
         this_month_labor = 0
         last_month_labor = 0
-        qs2 = Order.objects.filter(closed.month=today.month)
+        qs2 = Order.objects.all()
         for q in qs2:
-            this_month_labor += q.labor_total * 100
-        qs3 = Order.objects.filter(closed.month=today.month-1)
-        for q in qs2:
-            last_month_labor += q.labor_total * 100
+            if q.closed.month == today.month:
+                this_month_labor += q.labor_total * 100
+            elif q.closed.month == today.month - 1:
+                last_month_labor += q.labor_total * 100
         context['running_total'] = running_total
         context['total_tools'] = total_tools
         context['total_parts'] = total_parts
