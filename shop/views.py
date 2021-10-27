@@ -332,10 +332,13 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
         last_month_labor = 0
         qs2 = Order.objects.all()
         for q in qs2:
-            if q.closed.month == today.month:
-                this_month_labor += q.labor_total * 100
-            elif q.closed.month == today.month - 1:
-                last_month_labor += q.labor_total * 100
+            try:
+                if q.closed.month == today.month:
+                    this_month_labor += q.labor_total * 100
+                elif q.closed.month == today.month - 1:
+                    last_month_labor += q.labor_total * 100
+            except AttributeError:
+                pass
         context['running_total'] = running_total
         context['total_tools'] = total_tools
         context['total_parts'] = total_parts
