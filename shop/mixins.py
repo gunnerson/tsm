@@ -51,7 +51,7 @@ class FormSetView():
 
     def get_queryset(self):
         qs = self.model.objects.all()
-        if self.filter_bar:
+        if self.filter_bar or self.search_bar:
             query = self.request.GET.get('query', None)
             if query:
                 qs = self.model.objects.search(
