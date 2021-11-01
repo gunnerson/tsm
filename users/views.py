@@ -281,5 +281,5 @@ class PunchCardListView(LoginRequiredMixin, ListView):
         week_total = 0
         for q in qs:
             week_total += q.get_hours
-        context['week_total'] = week_total
+        context['week_total'] = round(week_total, 1)
         return context
