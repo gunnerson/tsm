@@ -45,10 +45,11 @@ class Order(models.Model):
     def parts_total(self, user):
         parts_total = 0
         parts = self.orderpart_set.all()
-        surcharge = user.profile.parts_surcharge
+        # surcharge = user.profile.parts_surcharge
         for p in parts:
             try:
-                parts_total += p.part.price * surcharge * p.amount
+                # parts_total += p.part.price * surcharge * p.amount
+                parts_total += p.part.price * p.amount
             except TypeError:
                 pass
         return round(parts_total, 2)
