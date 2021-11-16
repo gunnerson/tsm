@@ -123,7 +123,10 @@ class Part(models.Model):
     @property
     def get_price(self):
         last_purchase = self.purchaseitem_set.last()
-        return last_purchase.price
+        try:
+            return last_purchase.price
+        except AttributeError:
+            return 0
 
 
 class Job(models.Model):
