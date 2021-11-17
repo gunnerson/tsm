@@ -35,6 +35,8 @@ urlpatterns = [
          name='job_parts'),
     path('parts/', PartFormSetView.as_view(),
          name='parts'),
+    path('parts/<int:pk>/', PartDetailView.as_view(),
+        name='part'),
     path('purchases/', PurchaseListView.as_view(),
          name='purchases'),
     path('purchases/create/', PurchaseView.as_view(is_create=True),
