@@ -1,9 +1,18 @@
 {% extends "shop/base.html" %}
 
 {% block content %}
-  <p><strong>Purchased:</strong></p>
+  <p><strong>Purchased for:</strong></p>
   {% for p in purchases %}
-    <p>On {{ p.purchase.date }} from {{ p.purchase.vendor }} for {{ p.price }}</p>
+    <p>${{ p.price }} from {{ p.purchase.vendor }} on {{ p.purchase.date }}</p>
+  {% endfor %}
+  <br>
+  <p><strong>Installed in:</strong></p>
+  {% for o in orders %}
+    {% if o.order.truck %}
+      <p>{{ o.order.truck }} {{ o.order.truck.year }} {{ o.order.truck.make }}</p>
+    {% else %}
+      <p>{{ o.order.trailer }} {{ o.order.trailer.year }} {{ o.order.trailer.make }}</p>
+    {% endif %}
   {% endfor %}
 {% endblock content %}
 

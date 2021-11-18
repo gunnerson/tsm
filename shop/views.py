@@ -221,6 +221,8 @@ class PartDetailView(ReadCheckMixin, DetailView):
         part = self.get_object()
         purchases = PurchaseItem.objects.filter(part=part)
         context['purchases'] = purchases
+        orders = OrderPart.objects.filter(part=part)
+        context['orders'] = orders
         return context
 
 
