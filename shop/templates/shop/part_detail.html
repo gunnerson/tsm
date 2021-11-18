@@ -10,9 +10,9 @@
   {% for o in orders %}
     <p>
       {% if o.order.truck %}
-        <a href="{% url 'shop:order' o.order.id %}">{{ o.order.truck }} {{ o.order.truck.year }} {{ o.order.truck.get_make_dispay }}</a>
+        <a href="{% url 'shop:order' o.order.id %}">{{ o.order.truck }} {{ o.order.truck.year }} {{ o.order.truck.get_make_display }}</a>
       {% else %}
-        <a href="{% url 'shop:order' o.order.id %}">{{ o.order.trailer }} {{ o.order.trailer.year }} {{ o.order.trailer.get_make_dispay }}</a>
+        <a href="{% url 'shop:order' o.order.id %}">{{ o.order.trailer }} {{ o.order.trailer.year }} {{ o.order.trailer.get_make_display }}</a>
       {% endif %}
     </p>
   {% endfor %}
