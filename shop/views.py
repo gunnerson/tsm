@@ -207,9 +207,18 @@ class PartFormSetView(WriteCheckMixin, FormSetView):
     model = Part
     form_class = PartForm
     search_bar = True
-    # detail_url = 'shop:part'
+    detail_url = 'shop:part'
     fields = ('part_number', 'name', 'stock', 'stock_unit', 'price')
-    field_names = ('Part number', 'Description', 'In Stock', 'Units', 'Re-sale price')
+    field_names = ('Part number', 'Description',
+                   'In Stock', 'Units', 'Re-sale price')
+
+
+class PartDetailView(ReadCheckMixin, DetailView):
+    model = Part
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        return context
 
 
 class PurchaseListView(ReadCheckMixin, ListView):
@@ -242,14 +251,14 @@ class PurchaseView(WriteCheckMixin, ObjectView):
                         inst.part.save(update_fields=['stock'])
                         if (float(inst.price) * 1.15) > inst.part.price:
                             inst.part.price = float(inst.price) * 1.15
-                            inst.part.save(update_fields=['price'])                      
+                            inst.part.save(update_fields=['price'])
                     elif inst.id and inst.part_id:
                         before_inst = PurchaseItem.objects.get(id=inst.id)
                         inst.part.stock += inst.amount - before_inst.amount
                         inst.part.save(update_fields=['stock'])
                         if (float(inst.price) * 1.15) > inst.part.price:
                             inst.part.price = float(inst.price) * 1.15
-                            inst.part.save(update_fields=['price'])   
+                            inst.part.save(update_fields=['price'])
                         if inst.amount == 0:
                             try:
                                 inst.delete()
@@ -289,7 +298,7 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         qs = self.get_queryset()
-        running_total = 0        
+        running_total = 0
         total_tools = 0
         total_parts = 0
         total_building = 0
