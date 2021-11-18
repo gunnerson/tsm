@@ -218,6 +218,9 @@ class PartDetailView(ReadCheckMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        part = self.get_object()
+        purchases = PurchaseItem.objects.filter(part=part)
+        context['purchases'] = purchases
         return context
 
 

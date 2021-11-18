@@ -1,6 +1,9 @@
 {% extends "shop/base.html" %}
 
 {% block content %}
-
+  <p><strong>Purchased:</strong></p>
+  {% for p in purchases %}
+    <p>On {{ p.purchase.date }} from {{ p.purchase.vendor }} for {{ p.price }}</p>
+  {% endfor %}
 {% endblock content %}
 
