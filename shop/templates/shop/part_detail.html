@@ -8,11 +8,13 @@
   <br>
   <p><strong>Installed in:</strong></p>
   {% for o in orders %}
-    {% if o.order.truck %}
-      <a href="{% url 'shop:order' o.order.id %}">{{ o.order.truck }} {{ o.order.truck.year }} {{ o.order.truck.make }}</a>
-    {% else %}
-      <a href="{% url 'shop:order' o.order.id %}">{{ o.order.trailer }} {{ o.order.trailer.year }} {{ o.order.trailer.make }}</a>
-    {% endif %}
+    <p>
+      {% if o.order.truck %}
+        <a href="{% url 'shop:order' o.order.id %}">{{ o.order.truck }} {{ o.order.truck.year }} {{ o.order.truck.get_make_dispay }}</a>
+      {% else %}
+        <a href="{% url 'shop:order' o.order.id %}">{{ o.order.trailer }} {{ o.order.trailer.year }} {{ o.order.trailer.get_make_dispay }}</a>
+      {% endif %}
+    </p>
   {% endfor %}
 {% endblock content %}
 
