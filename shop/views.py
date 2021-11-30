@@ -100,7 +100,10 @@ class OrderView(WriteCheckMixin, ObjectView):
         context['btn_save'] = True
         if not self.is_create:
             order = self.get_object()
-            context['total_clocked'] = order.ordertime.total
+            total_clocked = 0
+            for ordertime in order.ordertime_set.all():
+                total_clocked += ordertime.total
+            context['total_clocked'] = ordertime.total
             context['total_billed'] = order.labor_total
             context['total_parts'] = order.parts_total(self.request.user)
             context['inst_id'] = order.id
