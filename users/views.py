@@ -225,11 +225,11 @@ def punch(request):
                 if open_ordertime:
                     open_ordertime.get_total()
             if submit == 'start':
-                ordertime = order.ordertime_set.get(mechanic=mechanic)
-                if ordertime:
+                try:
+                    ordertime = order.ordertime_set.get(mechanic=mechanic)
                     ordertime.start = timezone.now()
                     ordertime.save(update_fields=['start'])
-                else:
+                except OrderTime.DoesNotExist:
                     OrderTime(
                         order=order,
                         start=timezone.now(),
