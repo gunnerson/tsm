@@ -103,7 +103,7 @@ class OrderView(WriteCheckMixin, ObjectView):
             total_clocked = 0
             for ordertime in order.ordertime_set.all():
                 total_clocked += ordertime.total
-            context['total_clocked'] = ordertime.total
+            context['total_clocked'] = total_clocked
             context['total_billed'] = order.labor_total
             context['total_parts'] = order.parts_total(self.request.user)
             context['inst_id'] = order.id
