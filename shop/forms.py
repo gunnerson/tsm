@@ -179,11 +179,11 @@ class OrderTimeForm(forms.Form):
     def __init__(self, *args, order=None, mechanic=None, **kwargs):
         super().__init__(*args, **kwargs)
         qs = Order.objects.filter(closed=None)
-        taken_ids = []
-        for q in qs:
-            if q.taken and (q.mechanic != mechanic):
-                taken_ids.append(q.id)
-        qs = qs.exclude(id__in=taken_ids)
+        # taken_ids = []
+        # for q in qs:
+        #     if q.taken and (q.mechanic != mechanic):
+        #         taken_ids.append(q.id)
+        # qs = qs.exclude(id__in=taken_ids)
         self.fields['order'].queryset = qs
         if order:
             self.fields['order'].initial = order

@@ -90,8 +90,8 @@ class OrderView(WriteCheckMixin, ObjectView):
                 return self.render_to_response(
                     self.get_context_data(form=form, job_formset=job_formset,
                                           part_formset=part_formset))
-        else:
-            OrderTime(order=self.object).save()
+        # else:
+        #     OrderTime(order=self.object).save()
         return redirect(self.object.get_absolute_url())
 
     def get_context_data(

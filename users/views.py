@@ -147,14 +147,15 @@ def punch(request):
         mechanic = profile.mechanic
         cards = PunchCard.objects.filter(mechanic=mechanic)
         last_card = cards.last()
-        orders = mechanic.order_set.filter(closed=None)
+        orders = Order.objects.filter(closed=None)
         open_order = None
         open_ordertime = None
-        for inst in orders:
-            ordertime = inst.ordertime
-            if ordertime.start:
-                open_order = ordertime.order
-                open_ordertime = ordertime
+        for order in orders:
+            ordertimes = order.ordertime_set.all()
+            for ordertime in ordertimes:
+                if ordertime.start and ordertime.mechanic == mechanic:
+                    open_order = order
+                    open_ordertime = ordertime
         if request.method != 'POST':
             context = {}
             no_card = True
@@ -224,10 +225,19 @@ def punch(request):
                 if open_ordertime:
                     open_ordertime.get_total()
             if submit == 'start':
-                order.ordertime.start = timezone.now()
-                order.ordertime.save(update_fields=['start'])
-                order.mechanic = mechanic
-                order.save(update_fields=['mechanic'])
+                if order.ordertime:
+                    order.ordertime.start = timezone.now()
+                    order.ordertime.mechanic = mechanic
+                    order.ordertime.save(update_fields=['start', 'mechanic'])
+                else:
+                    OrderTime(
+                        order=order,
+                        start=timezone.now(),
+                        mechanic=mechanic,
+                    ).save()
+                if not order.mechanic:
+                    order.mechanic = mechanic
+                    order.save(update_fields=['mechanic'])
             elif submit == 'stop':
                 open_ordertime.get_total()
             return redirect('users:punch')

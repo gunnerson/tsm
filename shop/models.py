@@ -68,7 +68,7 @@ class Order(models.Model):
 
 
 class OrderTime(models.Model):
-    order = models.OneToOneField(
+    order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
         null=True,
@@ -79,6 +79,12 @@ class OrderTime(models.Model):
         max_digits=4,
         decimal_places=1,
         default=0,
+    )
+    mechanic = models.ForeignKey(
+        'Mechanic',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
     )
 
     def __str__(self):
