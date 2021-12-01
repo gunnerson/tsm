@@ -76,6 +76,7 @@ class TruckDetailView(ReadCheckMixin, InfoView):
         inst = self.get_object()
         context['last_inspection'] = inst.truck_pms.last()
         context['order_list'] = inst.order_set.all()
+        context['part_list'] = inst.part_set.all()
         return context
 
 
@@ -91,6 +92,7 @@ class TrailerDetailView(ReadCheckMixin, InfoView):
         inst = self.get_object()
         context['last_inspection'] = inst.trailer_pms.last()
         context['order_list'] = inst.order_set.all()
+        context['part_list'] = inst.part_set.all()
         return context
 
 

@@ -11,11 +11,21 @@
   {% if last_inspection.id %}
     <p><strong>Last inspection:</strong> <a href="{% url 'shop:inspection' last_inspection.id %}"> {{ last_inspection.date }}</a></p>
   {% endif %}
-  <p>
-    <strong>Orders:</strong>
-    {% for order in order_list %}
-      <a href="{% url 'shop:order' order.id %}">{{ order.opened }}, </a>
-    {% endfor %}
-  </p>
+  {% if order_list %}
+    <p>
+      <strong>Orders:</strong>
+      {% for order in order_list %}
+        <a href="{% url 'shop:order' order.id %}">{{ order.opened }}, </a>
+      {% endfor %}
+    </p>
+  {% endif %}
+  {% if part_list %}
+    <p>
+      <strong>Parts:</strong>
+      {% for part in part_list %}
+        <a href="{% url 'shop:part' part.id %}">{{ part }}, </a>
+      {% endfor %}
+    </p>
+  {% endif %}
 {% endblock content %}
 
