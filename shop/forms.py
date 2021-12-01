@@ -89,10 +89,14 @@ class PartForm(FormSetMixin):
         super().__init__(*args, **kwargs)
         self.fields['stock'].disabled = True
         if self.instance.track:
-            self.fields["part_number"].widget.attrs.update(
-                {'style': 'color:red'}
-            )
-
+            if self.instance.stock == 0:
+                self.fields["part_number"].widget.attrs.update(
+                    {'style': 'color:red'}
+                )
+            elif self.instance.stock == 1:
+                self.fields["part_number"].widget.attrs.update(
+                    {'style': 'color:yellow'}
+                )
 
 class PurchaseForm(FormMixin):
     class Meta:
