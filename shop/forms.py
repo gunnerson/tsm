@@ -95,7 +95,7 @@ class PartForm(FormSetMixin):
                 )
             elif self.instance.stock == 1:
                 self.fields["part_number"].widget.attrs.update(
-                    {'style': 'color:yellow'}
+                    {'style': 'color:green'}
                 )
 
 class PurchaseForm(FormMixin):
