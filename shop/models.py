@@ -111,6 +111,7 @@ class Part(models.Model):
         blank=True,
         default=0,
     )
+    track = models.BooleanField(default=False)
 
     objects = DBSearch()
     # Create index:
