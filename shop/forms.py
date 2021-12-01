@@ -88,9 +88,7 @@ class PartForm(FormSetMixin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['stock'].disabled = True
-        initial_arguments = kwargs.get('initial', None)
-        track = initial_arguments.get('track', None)
-        if track:
+        if self.instance.track:
             self.fields["part_number"].widget.attrs.update(
                 {'style': 'color:red'}
             )
