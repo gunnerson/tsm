@@ -458,12 +458,9 @@ def update_pms(request):
     pms = OrderJob.objects.filter(job_id=22)
     for pm in pms:
         truck = pm.order.truck
-        if truck.last_pm_date:            
-            if pm.order.closed > truck.last_pm_date:
+        try:
+            if truck.last_pm_date is None or pm.order.closed > truck.last_pm_date:
                 truck.last_pm_date = pm.order.closed
                 truck.last_pm_mls = pm.order.mileage
-                truck.save(update_fields=['last_pm_date', 'last_pm_mls'])
-        else:
-            truck.last_pm_date = pm.order.closed
-            truck.last_pm_mls = pm.order.mileage
-            truck.save(update_fields=['last_pm_date', 'last_pm_mls'])
+        except TypeError:
+            pass
