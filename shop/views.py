@@ -464,3 +464,4 @@ def update_pms(request):
                 truck.last_pm_mls = pm.order.mileage
         except TypeError:
             pass
+    return print('Operation successful!')
