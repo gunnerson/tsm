@@ -15,7 +15,6 @@ from .views import (
     BalanceFormSetView,
     InspectionListView,
     InspectionView,
-    update_pms,
 )
 
 app_name = "shop"
@@ -55,5 +54,4 @@ urlpatterns = [
          name='create_inspection'),
     path('inspections/<int:pk>/', InspectionView.as_view(),
          name='inspection'),
-    path('orders/update_pms/', update_pms, name='update_pms'),
 ]

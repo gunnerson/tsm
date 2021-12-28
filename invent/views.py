@@ -8,10 +8,20 @@ from .mixins import FormSetView, InfoView
 from .utils import get_summary_context, get_font_classes, model_to_dict
 from users.mixins import ReadCheckMixin, WriteCheckMixin
 from users.utils import read_check
+from shop.models import OrderJob
 
 
 @user_passes_test(read_check, login_url='index')
 def summary(request):
+    pms = OrderJob.objects.filter(job_id=22)
+    for pm in pms:
+        truck = pm.order.truck
+        try:
+            if truck.last_pm_date is None or pm.order.closed > truck.last_pm_date:
+                truck.last_pm_date = pm.order.closed
+                truck.last_pm_mls = pm.order.mileage
+        except TypeError:
+            pass
     profile = request.user.profile
     context = {}
     ours = request.GET.get('ours', None)

@@ -2,10 +2,9 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from datetime import date
 # from django.db import IntegrityError
-from django.http import HttpResponse
 
-from .models import Order, OrderTime, Part, Job, OrderPart, Purchase, \
-    PurchaseItem, Balance, Inspection, OrderJob
+from .models import Order, Part, Job, OrderPart, Purchase, \
+    PurchaseItem, Balance, Inspection
 from invent.models import Truck, Trailer
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
     InspectionForm
@@ -453,16 +452,3 @@ def budget_purchase(request, pk):
             comments=purchase,
         ).save()
     return redirect(purchase.get_absolute_url())
-
-
-def update_pms(request):
-    pms = OrderJob.objects.filter(job_id=22)
-    for pm in pms:
-        truck = pm.order.truck
-        try:
-            if truck.last_pm_date is None or pm.order.closed > truck.last_pm_date:
-                truck.last_pm_date = pm.order.closed
-                truck.last_pm_mls = pm.order.mileage
-        except TypeError:
-            pass
-    return HttpResponse('Operation successful...')
