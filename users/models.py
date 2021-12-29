@@ -129,7 +129,7 @@ class PunchCard(models.Model):
         ordering = ['punch_in']
 
     def __str__(self):
-        return self.mechanic + ' ' + self.punch_in.date()
+        return self.mechanic.__str__() + ' ' + str(self.punch_in.date())
 
     @property
     def get_hours(self):
