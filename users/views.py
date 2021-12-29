@@ -267,7 +267,7 @@ class PunchCardListView(LoginRequiredMixin, ListView):
         qs = PunchCard.objects.filter(
             mechanic=mechanic,
             punch_in__range=(start, end),
-        )
+        ).order_by('punch_in')
         return qs
 
     def get_context_data(self, *args, **kwargs):
