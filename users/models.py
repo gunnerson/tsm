@@ -128,6 +128,9 @@ class PunchCard(models.Model):
     class Meta:
         ordering = ['punch_in']
 
+    def __str__(self):
+        return self.mechanic + ' ' + self.punch_in.date()
+
     @property
     def get_hours(self):
         if self.lunch_in and self.lunch_out:
