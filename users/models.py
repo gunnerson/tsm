@@ -126,7 +126,7 @@ class PunchCard(models.Model):
     )
 
     class Meta:
-        ordering = ['punch_in']
+        ordering = ['-punch_in']
 
     def __str__(self):
         return self.mechanic.__str__() + ' ' + str(self.punch_in.date())
