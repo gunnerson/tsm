@@ -146,7 +146,7 @@ def punch(request):
         profile = request.user.profile
         mechanic = profile.mechanic
         cards = PunchCard.objects.filter(mechanic=mechanic)
-        last_card = cards.last()
+        last_card = cards.first()
         orders = Order.objects.filter(closed=None)
         open_order = None
         open_ordertime = None
