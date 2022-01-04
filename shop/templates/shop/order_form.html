@@ -10,6 +10,7 @@
       {% if total_clocked %}<strong>Clocked: </strong>{{ total_clocked }} h{% endif %}
       {% if total_billed %}<strong>&nbsp;&nbsp;&nbsp;Billed: </strong>{{ total_billed }} h{% endif %}
       {% if total_parts %}<strong>&nbsp;&nbsp;&nbsp;Parts: </strong>${{ total_parts }}{% endif %}
+      <span>&nbsp; &nbsp; &nbsp; </span>
       {% if is_truck %}<a href="{% url 'invent:truck' image_id %}"><img src="{% static 'img/detail.png' %}"></a>{% endif %}
       {% if is_trailer %}<a href="{% url 'invent:trailer' image_id %}"><img src="{% static 'img/detail.png' %}"></a>{% endif %}
     </p>
