@@ -119,9 +119,11 @@ class OrderView(WriteCheckMixin, ObjectView):
             if order.truck:
                 context['image_url'] = 'docs:truck_image'
                 context['image_id'] = order.truck.id
+                context['is_truck'] = True
             else:
                 context['image_url'] = 'docs:trailer_image'
                 context['image_id'] = order.trailer.id
+                context['is_trailer'] = True
         return context
 
     def get_form_kwargs(self):
