@@ -356,8 +356,8 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
             try:
                 if q.closed.month == today.month:
                     this_month_labor += q.labor_total * 100
-                elif ((q.date.month == today.month - 1) or
-                      (today.month == 1 and q.date.month == 12)):
+                elif ((q.closed.month == today.month - 1) or
+                      (today.month == 1 and q.closed.month == 12)):
                     last_month_labor += q.labor_total * 100
             except AttributeError:
                 pass
