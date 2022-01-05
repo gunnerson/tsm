@@ -18,26 +18,6 @@
 
 {% block content %}
 
-  {% if running_total %}
-    <p><strong>Running TOTAL: ${{running_total}}</strong>
-    <p><strong>Tools TOTAL: ${{total_tools}}</strong>
-    <p><strong>Parts TOTAL: ${{total_parts}}</strong>
-    <p><strong>Building TOTAL: ${{total_building}}</strong>
-    <p><strong>Shop supplies TOTAL: ${{total_supplies}}</strong>
-    <p><strong>Salaries TOTAL: ${{total_salaries}}</strong>
-    <p><strong>Income TOTAL: ${{total_income}}</strong>
-    <p><strong>This month TOTAL: ${{this_month}}</strong>
-    <p><strong>This month income: ${{this_month_income}}</strong>
-    <p><strong>This month labor: ${{this_month_labor}}</strong>
-    <p><strong>This month salaries: ${{this_month_salaries}}</strong>
-    <p><strong>Last month TOTAL: ${{last_month}}</strong>
-    <p><strong>Last month income: ${{last_month_income}}</strong>
-    <p><strong>Last month salaries: ${{last_month_salaries}}</strong>
-    <p><strong>Last month labor: ${{last_month_labor}}</strong>
-    <br>
-    <br>
-  {% endif %}
-
   <form method='post' id="data_form">
     {% csrf_token %}
     {{ formset.management_form }}
@@ -74,5 +54,24 @@
     </table>
     {{ formset.non_form_errors }}
   </form>
+
+  {% if running_total %}
+    <p><strong>Running TOTAL: ${{running_total}}</strong>
+    <p><strong>Tools TOTAL: ${{total_tools}}</strong>
+    <p><strong>Parts TOTAL: ${{total_parts}}</strong>
+    <p><strong>Building TOTAL: ${{total_building}}</strong>
+    <p><strong>Shop supplies TOTAL: ${{total_supplies}}</strong>
+    <p><strong>Salaries TOTAL: ${{total_salaries}}</strong>
+    <p><strong>Income TOTAL: ${{total_income}}</strong>
+    <p><strong>This month TOTAL: ${{this_month}}</strong>
+    <p><strong>This month income: ${{this_month_income}}</strong>
+    <p><strong>This month labor: ${{this_month_labor}}</strong>
+    <p><strong>This month salaries: ${{this_month_salaries}}</strong>
+    <p><strong>Last month TOTAL: ${{last_month}}</strong>
+    <p><strong>Last month income: ${{last_month_income}}</strong>
+    <p><strong>Last month salaries: ${{last_month_salaries}}</strong>
+    <p><strong>Last month labor: ${{last_month_labor}}</strong>
+    <br>
+  {% endif %}
 {% endblock content %}
 
