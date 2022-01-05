@@ -309,6 +309,7 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
     def get_queryset(self):
         today = date.today()
         show = self.request.GET.get('show', 'show_this_month')
+        print('>>>>>>>>>>>>>>>', self.request.GET)
         if show == 'show_this_month':
             qs = Balance.objects.filter(
                 date__year=today.year, date__month=today.month)
@@ -325,7 +326,7 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        qs = self.get_queryset()
+        qs = Balance.objects.all()
         running_total = 0
         total_tools = 0
         total_parts = 0
@@ -379,8 +380,7 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
                     last_month_labor += q.labor_total * 100
             except AttributeError:
                 pass
-        show = self.request.GET.get('show', 'show_this_month')
-        context['show'] = show        
+        context['show'] = self.request.GET.get('show', 'show_this_month')        
         context['running_total'] = running_total
         context['total_tools'] = total_tools
         context['total_parts'] = total_parts
