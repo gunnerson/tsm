@@ -1,20 +1,6 @@
 {% extends "shop/base.html" %}
 {% load static %}
 
-{% comment %}
-<script>
-  {% block page_js %}
-    function submitForm() {
-      document.getElementById('filter-form').submit();
-    };
-    const filters = document.getElementsByClassName("filter-button")
-          for (i = 0; i < filters.length; i++) {
-            filters[i].addEventListener("click", submitForm)
-           };
-  {% endblock page_js %}
-</script>
-{% endcomment %}
-
 {% block content %}
 
   {% if running_total %}

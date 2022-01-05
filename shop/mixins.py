@@ -96,7 +96,7 @@ class FormSetView():
             context['search_bar'] = self.search_bar
             context['query'] = self.request.GET.get('query', None)
         if self.filter_bar:
-            context['filter_bar'] = self.search_bar
+            context['filter_bar'] = self.filter_bar
         return context
 
     def render_to_response(self, context):
