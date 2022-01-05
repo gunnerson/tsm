@@ -5,7 +5,7 @@
   {% block page_js %}
     const filters = document.getElementsByClassName("filter-button")
           for (i = 0; i < filters.length; i++) {
-            filters[i].addEventListener("click", submitForm)
+            filters[i].addEventListener("click", document.getElementById('filter-form').submit())
            };
   {% endblock page_js %}
 </script>
