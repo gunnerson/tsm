@@ -3,9 +3,12 @@
 
 <script>
   {% block page_js %}
+    function submitForm() {
+      document.getElementById('filter-form').submit();
+    };
     const filters = document.getElementsByClassName("filter-button")
           for (i = 0; i < filters.length; i++) {
-            filters[i].addEventListener("click", document.getElementById('filter-form').submit())
+            filters[i].addEventListener("click", submitForm)
            };
   {% endblock page_js %}
 </script>
