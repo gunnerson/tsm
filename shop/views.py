@@ -354,14 +354,14 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
                 total_income += q.total
             elif q.category == 'B':
                 total_building += q.total
-            if q.date.month == today.month:
+            if q.date.month == today.month and q.date.year == today.year:
                 this_month += q.total
                 if q.category == 'I':
                     this_month_income += q.total
                 elif q.category == 'S':
                     this_month_salaries += q.total
-            elif ((q.date.month == today.month - 1) or
-                  (today.month == 1 and q.date.month == 12)):
+            elif ((q.date.month == today.month - 1 and q.date.year == today.year)
+                  or (today.month == 1 and q.date.month == 12 and q.date.year == today.year - 1)):
                 last_month += q.total
                 if q.category == 'I':
                     last_month_income += q.total
@@ -379,7 +379,7 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
                     last_month_labor += q.labor_total * 100
             except AttributeError:
                 pass
-        context['show'] = self.request.GET.get('show', 'show_this_month')        
+        context['show'] = self.request.GET.get('show', 'show_this_month')
         context['running_total'] = running_total
         context['total_tools'] = total_tools
         context['total_parts'] = total_parts
