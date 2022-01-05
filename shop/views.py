@@ -305,6 +305,23 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
     fields = ('date', 'category', 'total', 'comments')
     field_names = ('Date', 'Category', 'Total', 'Comments')
 
+    def get_queryset(self):
+        today = date.today()
+        show = self.request.GET.get('show', 'show_this_month')
+        if show == 'show_this_month':
+            qs = Balance.objects.filter(
+                date__year=today.year, date__month=today.month)
+        elif show == 'show_last_month':
+            if today.month != 1:
+                qs = Balance.objects.filter(
+                    date__year=today.year, date__month=today.month - 1)
+            else:
+                qs = Balance.objects.filter(
+                    date__year=today.year - 1, date__month=12)
+        else:
+            qs = Balance.objects.all()
+        return qs
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         qs = self.get_queryset()
