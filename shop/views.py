@@ -304,11 +304,11 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
     form_class = BalanceForm
     fields = ('date', 'category', 'total', 'comments')
     field_names = ('Date', 'Category', 'Total', 'Comments')
+    filter_bar = True
 
     def get_queryset(self):
         today = date.today()
         show = self.request.GET.get('show', 'show_this_month')
-        print('>>>>>>>>>>>>>>', self.request)
         if show == 'show_this_month':
             qs = Balance.objects.filter(
                 date__year=today.year, date__month=today.month)
