@@ -21,6 +21,20 @@
     <p><strong>Last month labor: ${{last_month_labor}}</strong>
     <br>
     <br>
+    <form method="GET" id="filter-form">
+      <div class="filter-item">
+        <input type="radio" name="show_this_month" id="show_this_month" class="filter-button" {% if show_this_month %}checked{% endif %}>
+        <label for="show_this_month" class="filter-button">This month</label>
+      </div>
+      <div class="filter-item">
+        <input type="radio" name="show_last_month" id="show_last_month" class="filter-button" {% if show_last_month %}checked{% endif %}>
+        <label for="show_last_month" class="filter-button">Last month</label>
+      </div>
+      <div class="filter-item">
+        <input type="radio" name="show_all" id="show_all" class="filter-button" {% if show_all %}checked{% endif %}>
+        <label for="show_all" class="filter-button">All time</label>
+      </div>
+    </form>
   {% endif %}
 
   <form method='post' id="data_form">
