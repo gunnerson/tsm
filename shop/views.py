@@ -378,6 +378,8 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
                     last_month_labor += q.labor_total * 100
             except AttributeError:
                 pass
+        show = self.request.GET.get('show', 'show_this_month')
+        context['show'] = show        
         context['running_total'] = running_total
         context['total_tools'] = total_tools
         context['total_parts'] = total_parts
