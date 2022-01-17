@@ -35,7 +35,7 @@ def get_part_forms(order, data=None):
     part_ids = []
     for j in order.orderjob_set.all():
         for p in j.job.parts.all():
-            if p.id not in part_ids and p.stock > 0:
+            if p.id not in part_ids:
                 part_ids.append(p.id)
     parts = Part.objects.filter(id__in=part_ids)
     return ModelFormset(data, queryset=qs, prefix='parts',
