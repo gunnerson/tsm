@@ -120,6 +120,10 @@ class Part(models.Model):
 
     class Meta:
         ordering = ['part_number']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['part_number', 'name'], name='unique_part'),
+        ]
 
     def __str__(self):
         return self.part_number + ' ' + self.name
