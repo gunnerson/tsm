@@ -17,7 +17,7 @@ def summary(request):
     for pm in pms:
         truck = pm.order.truck
         try:
-            if truck.last_pm_date is None or pm.order.closed > truck.last_pm_date:
+            if truck.last_pm_date is None or truck.last_pm_mls is None or pm.order.closed > truck.last_pm_date:
                 truck.last_pm_date = pm.order.closed
                 truck.last_pm_mls = pm.order.mileage
                 truck.save(update_fields=['last_pm_date', 'last_pm_mls'])
