@@ -118,6 +118,24 @@ def file_category_choices():
     return choices
 
 
+def parttype_axle_choices():
+    choices = [
+        ('S', 'STR'),
+        ('D', 'DRV'),
+        ('A', 'ADD'),
+        ('T', 'TRL'),
+    ]
+    return choices
+
+
+def parttype_side_choices():
+    choices = [
+        ('L', 'L/S'),
+        ('R', 'R/S'),
+    ]
+    return choices
+
+
 def us_states_choices():
     choices = [
         ('AL', 'Alabama'),

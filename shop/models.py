@@ -6,7 +6,7 @@ from decimal import Decimal
 from .managers import DBSearch
 from invent.models import Truck, Trailer, Company
 from users.models import Profile
-from invent.choices import category_choices
+from invent.choices import category_choices, parttype_axle_choices, parttype_side_choices
 
 
 class Order(models.Model):
@@ -97,12 +97,26 @@ class OrderTime(models.Model):
         self.save(update_fields=['total', 'start'])
 
 
-
 class PartType(models.Model):
     name = models.CharField(max_length=50)
+    axle = models.CharField(
+        max_length=1,
+        choices=parttype_axle_choices(),
+        blank=True,
+    )
+    side = models.CharField(
+        max_length=1,
+        choices=parttype_side_choices(),
+        blank=True,
+    )
 
     def __str__(self):
-        return self.name
+        name = self.name
+        if self.axle:
+            name = name + ', ' + self.axle
+        if self.side:
+            name = name + ', ' + self.side
+        return name
 
 
 class Part(models.Model):
