@@ -113,9 +113,9 @@ class PartType(models.Model):
     def __str__(self):
         name = self.name
         if self.axle:
-            name = name + ', ' + self.get_axle_display
+            name = name + ', ' + self.get_axle_display()
         if self.side:
-            name = name + ', ' + self.side
+            name = name + ', ' + self.get_side_display()
         return name
 
 
