@@ -97,6 +97,14 @@ class OrderTime(models.Model):
         self.save(update_fields=['total', 'start'])
 
 
+
+class PartType(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+
 class Part(models.Model):
     part_number = models.CharField(max_length=30)
     name = models.CharField(max_length=50)
@@ -112,7 +120,8 @@ class Part(models.Model):
         default=0,
     )
     track = models.BooleanField(default=False)
-
+    track_stock = models.PositiveSmallIntegerField(default=1)
+    part_type = models.ManyToManyField(PartType, blank=True)
     objects = DBSearch()
     # Create index:
     # ALTER TABLE shop_part ADD COLUMN textsearchable_index_col tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce(part_number, '') || ' ' || coalesce(name, ''))) STORED;
