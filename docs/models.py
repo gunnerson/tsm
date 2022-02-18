@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 
-from invent.models import Truck, Trailer, Driver, Company
+from invent.models import Truck, Trailer, Company
 from invent.choices import file_category_choices
 
 
@@ -51,10 +51,6 @@ class TruckDocument(Document):
 
 class TrailerDocument(Document):
     origin = models.ForeignKey(Trailer, on_delete=models.CASCADE)
-
-
-class DriverDocument(Document):
-    origin = models.ForeignKey(Driver, on_delete=models.CASCADE)
 
 
 class CompanyDocument(Document):

@@ -1,12 +1,12 @@
 from users.mixins import WriteCheckMixin
 
 from .models import TruckImage, TrailerImage, TruckDocument, TrailerDocument, \
-    DriverDocument, CompanyDocument
+    CompanyDocument
 from .forms import TruckImageForm, TrailerImageForm, TruckDocumentForm, \
-    TrailerDocumentForm, DriverDocumentForm, CompanyDocumentForm
+    TrailerDocumentForm, CompanyDocumentForm
 from .mixins import ImageCreateView, ImageListView, DocumentCreateView, \
     DocumentListView
-from invent.models import Truck, Trailer, Driver, Company
+from invent.models import Truck, Trailer, Company
 
 
 class TruckImageView(WriteCheckMixin, ImageCreateView):

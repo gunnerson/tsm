@@ -1,7 +1,7 @@
 from django import forms
 
 from .mixins import VehicleSelect, FormMixin, FormSetMixin
-from .models import Truck, Trailer, Company, Driver, PasswordGroup
+from .models import Truck, Trailer, Company
 
 
 class TruckForm(FormSetMixin):
@@ -31,36 +31,6 @@ class TrailerForm(FormSetMixin):
         }
 
 
-class DriverForm(FormSetMixin):
-    class Meta:
-        model = Driver
-        fields = '__all__'
-        widgets = {
-            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
-            'cdl_exp_date': forms.DateInput(attrs={'type': 'date'}),
-            'medical_exp_date': forms.DateInput(attrs={'type': 'date'}),
-            'start_date': forms.DateInput(attrs={'type': 'date'}),
-            'term_date': forms.DateInput(attrs={'type': 'date'}),
-            'last_mvr': forms.DateInput(attrs={'type': 'date'}),
-            'last_clearinghouse': forms.DateInput(attrs={'type': 'date'}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["truck"] = forms.ModelChoiceField(
-            queryset=Truck.objects.all(),
-            widget=VehicleSelect(model=Truck),
-            required=False,
-        )
-        self.fields["trailer"] = forms.ModelChoiceField(
-            queryset=Trailer.objects.all(),
-            widget=VehicleSelect(model=Trailer),
-            required=False,
-        )
-        self.fields["truck"].widget.attrs.update({'class': 'formset_field'})
-        self.fields["trailer"].widget.attrs.update({'class': 'formset_field'})
-
-
 class CompanyForm(FormSetMixin):
     class Meta:
         model = Company
@@ -68,10 +38,3 @@ class CompanyForm(FormSetMixin):
         widgets = {
             'comments': forms.Textarea(attrs={'rows': 1})
         }
-
-
-class PasswordGroupForm(FormMixin):
-    class Meta:
-        model = PasswordGroup
-        fields = '__all__'
-

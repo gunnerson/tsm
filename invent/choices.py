@@ -54,36 +54,6 @@ def company_group_choices():
     return choices
 
 
-def engine_choices():
-    choices = [
-        ('CT', 'Caterpillar'),
-        ('CM', 'Cummins'),
-        ('DT', 'Detroit'),
-        ('IN', 'International'),
-        ('PC', 'Paccar'),
-        ('VL', 'Volvo'),
-    ]
-    return choices
-
-
-def status_choices():
-    choices = [
-        ('D', 'Delivery'),
-        ('I', 'Idle'),
-        ('S', 'Shop'),
-        ('T', 'Term'),
-    ]
-    return choices
-
-
-def driver_status_choices():
-    choices = [
-        ('A', 'Active'),
-        ('T', 'Term'),
-    ]
-    return choices
-
-
 def size_choices():
     choices = [
         ('S', 'Small'),

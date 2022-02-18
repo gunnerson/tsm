@@ -200,5 +200,5 @@ LOGGING = {
 # Custom settings
 AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = 'users:login'
-LOGIN_REDIRECT_URL = 'invent:summary'
+LOGIN_REDIRECT_URL = 'invent:list_trucks'
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None

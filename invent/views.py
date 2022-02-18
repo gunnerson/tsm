@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import user_passes_test
 
-from .models import Truck, Trailer, Driver, Company
-from .forms import TruckForm, TrailerForm, DriverForm, CompanyForm
+from .models import Truck, Trailer, Company
+from .forms import TruckForm, TrailerForm, CompanyForm
 from .mixins import FormSetView, InfoView
 from .utils import get_summary_context, get_font_classes, model_to_dict
 from users.mixins import ReadCheckMixin, WriteCheckMixin
@@ -62,13 +62,6 @@ class TrailerFormSetView(WriteCheckMixin, FormSetView):
     form_class = TrailerForm
     detail_url = 'invent:trailer'
 
-
-class DriverFormSetView(WriteCheckMixin, FormSetView):
-    model = Driver
-    form_class = DriverForm
-    detail_url = 'invent:driver'
-
-
 class CompanyFormSetView(WriteCheckMixin, FormSetView):
     model = Company
     form_class = CompanyForm
@@ -104,21 +97,6 @@ class TrailerDetailView(ReadCheckMixin, InfoView):
         context['last_inspection'] = inst.trailer_pms.last()
         context['order_list'] = inst.order_set.all()
         context['part_list'] = inst.part_set.all()
-        return context
-
-
-class DriverDetailView(ReadCheckMixin, DetailView):
-    model = Driver
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        inst = self.get_object()
-        context['fields'] = model_to_dict(inst, exclude=('id'))
-        context['inst_id'] = inst.id
-        context['btn_doc'] = True
-        context['doc_url'] = 'docs:driver_doc'
-        context['btn_files'] = True
-        context['files_url'] = 'docs:driver_files'
         return context
 
 
