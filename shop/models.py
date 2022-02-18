@@ -110,6 +110,9 @@ class PartType(models.Model):
         blank=True,
     )
 
+    class Meta:
+        ordering = ['name', 'axle', 'side']
+
     def __str__(self):
         name = self.name
         if self.axle:
