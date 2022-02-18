@@ -1,11 +1,12 @@
 from django.contrib import admin
 
 from .models import Order, OrderTime, Part, Job, OrderJob, OrderPart, \
-    Purchase, PurchaseItem, Mechanic, Balance, Inspection
+    Purchase, PurchaseItem, Mechanic, Balance, Inspection, PartType
 
 admin.site.register(Order)
 admin.site.register(OrderTime)
 admin.site.register(Part)
+admin.site.register(PartType)
 admin.site.register(Job)
 admin.site.register(OrderJob)
 admin.site.register(OrderPart)
