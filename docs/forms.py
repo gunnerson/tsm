@@ -1,7 +1,7 @@
 from .mixins import ImageForm, FileForm
 
 from .models import TruckImage, TrailerImage, TruckDocument, TrailerDocument, \
-    DriverDocument, CompanyDocument
+    CompanyDocument
 
 
 class TruckImageForm(ImageForm):
@@ -29,13 +29,6 @@ class TrailerDocumentForm(FileForm):
 
     class Meta:
         model = TrailerDocument
-        exclude = ('origin',)
-
-
-class DriverDocumentForm(FileForm):
-
-    class Meta:
-        model = DriverDocument
         exclude = ('origin',)
 
 

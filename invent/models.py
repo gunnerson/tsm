@@ -54,12 +54,12 @@ class Truck(models.Model):
     last_pm_date = models.DateField(
         null=True,
         blank=True,
-        verbose_name='Last PM',
+        verbose_name='Last PM Date',
     )
     last_pm_mls = models.PositiveIntegerField(
         null=True,
         blank=True,
-        verbose_name='odometer'
+        verbose_name='Last PM Odometer'
     )
 
     objects = DBSearch()

@@ -77,23 +77,6 @@ class TrailerDocumentListView(WriteCheckMixin, DocumentListView):
         return origin.trailerdocument_set.all()
 
 
-class DriverDocumentView(WriteCheckMixin, DocumentCreateView):
-    model = DriverDocument
-    form_class = DriverDocumentForm
-    origin_model = Driver
-    folder_name = 'drivers'
-
-
-class DriverDocumentListView(WriteCheckMixin, DocumentListView):
-    model = DriverDocument
-    origin_model = Driver
-    key_url = "invent:driver"
-
-    def get_queryset(self):
-        origin = self.get_origin()
-        return origin.driverdocument_set.all()
-
-
 class CompanyDocumentView(WriteCheckMixin, DocumentCreateView):
     model = CompanyDocument
     form_class = CompanyDocumentForm
