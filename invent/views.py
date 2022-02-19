@@ -41,10 +41,6 @@ def summary(request):
             context['query'] = query
         else:
             qs = Truck.objects.filter(owner__in=our_companies)
-    if not request.GET.get('term', None):
-        qs = qs.exclude(status='T')
-    else:
-        context['term'] = True
     get_summary_context(qs, profile, context)
     get_font_classes(profile.font_size, context)
     context['filter_bar'] = True

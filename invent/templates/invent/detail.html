@@ -1,16 +1,6 @@
 {% extends "invent/base.html" %}
 
 {% block content %}
-  {% comment %}
-  {% for key, value in fields.items %}
-    {% if value %}
-    <p><b>{{ key }}:</b> {{ value }}</p>
-    {% endif %}
-  {% endfor %}
-  {% endcomment %}
-  {% if last_inspection.id %}
-    <p><strong>Last inspection:</strong> <a href="{% url 'shop:inspection' last_inspection.id %}"> {{ last_inspection.date }}</a></p>
-  {% endif %}
   {% if order_list %}
     <p>
       <strong>Orders:</strong>

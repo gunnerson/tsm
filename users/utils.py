@@ -30,20 +30,18 @@ def gen_list_ver_name(str):
 
 
 def generate_listcolshow(profile, model):
-    from invent.models import Truck, Trailer, Driver, Company
+    from invent.models import Truck, Trailer, Company
     from django.db import IntegrityError
     from .models import ListColShow
     list_name = str(model._meta)
     fields = model._meta.get_fields()
     i = 1
     if model == Truck or model == Trailer:
-        exclude = ('id', 'driver', 'order', 'part', 'truck_pms', 'truckimage',
+        exclude = ('id', 'order', 'part', 'truck_pms', 'truckimage',
                    'truckdocument', 'trailer_pms', 'trailerimage',
                    'trailerdocument')
-    elif model == Driver:
-        exclude = ('id', 'driverdocument')
     elif model == Company:
-        exclude = ('id', 'driver', 'owned_trucks', 'insured_trucks', 'order',
+        exclude = ('id', 'owned_trucks', 'insured_trucks', 'order',
                    'owned_trailers', 'insured_trailers', 'purchase', 'profile',
                    'companydocument')
     for f in fields:
@@ -61,21 +59,19 @@ def generate_listcolshow(profile, model):
 
 
 def generate_profile(profile):
-    from invent.models import Trailer, Truck, Driver, Company
+    from invent.models import Trailer, Truck, Company
     generate_listcolshow(profile, Truck)
     generate_listcolshow(profile, Trailer)
-    generate_listcolshow(profile, Driver)
     generate_listcolshow(profile, Company)
     return HttpResponse('Operation successful...')
 
 
 def generate_su_profile(request):
-    from invent.models import Trailer, Truck, Driver, Company
+    from invent.models import Trailer, Truck, Company
     from .models import ListColShow
     profile = request.user.profile
     ListColShow.objects.filter(profile=profile).delete()
     generate_listcolshow(profile, Truck)
     generate_listcolshow(profile, Trailer)
-    generate_listcolshow(profile, Driver)
     generate_listcolshow(profile, Company)
     return HttpResponse('Operation successful...')

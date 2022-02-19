@@ -6,9 +6,6 @@ from django.core.validators import RegexValidator
 from .managers import DBSearch
 from .choices import (
     truck_make_choices,
-    engine_choices,
-    status_choices,
-    driver_status_choices,
     trailer_make_choices,
     year_choices,
     us_states_choices,

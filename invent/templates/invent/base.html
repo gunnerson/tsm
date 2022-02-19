@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block nav_toolbar %}
-    <a href="{% url 'invent:summary' %}" title="Summary"><img src="{% static 'img/book.png' %}" id="nav_summary" ></a>
     <a href="{% url 'invent:list_trucks' %}" title="Trucks"><img src="{% static 'img/truck.png' %}" id="nav_trucks" ></a>
     <a href="{% url 'invent:list_trailers' %}" title="Trailers"><img src="{% static 'img/trailer.png' %}" id="nav_trailers" ></a>
     <a href="{% url 'invent:list_companies' %}" title="Companies"><img src="{% static 'img/contact.png' %}" id="nav_companies" ></a>
@@ -15,10 +14,6 @@
         <img src="{% static 'img/search.png' %}">
       </button>
       <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
-      <div class="filter-item">
-        <input type="checkbox" name="term" id="check_term" class="filter-button" {% if term %}checked{% endif %}>
-        <label for="check_term" class="filter-button">Show terminated</label>
-      </div>
       <div class="filter-item">
         <input type="checkbox" name="ours" id="check_ours" class="filter-button" {% if ours %}checked{% endif %}>
         <label for="check_ours" class="filter-button">Show non-company</label>
@@ -33,19 +28,13 @@
     document.getElementById("nav_safety").classList.add('active');
 
     var section = window.location.toString().replace(/^https?:\/\//, '').split('/')[1];
-    if (section == "summary") {
-      document.getElementById("nav_summary").classList.add('active');
-      document.title = "LPT - Summary"
-    } else if (section == "trucks") {
+    if (section == "trucks") {
       document.getElementById("nav_trucks").classList.add('active');
       document.title = "LPT - Trucks"
     } else if (section == "trailers") {
       document.getElementById("nav_trailers").classList.add('active');
       document.title = "LPT - Trailers"
-    } else if (section == "drivers") {
-      document.getElementById("nav_drivers").classList.add('active');
-      document.title = "LPT - Drivers"
-    } else if (section == "companies") {
+    }else if (section == "companies") {
       document.getElementById("nav_companies").classList.add('active');
       document.title = "LPT - Companies"
     };
