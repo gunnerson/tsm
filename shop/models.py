@@ -99,27 +99,12 @@ class OrderTime(models.Model):
 
 class PartType(models.Model):
     name = models.CharField(max_length=50)
-    axle = models.CharField(
-        max_length=1,
-        choices=parttype_axle_choices(),
-        blank=True,
-    )
-    side = models.CharField(
-        max_length=1,
-        choices=parttype_side_choices(),
-        blank=True,
-    )
 
     class Meta:
-        ordering = ['name', '-axle', 'side']
+        ordering = ['name']
 
     def __str__(self):
-        name = self.name
-        if self.axle:
-            name = name + ', ' + self.get_axle_display()
-        if self.side:
-            name = name + ', ' + self.get_side_display()
-        return name
+        return self.name
 
 
 class Part(models.Model):
@@ -164,6 +149,38 @@ class Part(models.Model):
             return last_purchase.price
         except AttributeError:
             return 0
+
+
+class PartPlace(models.Model):
+    part = models.ForeignKey(Part, on_delete=models.CASCADE)
+    truck = models.ForeignKey(
+        Truck,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    trailer = models.ForeignKey(
+        Trailer,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    axle_str_left = models.BooleanField()
+    axle_str_right = models.BooleanField()
+    axle_drv_left = models.BooleanField()
+    axle_drv_right = models.BooleanField()
+    axle_add_leftt = models.BooleanField()
+    axle_add_right = models.BooleanField()
+    axle_trl_left = models.BooleanField()
+    axle_trl_right = models.BooleanField()
+
+    def __str__(self):
+        name = self.name
+        if self.truck:
+            name = name + ', ' +self.truck
+        if self.trailer:
+            name = name + ', ' +self.trailer
+        return self.name
 
 
 class Job(models.Model):
