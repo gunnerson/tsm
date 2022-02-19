@@ -74,7 +74,6 @@ class TruckDetailView(ReadCheckMixin, InfoView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         inst = self.get_object()
-        context['last_inspection'] = inst.truck_pms.last()
         context['order_list'] = inst.order_set.all()
         context['part_list'] = inst.part_set.all()
         return context
@@ -90,7 +89,6 @@ class TrailerDetailView(ReadCheckMixin, InfoView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         inst = self.get_object()
-        context['last_inspection'] = inst.trailer_pms.last()
         context['order_list'] = inst.order_set.all()
         context['part_list'] = inst.part_set.all()
         return context

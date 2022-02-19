@@ -9,11 +9,6 @@ class TruckForm(FormSetMixin):
         model = Truck
         fields = '__all__'
         widgets = {
-            'registration': forms.DateInput(attrs={'type': 'date'}),
-            'insurance': forms.DateInput(attrs={'type': 'date'}),
-            'inspection': forms.DateInput(attrs={'type': 'date'}),
-            'start_date': forms.DateInput(attrs={'type': 'date'}),
-            'term_date': forms.DateInput(attrs={'type': 'date'}),
             'last_pm_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
@@ -22,13 +17,6 @@ class TrailerForm(FormSetMixin):
     class Meta:
         model = Trailer
         fields = '__all__'
-        widgets = {
-            'registration': forms.DateInput(attrs={'type': 'date'}),
-            'insurance': forms.DateInput(attrs={'type': 'date'}),
-            'inspection': forms.DateInput(attrs={'type': 'date'}),
-            'start_date': forms.DateInput(attrs={'type': 'date'}),
-            'term_date': forms.DateInput(attrs={'type': 'date'}),
-        }
 
 
 class CompanyForm(FormSetMixin):

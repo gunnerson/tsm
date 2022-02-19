@@ -143,7 +143,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Logging settings
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

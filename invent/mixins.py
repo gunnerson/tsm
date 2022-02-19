@@ -60,13 +60,14 @@ class FormSetView():
     def get_queryset(self):
         request = self.request
         ours = request.GET.get('ours', None)
-        our_companies = Company.objects.filter(group__in=('OU', 'LO'))
+        our_companies = Company.objects.filter(group__in=('OU', ))
         if ours:
             qs = self.model.objects.all()
         else:
             try:
                 qs = self.model.objects.filter(owner__in=our_companies)
             except FieldError:
+                pass
                 qs = self.model.objects.all()
         query = self.request.GET.get('query', None)
         if query:
@@ -75,11 +76,6 @@ class FormSetView():
                 self.model.__name__,
                 our_companies,
             )
-        if not self.request.GET.get('term', None):
-            try:
-                qs = qs.exclude(status='T')
-            except FieldError:
-                pass
         return qs
 
     def get_form_kwargs(self):
