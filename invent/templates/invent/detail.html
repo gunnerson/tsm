@@ -1,6 +1,13 @@
 {% extends "invent/base.html" %}
 
 {% block content %}
+  <p> Fleet number: {{ object.owner }} # {{ object.fleet_number }} </p>
+  <p> VIN: {{ object.vin }} </p>
+  <p> Make: {{ object.year }} {{ object.make }}</p>
+  {% if last_pm_mls %}
+    <p> Last PM: {{ object.last_pm_mls }} on {{ object.last_pm_mls|default_if_none:"..." }}</p>
+  {% endif %}
+  <br>
   {% if order_list %}
     <p>
       <strong>Orders:</strong>
