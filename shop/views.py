@@ -4,10 +4,10 @@ from datetime import date
 # from django.db import IntegrityError
 
 from .models import Order, Part, Job, OrderPart, Purchase, \
-    PurchaseItem, Balance, Inspection
+    PurchaseItem, Balance, Inspection, PartPlace
 from invent.models import Truck, Trailer
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
-    InspectionForm
+    InspectionForm, PartPlaceForm
 from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
     link_with_part
 from .mixins import ObjectView, FormSetView
@@ -168,6 +168,15 @@ class JobFormSetView(WriteCheckMixin, FormSetView):
     detail_url = 'shop:job_parts'
     fields = ('name', 'man_hours')
     field_names = ('Description', 'Man-hours')
+
+
+class PartPlaceFormSetView(WriteCheckMixin, FormSetView):
+    model = PartPlace
+    form_class = PartPlaceForm
+    fields = ('part', 'side_left', 'side_right', 'axle_str', 'axle_drv',
+              'axle_add', 'axle_trl',)
+    field_names = ('Part', 'Left side', 'Right side', 'STR axle', 'DRV axle', \
+        'ADD axle', 'TRL axle', )
 
 
 class JobPartListView(ReadCheckMixin, ListView):

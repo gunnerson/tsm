@@ -123,7 +123,12 @@ class Part(models.Model):
     )
     track = models.BooleanField(default=False)
     track_stock = models.PositiveSmallIntegerField(default=1)
-    part_type = models.ManyToManyField(PartType, blank=True)
+    part_type = models.ForeignKey(
+        PartType,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
     objects = DBSearch()
     # Create index:
     # ALTER TABLE shop_part ADD COLUMN textsearchable_index_col tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce(part_number, '') || ' ' || coalesce(name, ''))) STORED;
@@ -165,22 +170,57 @@ class PartPlace(models.Model):
         null=True,
         blank=True
     )
-    axle_str_left = models.BooleanField()
-    axle_str_right = models.BooleanField()
-    axle_drv_left = models.BooleanField()
-    axle_drv_right = models.BooleanField()
-    axle_add_leftt = models.BooleanField()
-    axle_add_right = models.BooleanField()
-    axle_trl_left = models.BooleanField()
-    axle_trl_right = models.BooleanField()
+    side_left = models.BooleanField()
+    side_right = models.BooleanField()
+    axle_str = models.BooleanField()
+    axle_drv = models.BooleanField()
+    axle_add = models.BooleanField()
+    axle_trl = models.BooleanField()
+
+    @property
+    def part_type(self):
+        part_type = self.part.part_type.name
+        if self.axle_str:
+            part_type = part_type + ', STR'
+        if self.axle_drv:
+            part_type = part_type + ', DRV'
+        if self.axle_add:
+            part_type = part_type + ', ADD'
+        if self.axle_trl:
+            part_type = part_type + ', TRL'
+        if self.side_left:
+            part_type = part_type + ', L/S'
+        if self.side_right:
+            part_type = part_type + ', R/S'
+        return part_type
 
     def __str__(self):
-        name = self.name
+        part_type = self.part.part_type.name
+        if self.axle_str:
+            part_type = part_type + ', STR'
+        if self.axle_drv:
+            part_type = part_type + ', DRV'
+        if self.axle_add:
+            part_type = part_type + ', ADD'
+        if self.axle_trl:
+            part_type = part_type + ', TRL'
+        if self.side_left:
+            part_type = part_type + ', L/S'
+        if self.side_right:
+            part_type = part_type + ', R/S'
         if self.truck:
-            name = name + ', ' +self.truck
-        if self.trailer:
-            name = name + ', ' +self.trailer
-        return self.name
+            name = part_type + ' for ' + self.truck.__str__()
+        elif self.trailer:
+            name = part_type + ' for ' + self.trailer.__str__()
+        return name
+
+    @property
+    def is_unique(self):
+        if self.side_left or self.side_right or self.axle_str or \
+                self.axle_drv or self.axle_add or self.axle_trl:
+            return False
+        else:
+            return True
 
 
 class Job(models.Model):

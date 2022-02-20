@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import Order, OrderTime, Part, Job, OrderJob, OrderPart, \
-    Purchase, PurchaseItem, Mechanic, Balance, Inspection, PartType
+    Purchase, PurchaseItem, Mechanic, Balance, Inspection, PartType, PartPlace
 
 admin.site.register(Order)
 admin.site.register(OrderTime)
@@ -15,3 +15,4 @@ admin.site.register(PurchaseItem)
 admin.site.register(Mechanic)
 admin.site.register(Balance)
 admin.site.register(Inspection)
+admin.site.register(PartPlace)

@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Order, Job, Part, OrderJob, OrderPart, Purchase, \
-    PurchaseItem, Balance, Inspection
+    PurchaseItem, Balance, Inspection, PartPlace
 from .mixins import OrderSelect
 from invent.mixins import FormMixin, FormSetMixin
 
@@ -97,6 +97,13 @@ class PartForm(FormSetMixin):
                 self.fields["part_number"].widget.attrs.update(
                     {'style': 'color:orange'}
                 )
+
+
+class PartPlaceForm(FormSetMixin):
+    class Meta:
+        model = PartPlace
+        fields = '__all__'
+
 
 class PurchaseForm(FormMixin):
     class Meta:
