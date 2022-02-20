@@ -30,7 +30,7 @@
     <p>
       <strong>Assigned parts:</strong>
       {% for ap in assigned_parts_list %}
-        <p><a href="">{{ ap }}</a></p>
+        <p>{{ ap.part_type }}: <a href="{% url 'shop:part' ap.part.id %}">{{ ap.part.part_number }}</a></p>
       {% endfor %}
     </p>
   {% endif %}
