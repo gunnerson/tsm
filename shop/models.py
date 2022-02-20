@@ -178,7 +178,7 @@ class PartPlace(models.Model):
     axle_trl = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['part__part_type', 'truck', 'trailer', ]
+        ordering = ['part__part_type', 'part', 'truck', 'trailer', ]
         constraints = [
             models.UniqueConstraint(
                 fields=['part', 'truck'], name='unique_truck_part'),
