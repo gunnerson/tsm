@@ -77,7 +77,7 @@ class TruckDetailView(ReadCheckMixin, InfoView):
         inst = self.get_object()
         context['order_list'] = inst.order_set.all()
         context['part_list'] = inst.part_set.all()
-        context['assigned_parts_list'] = inst.parttype_set.all()
+        context['assigned_parts_list'] = inst.partplace_set.all()
         context['btn_assign_truck'] = True
         return context
 
