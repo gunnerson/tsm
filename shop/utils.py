@@ -28,6 +28,8 @@ def get_part_forms(order, data=None):
         formset=BaseModelFormSet,
     )
     assigned_parts_ids = []
+    exclude_ids = []
+    part_ids = []
     if order.truck:
         part_places = order.truck.partplace_set.all()
         for p in part_places:
@@ -37,11 +39,10 @@ def get_part_forms(order, data=None):
         for p in part_places:
             assigned_parts_ids.append(p.part.id)
     qs = order.orderpart_set.all()
-    exclude_ids = []
     for q in qs:
         if q.part.id not in exclude_ids:
             exclude_ids.append(q.part.id)
-    part_ids = []
+        part_ids.append(q.part.id)
     for j in order.orderjob_set.all():
         # for p in j.job.parts.all():
         #     if p.id not in part_ids:
