@@ -58,6 +58,7 @@ class TrailerFormSetView(WriteCheckMixin, FormSetView):
     form_class = TrailerForm
     detail_url = 'invent:trailer'
 
+
 class CompanyFormSetView(WriteCheckMixin, FormSetView):
     model = Company
     form_class = CompanyForm
