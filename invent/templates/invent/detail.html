@@ -25,6 +25,15 @@
       {% endfor %}
     </p>
   {% endif %}
+  {% if assigned_parts_list %}
+    <br>
+    <p>
+      <strong>Assigned parts:</strong>
+      {% for ap in assigned_parts_list %}
+        <p><a href="{% url 'shop:part' part.id %}">{{ ap }}</a></p>
+      {% endfor %}
+    </p>
+  {% endif %}
   <br>
 {% endblock content %}
 
