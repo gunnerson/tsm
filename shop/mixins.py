@@ -34,6 +34,7 @@ class FormSetView():
     def as_view(cls):
         def view(request, *args, **kwargs):
             self = cls(request, *args, **kwargs)
+            self.setup(request, *args, **kwargs)
             return self.dispatch(request, *args, **kwargs)
         return view
 
@@ -48,6 +49,11 @@ class FormSetView():
         self.request = request
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+    def setup(self, request, *args, **kwargs):
+        self.request = request
+        self.args = args
+        self.kwargs = kwargs
 
     def get_queryset(self):
         qs = self.model.objects.all()

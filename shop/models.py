@@ -170,12 +170,21 @@ class PartPlace(models.Model):
         null=True,
         blank=True
     )
-    side_left = models.BooleanField()
-    side_right = models.BooleanField()
-    axle_str = models.BooleanField()
-    axle_drv = models.BooleanField()
-    axle_add = models.BooleanField()
-    axle_trl = models.BooleanField()
+    side_left = models.BooleanField(default=False)
+    side_right = models.BooleanField(default=False)
+    axle_str = models.BooleanField(default=False)
+    axle_drv = models.BooleanField(default=False)
+    axle_add = models.BooleanField(default=False)
+    axle_trl = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['part', 'truck', 'trailer', ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=['part', 'truck'], name='unique_truck_part'),
+            models.UniqueConstraint(
+                fields=['part', 'trailer'], name='unique_trailer_part'),
+        ]
 
     @property
     def part_type(self):
@@ -195,23 +204,26 @@ class PartPlace(models.Model):
         return part_type
 
     def __str__(self):
-        part_type = self.part.part_type.name
-        if self.axle_str:
-            part_type = part_type + ', STR'
-        if self.axle_drv:
-            part_type = part_type + ', DRV'
-        if self.axle_add:
-            part_type = part_type + ', ADD'
-        if self.axle_trl:
-            part_type = part_type + ', TRL'
-        if self.side_left:
-            part_type = part_type + ', L/S'
-        if self.side_right:
-            part_type = part_type + ', R/S'
-        if self.truck:
-            name = part_type + ' for ' + self.truck.__str__()
-        elif self.trailer:
-            name = part_type + ' for ' + self.trailer.__str__()
+        try:
+            part_type = self.part.part_type.name
+            if self.axle_str:
+                part_type = part_type + ', STR'
+            if self.axle_drv:
+                part_type = part_type + ', DRV'
+            if self.axle_add:
+                part_type = part_type + ', ADD'
+            if self.axle_trl:
+                part_type = part_type + ', TRL'
+            if self.side_left:
+                part_type = part_type + ', L/S'
+            if self.side_right:
+                part_type = part_type + ', R/S'
+            if self.truck:
+                name = part_type + ' for ' + self.truck.__str__()
+            elif self.trailer:
+                name = part_type + ' for ' + self.trailer.__str__()
+        except AttributeError:
+            name = 'Type not assigned'
         return name
 
     @property
@@ -231,6 +243,7 @@ class Job(models.Model):
         null=True,
         blank=True,
     )
+    part_types = models.ManyToManyField(PartType, blank=True)
     parts = models.ManyToManyField(Part, blank=True)
 
     class Meta:

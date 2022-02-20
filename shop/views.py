@@ -4,10 +4,10 @@ from datetime import date
 # from django.db import IntegrityError
 
 from .models import Order, Part, Job, OrderPart, Purchase, \
-    PurchaseItem, Balance, Inspection, PartPlace
+    PurchaseItem, Balance, PartPlace, PartType
 from invent.models import Truck, Trailer
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
-    InspectionForm, PartPlaceForm
+    PartPlaceForm
 from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
     link_with_part
 from .mixins import ObjectView, FormSetView
@@ -165,7 +165,7 @@ class OrderPrintView(WriteCheckMixin, DetailView):
 class JobFormSetView(WriteCheckMixin, FormSetView):
     model = Job
     form_class = JobForm
-    detail_url = 'shop:job_parts'
+    detail_url = 'shop:job_part_types'
     fields = ('name', 'man_hours')
     field_names = ('Description', 'Man-hours')
 
@@ -175,8 +175,50 @@ class PartPlaceFormSetView(WriteCheckMixin, FormSetView):
     form_class = PartPlaceForm
     fields = ('part', 'side_left', 'side_right', 'axle_str', 'axle_drv',
               'axle_add', 'axle_trl',)
-    field_names = ('Part', 'Left side', 'Right side', 'STR axle', 'DRV axle', \
-        'ADD axle', 'TRL axle', )
+    field_names = ('Part', 'Left side', 'Right side', 'STR axle', 'DRV axle',
+                   'ADD axle', 'TRL axle', )
+
+    def get_queryset(self):
+        if self.kwargs['unit'] == 'truck':
+            unit = Truck.objects.get(id=self.kwargs['pk'])
+            qs = self.model.objects.filter(truck=unit)
+        else:
+            unit = Trailer.objects.get(id=self.kwargs['pk'])
+            qs = self.model.objects.filter(trailer=unit)
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        if self.kwargs['unit'] == 'truck':
+            unit = Truck.objects.get(id=self.kwargs['pk'])
+            context['to_truck'] = unit
+        else:
+            unit = Trailer.objects.get(id=self.kwargs['pk'])
+            context['to_trailer'] = unit
+        context['assign'] = True
+        return context
+
+    def post(self, request, *args, **kwargs):
+        formset = self.get_modelformset(request.POST)
+        if formset.is_valid():
+            if self.kwargs['unit'] == 'truck':
+                unit = Truck.objects.get(id=self.kwargs['pk'])
+                for f in formset:
+                    if f.has_changed():
+                        inst = f.save(commit=False)
+                        inst.truck = unit
+                        inst.save()
+            else:
+                unit = Trailer.objects.get(id=self.kwargs['pk'])
+                for f in formset:
+                    if f.has_changed():
+                        inst = f.save(commit=False)
+                        inst.trailer = unit
+                        inst.save()
+            return redirect(self.redirect_url)
+        else:
+            return self.render_to_response(
+                self.get_context_data(formset=formset))
 
 
 class JobPartListView(ReadCheckMixin, ListView):
@@ -217,13 +259,40 @@ class JobPartListView(ReadCheckMixin, ListView):
         return redirect('.')
 
 
+class JobPartTypeListView(WriteCheckMixin, ListView):
+    model = PartType
+    template_name = 'shop/jobparttype_add.html'
+
+    def get_context_data(self, *args, **kwargs):
+        job = Job.objects.get(id=self.kwargs['pk'])
+        context = super().get_context_data(*args, **kwargs)
+        qs = self.get_queryset()
+        context['checked'] = []
+        for q in qs:
+            if q in job.part_types.all():
+                context['checked'].append(q.id)
+        context['btn_save'] = True
+        return context
+
+    def post(self, *args, **kwargs):
+        job = Job.objects.get(id=kwargs['pk'])
+        qs = self.get_queryset()
+        for q in qs:
+            if self.request.POST.get(str(q.id), None):
+                job.part_types.add(q)
+            else:
+                job.part_types.remove(q)
+        return redirect('.')
+
+
 class PartFormSetView(WriteCheckMixin, FormSetView):
     model = Part
     form_class = PartForm
     search_bar = True
     detail_url = 'shop:part'
-    fields = ('part_number', 'name', 'stock', 'stock_unit', 'price', 'track')
-    field_names = ('Part number', 'Description',
+    fields = ('part_number', 'part_type', 'name', 'stock', 'stock_unit',
+              'price', 'track')
+    field_names = ('Part number', 'Type', 'Description',
                    'In Stock', 'Units', 'Re-sale price', 'Track')
 
 
@@ -405,44 +474,6 @@ class BalanceFormSetView(WriteCheckMixin, FormSetView):
         context['this_month_labor'] = this_month_labor
         context['last_month_labor'] = last_month_labor
         return context
-
-
-class InspectionListView(ReadCheckMixin, ListView):
-    model = Inspection
-    template_name = 'shop/inspection_list.html'
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context['btn_new'] = True
-        context['create_url'] = 'shop:create_inspection'
-        return context
-
-
-class InspectionView(WriteCheckMixin, ObjectView):
-    model = Inspection
-    form_class = InspectionForm
-    template_name = 'shop/inspection_form.html'
-
-    def get_context_data(
-            self, *args, job_formset=None, part_formset=None, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context['btn_save'] = True
-        if not self.is_create:
-            inst = self.get_object()
-            context['inst_id'] = inst.id
-            context['btn_image'] = True
-            if inst.truck:
-                context['image_url'] = 'docs:truck_image'
-                context['image_id'] = inst.truck.id
-            else:
-                context['image_url'] = 'docs:trailer_image'
-                context['image_id'] = inst.trailer.id
-        return context
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update(is_create=self.is_create)
-        return kwargs
 
 
 def budget_invoice(request, pk):

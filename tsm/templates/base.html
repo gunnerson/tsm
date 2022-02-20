@@ -51,6 +51,12 @@
           {% if btn_files %}
             <a href="{% url files_url inst_id %}" title="Show documents"><img src="{% static 'img/folder.png' %}"></a>
           {% endif %}
+          {% if btn_assign_truck %}
+            <a href="{% url 'shop:assign_part' object.id 'truck' %}"><img src="{% static 'img/arrow.png' %}"></a>
+          {% endif %}
+          {% if btn_assign_trailer %}
+            <a href="{% url 'shop:assign_part' object.id 'trailer' %}"><img src="{% static 'img/arrow.png' %}"></a>
+          {% endif %}
           {% if btn_key %}
             <a href="{% url key_url key_id %}" title="Back to item"><img src="{% static 'img/bookmark.png' %}"></a>
           {% endif %}

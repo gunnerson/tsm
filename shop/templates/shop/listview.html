@@ -17,6 +17,11 @@
 {% endblock filter_bar %}
 
 {% block content %}
+  {% if to_truck %}
+    <strong>Assign parts to <a href="{% url 'invent:truck' to_truck.id %}">{{ to_truck }}</a></strong><br><br>
+  {% elif to_trailer %}
+    <strong>Assign parts to <a href="{% url 'invent:trailer' to_trailer.id %}">{{ to_trailer }}</a></strong><br><br>
+  {% endif %}
 
   <form method='post' id="data_form">
     {% csrf_token %}
@@ -37,7 +42,7 @@
                 {{ field }}
                 {% if field.value and detail_url %}
                   <td class="formset_field">
-                    <a href="{% url detail_url field.value %}" title="Add parts">
+                    <a href="{% url detail_url field.value %}">
                       <img src="{% static 'img/parts.png' %}">
                       {{ field }}
                     </a>

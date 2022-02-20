@@ -27,6 +27,15 @@ def get_part_forms(order, data=None):
         fields='__all__',
         formset=BaseModelFormSet,
     )
+    assigned_parts_ids = []
+    if order.truck:
+        part_places = order.truck.partplace_set.all()
+        for p in part_places:
+            assigned_parts_ids.append(p.part.id)
+    elif order.trailer:
+        part_places = order.trailer.partplace_set.all()
+        for p in part_places:
+            assigned_parts_ids.append(p.part.id)
     qs = order.orderpart_set.all()
     exclude_ids = []
     for q in qs:
@@ -34,9 +43,13 @@ def get_part_forms(order, data=None):
             exclude_ids.append(q.part.id)
     part_ids = []
     for j in order.orderjob_set.all():
-        for p in j.job.parts.all():
-            if p.id not in part_ids:
-                part_ids.append(p.id)
+        # for p in j.job.parts.all():
+        #     if p.id not in part_ids:
+        #         part_ids.append(p.id)
+        for pt in j.job.part_types.all():
+            for p in pt.part_set.all():
+                if p.id in assigned_parts_ids and p.id not in part_ids:
+                    part_ids.append(p.id)
     parts = Part.objects.filter(id__in=part_ids)
     return ModelFormset(data, queryset=qs, prefix='parts',
                         form_kwargs={'parts': parts, 'exclude': exclude_ids})
