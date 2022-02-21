@@ -39,7 +39,7 @@ def generate_listcolshow(profile, model):
     if model == Truck or model == Trailer:
         exclude = ('id', 'order', 'part', 'truck_pms', 'truckimage',
                    'truckdocument', 'trailer_pms', 'trailerimage',
-                   'trailerdocument')
+                   'trailerdocument', 'partplace')
     elif model == Company:
         exclude = ('id', 'owned_trucks', 'insured_trucks', 'order',
                    'owned_trailers', 'insured_trailers', 'purchase', 'profile',
