@@ -24,8 +24,8 @@ SECRET_KEY = os.environ.get('TSM_SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = True if os.environ.get('DJANGO_DEBUG') == 'true' else False
+# DEBUG = True
+DEBUG = True if os.environ.get('DJANGO_DEBUG') == 'true' else False
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_HOSTS', '127.0.0.1').split(',')
 
