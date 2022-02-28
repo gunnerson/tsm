@@ -24,7 +24,7 @@
         <a href="{% url 'shop:part' r.id %}">{{ r }}, </a>
       {% endfor %}
       {% for r in replaces2 %}
-        <a href="{% url 'shop:part' r.id %}">{{ r }}, </a>
+        <a href="{% url 'shop:part' r.id %}"><i>{{ r }}</i>, </a>
       {% endfor %}
   </p>
   <br>
