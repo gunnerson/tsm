@@ -2,6 +2,7 @@
 
 {% block content %}
   <p><strong>{{ object.part_number }}: {{ object.name }}</strong></p><br>
+  <p><strong>In stock: {{ object.stock }}</strong></p><br>
   <p><strong>Purchased for:</strong></p>
   {% for p in purchases %}
     <p>${{ p.price }} from {{ p.purchase.vendor }} on {{ p.purchase.date }}</p>
