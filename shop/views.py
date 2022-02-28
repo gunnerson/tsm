@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
 from datetime import date
+from django.core.exceptions import ObjectDoesNotExist
 # from django.db import IntegrityError
 
 from .models import Order, Part, Job, OrderPart, Purchase, \
@@ -515,3 +516,21 @@ def budget_purchase(request, pk):
             comments=purchase,
         ).save()
     return redirect(purchase.get_absolute_url())
+
+
+def assign_to_all(request, pk, unit):
+    part = Part.objects.get(id=pk)
+    if unit == 'truck':
+        trucks = Truck.objects.all()
+        for t in trucks:
+            try:
+                PartPlace.objects.get(part=part, truck=t)
+            except ObjectDoesNotExist:
+                PartPlace(part=part, truck=t).save()
+    else:
+        trailers = Trailer.objects.all()
+        for t in trailers:
+            try:
+                PartPlace.objects.get(part=part, trailer=t)
+            except ObjectDoesNotExist:
+                PartPlace(part=part, trailer=t).save()

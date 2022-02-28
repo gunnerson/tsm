@@ -15,6 +15,7 @@ from .views import (
     budget_purchase,
     BalanceFormSetView,
     PartPlaceFormSetView,
+    assign_to_all,
 )
 
 app_name = "shop"
@@ -52,4 +53,6 @@ urlpatterns = [
          name='balance'),
     path('assign/<int:pk>/<slug:unit>/', PartPlaceFormSetView.as_view(),
          name='assign_part'),
+    path('assign_to_all/<int:pk>/<slug:unit>/', assign_to_all,
+         name='assign_to_all'),
 ]

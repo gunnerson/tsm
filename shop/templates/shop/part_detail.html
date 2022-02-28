@@ -17,5 +17,7 @@
       {% endif %}
     </p>
   {% endfor %}
+  <a href="{% url 'shop:assign_to_all' object.id truck %}"><p><strong>Assign to all trucks</strong></p></a>
+  <a href="{% url 'shop:assign_to_all' object.id trailer %}"><p><strong>Assign to all trailers</strong></p></a>
 {% endblock content %}
 

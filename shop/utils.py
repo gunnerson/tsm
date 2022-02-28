@@ -83,3 +83,6 @@ def link_with_part(inst, remove=None):
             inst.part.trucks.add(inst.order.truck)
         elif inst.order.trailer:
             inst.part.trailers.add(inst.order.trailer)
+
+
+
