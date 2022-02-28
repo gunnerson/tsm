@@ -534,3 +534,4 @@ def assign_to_all(request, pk, unit):
                 PartPlace.objects.get(part=part, trailer=t)
             except ObjectDoesNotExist:
                 PartPlace(part=part, trailer=t).save()
+    return redirect(part.get_absolute_url())
