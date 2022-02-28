@@ -292,9 +292,9 @@ class PartFormSetView(WriteCheckMixin, FormSetView):
     search_bar = True
     detail_url = 'shop:part'
     fields = ('part_number', 'part_type', 'name', 'stock', 'stock_unit',
-              'price', 'track')
+              'price', 'track', 'replaces')
     field_names = ('Part number', 'Type', 'Description',
-                   'In Stock', 'Units', 'Re-sale price', 'Track')
+                   'In Stock', 'Units', 'Re-sale price', 'Track', 'Replaces')
 
 
 class PartDetailView(ReadCheckMixin, DetailView):
@@ -307,6 +307,7 @@ class PartDetailView(ReadCheckMixin, DetailView):
         context['purchases'] = purchases
         orders = OrderPart.objects.filter(part=part)
         context['orders'] = orders
+        context['replaces'] = part.parts.all()
         return context
 
 
