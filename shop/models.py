@@ -129,6 +129,7 @@ class Part(models.Model):
         null=True,
         blank=True
     )
+    replaces = models.ManyToManyField('Part', blank=True)
     objects = DBSearch()
     # Create index:
     # ALTER TABLE shop_part ADD COLUMN textsearchable_index_col tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce(part_number, '') || ' ' || coalesce(name, ''))) STORED;
