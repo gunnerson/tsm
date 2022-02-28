@@ -31,5 +31,10 @@
   <a href="{% url 'shop:assign_to_all' object.id 'truck' %}" onclick="return confirm('Assign to all trucks?');" ><p><strong>Assign to all trucks</strong></p></a>
   <br>
   <a href="{% url 'shop:assign_to_all' object.id 'trailer' %}" onclick="return confirm('Assign to all trailers?');" ><p><strong>Assign to all trailers</strong></p></a>
+  <p><strong>
+    {% if user.is_superuser %}
+      <a href="{% url 'admin:shop_part_change' object.id %}">Admin</a>
+    {% endif %}
+  </strong></p>
 {% endblock content %}
 
