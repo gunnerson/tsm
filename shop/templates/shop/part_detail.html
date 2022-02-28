@@ -17,16 +17,18 @@
       {% endif %}
     </p>
   {% endfor %}
-  <br>
-  <p>
-    <strong>Replaces:</strong>
-      {% for r in replaces %}
-        <a href="{% url 'shop:part' r.id %}">{{ r }}, </a>
-      {% endfor %}
-      {% for r in replaces2 %}
-        <a href="{% url 'shop:part' r.id %}"><i>{{ r }}</i>, </a>
-      {% endfor %}
-  </p>
+  {% if replaces or replaces2 %}
+    <br>
+    <p>
+      <strong>Replaces:</strong>
+        {% for r in replaces %}
+          <a href="{% url 'shop:part' r.id %}">{{ r }}, </a>
+        {% endfor %}
+        {% for r in replaces2 %}
+          <a href="{% url 'shop:part' r.id %}"><i>{{ r }}</i>, </a>
+        {% endfor %}
+    </p>
+  {% endif %}
   <br>
   <a href="{% url 'shop:assign_to_all' object.id 'truck' %}" onclick="return confirm('Assign to all trucks?');" ><strong>Assign to all trucks</strong></a>
   -----
