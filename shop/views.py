@@ -307,7 +307,7 @@ class PartDetailView(ReadCheckMixin, DetailView):
         context['purchases'] = purchases
         orders = OrderPart.objects.filter(part=part)
         context['orders'] = orders
-        context['replaces'] = part.parts.all()
+        context['replaces'] = part.replaces.all()
         return context
 
 
