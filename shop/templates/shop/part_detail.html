@@ -23,10 +23,10 @@
     <p>
       <strong>Replaces:</strong>
         {% for r in replaces %}
-          <a href="{% url 'shop:part' r.id %}">{{ r }}, </a>
+          <a href="{% url 'shop:part' r.id %}">{{ r.part_number }}, </a>
         {% endfor %}
         {% for r in replaces2 %}
-          <a href="{% url 'shop:part' r.id %}"><i>{{ r }}</i>, </a>
+          <a href="{% url 'shop:part' r.id %}"><i>{{ r.part_number }}</i>, </a>
         {% endfor %}
     </p>
   {% endif %}
