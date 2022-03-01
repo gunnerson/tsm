@@ -424,6 +424,7 @@ div.desc {
   display: flex;
   align-items: flex-start;
   align-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .shelves-table {
