@@ -37,11 +37,12 @@
         <th> Items </th>
         <th> In stock </th>
         <th> Re-order </th>
+        <th> Cheapest </th>
       </tr>
     </thead>
     <tbody>
       {% for object in object_list %}
-        {% if object.part_type.name == 'Brake shoes' or object.part_type.name == 'Brake drum' %}
+        {% if object.part_type.name == 'Brake shoes' or object.part_type.name == 'Brake drum' or object.part_type.name == 'Brake pads' %}
           <tr class="{% if object.in_stock <= object.re_order %}restock{% endif %}">
             <td>
               {% for part in object.part.all %}
@@ -50,6 +51,7 @@
             </td>
             <td>{{ object.in_stock }}</td>
             <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+            <td>{{ object.cheapest }}</a></td>            
           </tr>
         {% endif %}
       {% endfor %}

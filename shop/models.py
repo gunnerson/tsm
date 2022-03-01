@@ -154,6 +154,14 @@ class Part(models.Model):
         except AttributeError:
             return 0
 
+    @property
+    def lowest_price(self):
+        lp = [0, ]
+        purchases = self.purchaseitem_set.all()
+        for p in purchases:
+            lp.append(p.price)
+        return min(lp)
+
 
 class PartPlace(models.Model):
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
@@ -267,6 +275,13 @@ class Shelf(models.Model):
             in_stock += p.stock
         reorder = self.store - in_stock
         return reorder if reorder >= 0 else 0
+
+    @property
+    def cheapest(self):
+        lp = [0, ]
+        for p in self.part.all():
+            lp.append(p.price)
+        return min(lp)
 
 
 class Job(models.Model):
