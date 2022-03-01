@@ -427,6 +427,8 @@ div.desc {
 .shelves-table {
   flex: 50%;
   margin: 5px;
+  align-items: flex-start;
+  align-content: flex-start;
 }
 
 .shelves-table thead tr th{
