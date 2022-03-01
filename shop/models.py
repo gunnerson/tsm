@@ -158,7 +158,8 @@ class Part(models.Model):
         lp = []
         purchases = self.purchaseitem_set.all()
         for p in purchases:
-            lp.append(p.price)
+            if p.price:
+                lp.append(p.price)
         return min(lp)
 
 
@@ -279,7 +280,8 @@ class Shelf(models.Model):
     def cheapest(self):
         lp = []
         for p in self.part.all():
-            lp.append(p.price)
+            if p.price:
+                lp.append(p.price)
         return min(lp)
 
 
