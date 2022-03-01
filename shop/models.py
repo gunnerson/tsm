@@ -156,7 +156,7 @@ class Part(models.Model):
 
     @property
     def lowest_price(self):
-        lp = [0, ]
+        lp = []
         purchases = self.purchaseitem_set.all()
         for p in purchases:
             lp.append(p.price)
@@ -278,7 +278,7 @@ class Shelf(models.Model):
 
     @property
     def cheapest(self):
-        lp = [0, ]
+        lp = []
         for p in self.part.all():
             lp.append(p.price)
         return min(lp)
