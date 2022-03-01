@@ -5,7 +5,7 @@
   <p><strong>In stock:</strong> {{ object.stock }} {{ object.stock_unit }}</p><br>
   <p><strong>Purchased for:</strong></p>
   {% for p in purchases %}
-    <p>${{ p.price }} from {{ p.purchase.vendor }} on {{ p.purchase.date }}</p>
+    <p>${{ p.price }} from {{ p.purchase.vendor }} on <a href="{% url 'shop:purchase' p.purchase.id %}">{{ p.purchase.date }}</a></p>
   {% endfor %}
   <br>
   <p><strong>Installed in:</strong></p>
