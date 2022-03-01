@@ -88,7 +88,7 @@ def link_with_part(inst, remove=None):
             inst.part.trailers.add(inst.order.trailer)
 
 
-def assign_to_101(request):
+def assign_to_101():
     parts = Part.objects.all()
     t = Truck.objects.get(id=40)
     for p in parts:
