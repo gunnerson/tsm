@@ -11,7 +11,7 @@
     </thead>
     <tbody>
       {% for object in object_list %}
-        {% if object.part_type.name == 'Lube filter'}
+        {% if object.part_type.name == 'Lube filter' %}
           <tr>
             <td>{{ object }}</td>
             <td>{{ object.in_stock }}</td>
