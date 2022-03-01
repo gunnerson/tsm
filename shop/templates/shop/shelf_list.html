@@ -1,6 +1,7 @@
 {% extends "shop/base.html" %}
 
 {% block content %}
+<p><strong>Filters</strong></p>
   <table>
     <thead>
       <tr>
@@ -10,10 +11,12 @@
     </thead>
     <tbody>
       {% for object in object_list %}
-        <tr>
-          <td>{{ object }}</td>
-          <td>{{ object.in_stock }}</td>
-        </tr>
+        {% if object.part_type.name == 'Lube filter'}
+          <tr>
+            <td>{{ object }}</td>
+            <td>{{ object.in_stock }}</td>
+          </tr>
+        {% endif %}
       {% endfor %}
     </tbody>
   </table>

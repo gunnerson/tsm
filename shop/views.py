@@ -546,8 +546,3 @@ def assign_to_all(request, pk, unit):
 class ShelfListView(ReadCheckMixin, ListView):
     model = Shelf
     template_name = 'shop/shelf_list.html'
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        return context
-        

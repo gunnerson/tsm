@@ -241,14 +241,18 @@ class Shelf(models.Model):
 
     class Meta:
         verbose_name_plural = "shelves"
-        ordering = ['id',]
+        ordering = ['id', ]
 
     def __str__(self):
         name = '#' + str(self.id) + ' '
         for p in self.part.all():
             name += p.part_number + ', '
         return name
-    
+
+    @property
+    def part_type(self):
+        return self.part.last().part_type
+
     @property
     def in_stock(self):
         in_stock = 0
