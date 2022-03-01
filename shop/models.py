@@ -122,7 +122,7 @@ class Part(models.Model):
         default=0,
     )
     track = models.BooleanField(default=False)
-    track_stock = models.PositiveSmallIntegerField(default=1)
+    track_stock = models.PositiveSmallIntegerField(default=0)
     part_type = models.ForeignKey(
         PartType,
         on_delete=models.SET_NULL,
