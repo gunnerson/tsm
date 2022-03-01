@@ -280,8 +280,8 @@ class Shelf(models.Model):
     def cheapest(self):
         lp = []
         for p in self.part.all():
-            if p.price:
-                lp.append(p.price)
+            if p.lowest_price:
+                lp.append(p.lowest_price)
         return min(lp)
 
 
