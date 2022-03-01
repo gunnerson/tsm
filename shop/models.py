@@ -284,7 +284,10 @@ class Shelf(models.Model):
         for p in self.part.all():
             if p.lowest_price:
                 lp.append(p.lowest_price)
-        return min(lp)
+        try:
+            return min(lp)
+        except ValueError:
+            return None
 
 
 class Job(models.Model):
