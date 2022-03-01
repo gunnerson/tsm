@@ -252,7 +252,7 @@ class Shelf(models.Model):
     @property
     def in_stock(self):
         in_stock = 0
-        for p in self.parts.all():
+        for p in self.part.all():
             in_stock += p.stock
         return in_stock
 
