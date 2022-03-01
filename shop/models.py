@@ -153,17 +153,6 @@ class Part(models.Model):
         except AttributeError:
             return 0
 
-    @property
-    def lowest_price(self):
-        lp = []
-        purchases = self.purchaseitem_set.all()
-        for p in purchases:
-            if p.price:
-                lp.append(p.price)
-        try:
-            return min(lp)
-        except ValueError:
-            return None
 
 class PartPlace(models.Model):
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
@@ -282,8 +271,8 @@ class Shelf(models.Model):
     def cheapest(self):
         lp = []
         for p in self.part.all():
-            if p.lowest_price:
-                lp.append(p.lowest_price)
+            if p.get_price:
+                lp.append(p.get_price)
         try:
             return min(lp)
         except ValueError:
