@@ -11,7 +11,7 @@
     </thead>
     <tbody>
       {% for object in object_list %}
-        {% if object.part_type.name in ['Lube filter', 'Fuel filter', 'Fuel/water separator'] %}
+        {% if object.part_type.name in 'Lube filter', 'Fuel filter', 'Fuel/water separator' %}
           <tr>
             <td>{{ object }}</td>
             <td>{{ object.in_stock }}</td>
