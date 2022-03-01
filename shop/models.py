@@ -243,7 +243,7 @@ class Shelf(models.Model):
         # ordering = ['part__part__part_type', 'part']
 
     def __str__(self):
-        return '#' + str(self.id) + ' ' + self.part.objects.last().part_type
+        return '#' + str(self.id) + ' ' + self.part.last().part_type
 
     @property
     def in_stock(self):
