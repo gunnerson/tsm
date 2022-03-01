@@ -420,6 +420,10 @@ div.desc {
   background-color: #ff000034!important;
 }
 
+.shelves-row {
+  display: flex;
+}
+
 .shelves-table thead tr th{
   padding: 5px 5px;
 }
