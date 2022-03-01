@@ -2,11 +2,20 @@
 
 {% block content %}
   <table class="order-table">
-    {% for object in object_list %}
+    <thead>
       <tr>
-        <td>{{ object }}</a></td>
+        <th> Shelf </th>
+        <th> In stock </th>
       </tr>
-    {% endfor %}
+    </thead>
+    <tbody>
+      {% for object in object_list %}
+        <tr>
+          <td>{{ object }}</td>
+          <td>{{ object.in_stock }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
   </table>
 {% endblock content %}
 
