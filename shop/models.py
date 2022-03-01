@@ -119,7 +119,6 @@ class Part(models.Model):
         decimal_places=2,
         null=True,
         blank=True,
-        default=0,
     )
     part_type = models.ForeignKey(
         PartType,
