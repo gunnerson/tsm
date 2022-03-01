@@ -416,6 +416,10 @@ div.desc {
   right: 5px;
 }
 
+.shelves-table {
+  border: 1px solid var(--border-color);
+}
+
 
 @media only screen and (max-width: 768px) {
 #wrapper {
