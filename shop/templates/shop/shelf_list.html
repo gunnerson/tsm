@@ -1,11 +1,12 @@
 {% extends "shop/base.html" %}
 
 {% block content %}
+
   <table class="order-table shelves-table" >
     <thead>
       <tr><th>Filters</th></tr>
       <tr>
-        <th> Shelf </th>
+        <th> Items </th>
         <th> In stock </th>
         <th> Re-order </th>
       </tr>
@@ -13,6 +14,28 @@
     <tbody>
       {% for object in object_list %}
         {% if object.part_type.name == 'Lube filter' or object.part_type.name == 'Fuel filter' or object.part_type.name == 'Fuel/water separator' %}
+          <tr class="{% if object.in_stock <= object.re_order %}restock{% endif %}">
+            <td>{{ object }}</td>
+            <td>{{ object.in_stock }}</td>
+            <td>{{ object.reorder_amount }}</td>            
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Brake shoes and drums</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in object_list %}
+        {% if object.part_type.name == 'Brake shoes' or object.part_type.name == 'Brake drum' %}
           <tr class="{% if object.in_stock <= object.re_order %}restock{% endif %}">
             <td>{{ object }}</td>
             <td>{{ object.in_stock }}</td>
