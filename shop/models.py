@@ -241,7 +241,7 @@ class Shelf(models.Model):
 
     class Meta:
         verbose_name_plural = "shelves"
-        # ordering = ['part__part__part_type', 'part']
+        ordering = ['id',]
 
     def __str__(self):
         name = '#' + str(self.id) + ' '
