@@ -1,6 +1,9 @@
 from django.forms import modelformset_factory, BaseModelFormSet
+from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 
-from .models import OrderJob, OrderPart, Part, PurchaseItem
+from .models import OrderJob, OrderPart, Part, PurchaseItem, PartPlace
+from invent.models import Truck
 from .forms import OrderJobForm, OrderPartForm, PurchaseItemForm
 
 
@@ -85,4 +88,12 @@ def link_with_part(inst, remove=None):
             inst.part.trailers.add(inst.order.trailer)
 
 
-
+def assign_to_101(request):
+    parts = Part.objects.all()
+    t = Truck.objects.get(id=40)
+    for p in parts:
+        try:
+            PartPlace.objects.get(part=p, truck=t)
+        except ObjectDoesNotExist:
+            PartPlace(part=p, truck=t).save()
+    return HttpResponse('Operation successful...')

@@ -75,3 +75,14 @@ def generate_su_profile(request):
     generate_listcolshow(profile, Trailer)
     generate_listcolshow(profile, Company)
     return HttpResponse('Operation successful...')
+    
+
+def assign_to_101(request):
+    parts = Part.objects.all()
+    t = Truck.objects.get(id=40)
+    for p in parts:
+        try:
+            PartPlace.objects.get(part=p, truck=t)
+        except ObjectDoesNotExist:
+            PartPlace(part=p, truck=t).save()
+    return HttpResponse('Operation successful...')
