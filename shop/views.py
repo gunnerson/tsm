@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 # from django.db import IntegrityError
 
 from .models import Order, Part, Job, OrderPart, Purchase, \
-    PurchaseItem, Balance, PartPlace, PartType
+    PurchaseItem, Balance, PartPlace, PartType, Shelf
 from invent.models import Truck, Trailer
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
     PartPlaceForm
@@ -309,7 +309,8 @@ class PartDetailView(ReadCheckMixin, DetailView):
         context['replaces'] = part.replaces.all()
         context['replaces2'] = part.part_set.all()
         try:
-            context['replaces3'] = part.part_set.last().replaces.exclude(id=part.id)
+            context['replaces3'] = part.part_set.last(
+            ).replaces.exclude(id=part.id)
         except AttributeError:
             pass
         return context
@@ -540,3 +541,13 @@ def assign_to_all(request, pk, unit):
             except ObjectDoesNotExist:
                 PartPlace(part=part, trailer=t).save()
     return redirect(part.get_absolute_url())
+
+
+class ShelfListView(ReadCheckMixin, ListView):
+    model = Shelf
+    template_name = 'shop/shelf_list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        return context
+        

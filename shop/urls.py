@@ -16,7 +16,7 @@ from .views import (
     BalanceFormSetView,
     PartPlaceFormSetView,
     assign_to_all,
-)
+    ShelfListView,)
 
 app_name = "shop"
 
@@ -55,4 +55,6 @@ urlpatterns = [
          name='assign_part'),
     path('assign_to_all/<int:pk>/<slug:unit>/', assign_to_all,
          name='assign_to_all'),
+    path('shelves/', ShelfListView.as_view(),
+         name='shelves'),
 ]

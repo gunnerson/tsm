@@ -1,0 +1,12 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+  <table class="order-table">
+    {% for object in object_list %}
+      <tr>
+        <td>{{ object }}</a></td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock content %}
+
