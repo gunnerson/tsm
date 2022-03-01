@@ -308,7 +308,10 @@ class PartDetailView(ReadCheckMixin, DetailView):
         context['orders'] = orders
         context['replaces'] = part.replaces.all()
         context['replaces2'] = part.part_set.all()
-        context['replaces3'] = part.part_set.last().replaces.all()
+        try:
+            context['replaces3'] = part.part_set.last().replaces.all()
+        except AttributeError:
+            pass
         return context
 
 
