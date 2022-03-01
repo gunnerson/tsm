@@ -309,7 +309,7 @@ class PartDetailView(ReadCheckMixin, DetailView):
         context['replaces'] = part.replaces.all()
         context['replaces2'] = part.part_set.all()
         try:
-            context['replaces3'] = part.part_set.last().replaces.exlude(part=part)
+            context['replaces3'] = part.part_set.last().replaces.exclude(id=part.id)
         except AttributeError:
             pass
         return context
