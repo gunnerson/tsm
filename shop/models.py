@@ -160,8 +160,10 @@ class Part(models.Model):
         for p in purchases:
             if p.price:
                 lp.append(p.price)
-        return min(lp)
-
+        try:
+            return min(lp)
+        except ValueError:
+            return None
 
 class PartPlace(models.Model):
     part = models.ForeignKey(Part, on_delete=models.CASCADE)
