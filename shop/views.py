@@ -292,9 +292,9 @@ class PartFormSetView(WriteCheckMixin, FormSetView):
     search_bar = True
     detail_url = 'shop:part'
     fields = ('part_number', 'part_type', 'name', 'stock', 'stock_unit',
-              'price', 'track', )
+              'price', 'track', 'track_stock')
     field_names = ('Part number', 'Type', 'Description',
-                   'In Stock', 'Units', 'Re-sale price', 'Track', )
+                   'In Stock', 'Units', 'Re-sale price', 'Track', 'Keep')
 
 
 class PartDetailView(ReadCheckMixin, DetailView):
