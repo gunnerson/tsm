@@ -121,8 +121,6 @@ class Part(models.Model):
         blank=True,
         default=0,
     )
-    track = models.BooleanField(default=False)
-    track_stock = models.PositiveSmallIntegerField(default=0)
     part_type = models.ForeignKey(
         PartType,
         on_delete=models.SET_NULL,
@@ -234,6 +232,22 @@ class PartPlace(models.Model):
             return False
         else:
             return True
+
+
+class Shelf(models.Model):
+    part = models.ManyToManyField(Part, blank=True)
+    store = models.PositiveSmallIntegerField(default=1)
+
+    class Meta:
+        verbose_name_plural = "shelves"
+        # ordering = ['part__part__part_type', 'part']
+
+    @property
+    def in_stock(self):
+        in_stock = 0
+        for p in self.parts.all():
+            in_stock += p.stock
+        return in_stock
 
 
 class Job(models.Model):
