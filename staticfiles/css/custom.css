@@ -420,6 +420,9 @@ div.desc {
   background-color: #ff000034!important;
 }
 
+.shelves-table thead tr td:not(:first-child, :last-child){
+  padding: 5px 5px;
+}
 
 @media only screen and (max-width: 768px) {
 #wrapper {
