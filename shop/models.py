@@ -260,6 +260,13 @@ class Shelf(models.Model):
             in_stock += p.stock
         return in_stock
 
+    @property
+    def reorder_amount(self):
+        in_stock = 0
+        for p in self.part.all():
+            in_stock += p.stock
+        return self.store - in_stock
+
 
 class Job(models.Model):
     name = models.CharField(max_length=50)

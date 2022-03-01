@@ -7,14 +7,16 @@
       <tr>
         <th> Shelf </th>
         <th> In stock </th>
+        <th> Re-order ammount </th>
       </tr>
     </thead>
     <tbody>
       {% for object in object_list %}
         {% if object.part_type.name == 'Lube filter' or object.part_type.name == 'Fuel filter' or object.part_type.name == 'Fuel/water separator' %}
-          <tr class="{% if object.in_stock <= object.re_order %}restock1{% endif %}">
+          <tr class="{% if object.in_stock <= object.re_order %}restock{% endif %}">
             <td>{{ object }}</td>
             <td>{{ object.in_stock }}</td>
+            <td>{{ object.reorder_amount }}</td>            
           </tr>
         {% endif %}
       {% endfor %}
