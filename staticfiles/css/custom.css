@@ -420,7 +420,7 @@ div.desc {
   background-color: #ff000034!important;
 }
 
-.shelves-table thead tr td:not(:first-child, :last-child){
+.shelves-table thead tr th:not(:first-child, :last-child){
   padding: 5px 5px;
 }
 
