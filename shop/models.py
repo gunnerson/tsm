@@ -237,6 +237,7 @@ class PartPlace(models.Model):
 class Shelf(models.Model):
     part = models.ManyToManyField(Part, blank=True)
     store = models.PositiveSmallIntegerField(default=1)
+    re_order = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         verbose_name_plural = "shelves"
