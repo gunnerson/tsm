@@ -265,7 +265,8 @@ class Shelf(models.Model):
         in_stock = 0
         for p in self.part.all():
             in_stock += p.stock
-        return self.store - in_stock
+        reorder = self.store - in_stock
+        return reorder if reorder >= 0 else 0
 
 
 class Job(models.Model):
