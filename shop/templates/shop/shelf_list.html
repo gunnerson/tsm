@@ -202,7 +202,7 @@
 
   <table class="order-table shelves-table" >
     <thead>
-      <tr><th>WS sensors</th></tr>
+      <tr><th>ABS sensors</th></tr>
       <tr>
         <th> Items </th>
         <th> In stock </th>
@@ -212,7 +212,7 @@
     </thead>
     <tbody>
       {% for object in object_list %}
-        {% if object.part_type.name == 'Wheel speed sensors' %}
+        {% if object.part_type.name == 'Wheel speed sensor' %}
           <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
