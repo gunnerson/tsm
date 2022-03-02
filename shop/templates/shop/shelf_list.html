@@ -129,7 +129,7 @@
     <tbody>
       {% for object in object_list %}
         {% if object.part_type.name == 'Wheel bearing' %}
-          <tr class="{% if object.in_stock <= object.re_order %}restock{% endif %}">
+          <tr class="{% if object.in_stock == 0 %}restock{% endif %} {% if object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
                 <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>

@@ -420,6 +420,10 @@ div.desc {
   background-color: #ff000034!important;
 }
 
+.restock2 {
+  background-color: #f4ff00ad!important;
+}
+
 .shelves-row {
   display: flex;
   align-items: flex-start;
