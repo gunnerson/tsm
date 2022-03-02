@@ -184,7 +184,7 @@
     </thead>
     <tbody>
       {% for object in object_list %}
-        {% if object.part_type.name == 'Brake adjuester' or object.part_type.name == 'Clevis kit' %}
+        {% if object.part_type.name == 'Brake adjuster' or object.part_type.name == 'Clevis kit' %}
           <tr class="{% if object.in_stock <= object.re_order %}restock{% endif %}">
             <td>
               {% for part in object.part.all %}
