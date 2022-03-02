@@ -17,7 +17,7 @@
     <tbody>
       {% for object in object_list %}
         {% if object.part_type.name == 'Lube filter' or object.part_type.name == 'Fuel filter' or object.part_type.name == 'Fuel/water separator' %}
-          <tr class="{% if object.in_stock <= object.re_order %}restock{% endif %}">
+          <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
                 <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
@@ -45,7 +45,7 @@
     <tbody>
       {% for object in object_list %}
         {% if object.part_type.name == 'Brake shoes' or object.part_type.name == 'Brake drum' or object.part_type.name == 'Brake pads' %}
-          <tr class="{% if object.in_stock <= object.re_order %}restock{% endif %}">
+          <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
                 <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
@@ -73,7 +73,7 @@
     <tbody>
       {% for object in object_list %}
         {% if object.part_type.name == 'Tire' %}
-          <tr class="{% if object.in_stock <= object.re_order %}restock{% endif %}">
+          <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
                 <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
@@ -101,7 +101,7 @@
     <tbody>
       {% for object in object_list %}
         {% if object.part_type.name == 'Wheel seal' %}
-          <tr class="{% if object.in_stock <= object.re_order %}restock{% endif %}">
+          <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
                 <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
@@ -157,7 +157,7 @@
     <tbody>
       {% for object in object_list %}
         {% if object.part_type.name == 'Brake chamber' %}
-          <tr class="{% if object.in_stock <= object.re_order %}restock{% endif %}">
+          <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
                 <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
@@ -185,7 +185,7 @@
     <tbody>
       {% for object in object_list %}
         {% if object.part_type.name == 'Brake adjuster' or object.part_type.name == 'Clevis kit' %}
-          <tr class="{% if object.in_stock <= object.re_order %}restock{% endif %}">
+          <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
                 <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
