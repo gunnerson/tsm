@@ -62,7 +62,7 @@
 
   <table class="order-table shelves-table" >
     <thead>
-      <tr><th>Tires</th></tr>
+      <tr><th>Wheel seals</th></tr>
       <tr>
         <th> Items </th>
         <th> In stock </th>
@@ -72,7 +72,7 @@
     </thead>
     <tbody>
       {% for object in object_list %}
-        {% if object.part_type.name == 'Tire' %}
+        {% if object.part_type.name == 'Wheel seal' %}
           <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
@@ -90,7 +90,7 @@
 
   <table class="order-table shelves-table" >
     <thead>
-      <tr><th>Wheel seals</th></tr>
+      <tr><th>Brake camshafts</th></tr>
       <tr>
         <th> Items </th>
         <th> In stock </th>
@@ -100,7 +100,7 @@
     </thead>
     <tbody>
       {% for object in object_list %}
-        {% if object.part_type.name == 'Wheel seal' %}
+        {% if object.part_type.name == 'S-cam' or object.part_type.name == 'S-cam kit' %}
           <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
@@ -174,7 +174,7 @@
 
   <table class="order-table shelves-table" >
     <thead>
-      <tr><th>Brake camshafts</th></tr>
+      <tr><th>Wheel bearings</th></tr>
       <tr>
         <th> Items </th>
         <th> In stock </th>
@@ -184,7 +184,7 @@
     </thead>
     <tbody>
       {% for object in object_list %}
-        {% if object.part_type.name == 'S-cam' or object.part_type.name == 'S-cam kit' %}
+        {% if object.part_type.name == 'Wheel bearing' %}
           <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
@@ -202,7 +202,7 @@
 
   <table class="order-table shelves-table" >
     <thead>
-      <tr><th>Wheel bearings</th></tr>
+      <tr><th>Tires</th></tr>
       <tr>
         <th> Items </th>
         <th> In stock </th>
@@ -212,7 +212,7 @@
     </thead>
     <tbody>
       {% for object in object_list %}
-        {% if object.part_type.name == 'Wheel bearing' %}
+        {% if object.part_type.name == 'Tire' %}
           <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
