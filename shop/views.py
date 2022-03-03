@@ -340,8 +340,11 @@ class PurchaseView(WriteCheckMixin, ObjectView):
                 for f in formset:
                     inst = f.save(commit=False)
                     inst.purchase = self.object
-                    if not inst.part.price:
-                        inst.part.price = 0
+                    try:
+                        if not inst.part.price:
+                            inst.part.price = 0
+                    except PurchaseItem.part.DoesNotExist:
+                        pass
                     if not inst.id and inst.part_id:
                         inst.save()
                         inst.part.stock += inst.amount
