@@ -186,20 +186,23 @@ class PartPlace(models.Model):
 
     @property
     def part_type(self):
-        part_type = self.part.part_type.name
-        if self.axle_str:
-            part_type = part_type + ', STR'
-        if self.axle_drv:
-            part_type = part_type + ', DRV'
-        if self.axle_add:
-            part_type = part_type + ', ADD'
-        if self.axle_trl:
-            part_type = part_type + ', TRL'
-        if self.side_left:
-            part_type = part_type + ', L/S'
-        if self.side_right:
-            part_type = part_type + ', R/S'
-        return part_type
+        try:
+            part_type = self.part.part_type.name
+            if self.axle_str:
+                part_type = part_type + ', STR'
+            if self.axle_drv:
+                part_type = part_type + ', DRV'
+            if self.axle_add:
+                part_type = part_type + ', ADD'
+            if self.axle_trl:
+                part_type = part_type + ', TRL'
+            if self.side_left:
+                part_type = part_type + ', L/S'
+            if self.side_right:
+                part_type = part_type + ', R/S'
+            return part_type
+        except AttributeError:
+            return None
 
     def __str__(self):
         try:
