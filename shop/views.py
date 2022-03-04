@@ -339,14 +339,13 @@ class PurchaseView(WriteCheckMixin, ObjectView):
             if formset.is_valid():
                 for f in formset:
                     inst = f.save(commit=False)
-                    inst.purchase = self.object
-                    if inst.part:
-                        if not inst.part.price:
-                            inst.part.price = 0
+                    inst.purchase = self.object                    
                     if not inst.id and inst.part_id:
                         inst.save()
                         inst.part.stock += inst.amount
                         inst.part.save(update_fields=['stock'])
+                        if not inst.part.price:
+                            inst.part.price = 0
                         if (float(inst.price) * 1.15) > inst.part.price:
                             inst.part.price = float(inst.price) * 1.15
                             inst.part.save(update_fields=['price'])
@@ -354,6 +353,8 @@ class PurchaseView(WriteCheckMixin, ObjectView):
                         before_inst = PurchaseItem.objects.get(id=inst.id)
                         inst.part.stock += inst.amount - before_inst.amount
                         inst.part.save(update_fields=['stock'])
+                        if not inst.part.price:
+                            inst.part.price = 0
                         if (float(inst.price) * 1.15) > inst.part.price:
                             inst.part.price = float(inst.price) * 1.15
                             inst.part.save(update_fields=['price'])
