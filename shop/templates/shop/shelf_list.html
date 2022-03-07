@@ -296,7 +296,7 @@
     </thead>
     <tbody>
       {% for object in object_list %}
-        {% if object.part_type.name == 'Misc' %}
+        {% if object.part_type.name == 'Differential seal' or object.part_type.name == 'Center bearing' %}
           <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
