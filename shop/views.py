@@ -569,7 +569,8 @@ class ShelfListView(ReadCheckMixin, ListView):
         misc_id = []
         for q in qs:
             part_type = q.part_type.name
-            if part_type in ('Lube filter', 'Fuel filter', 'Fuel/water separator',):
+            if part_type in ('Lube filter', 'Fuel filter',
+                             'Fuel/water separator',):
                 oil_filters_id.append(q.id)
             elif part_type in ('Brake shoes', 'Brake drum', 'Brake pads',):
                 brakes_id.append(q.id)
@@ -593,7 +594,8 @@ class ShelfListView(ReadCheckMixin, ListView):
                 tires_id.append(q.id)
             elif part_type in ('Air filter',):
                 air_filters_id.append(q.id)
-            elif part_type in ('Misc', 'Differential seal', 'Center bearing', 'Inverter', 'Battery', '3-in-1',):
+            elif part_type in ('Misc', 'Differential seal', 'Center bearing',
+                               'Inverter', 'Battery', '3-in-1',):
                 misc_id.append(q.id)
         context['oil_filters'] = qs.filter(id__in=oil_filters_id)
         context['brakes'] = qs.filter(id__in=brakes_id)
