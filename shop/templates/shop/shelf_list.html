@@ -16,7 +16,6 @@
     </thead>
     <tbody>
       {% for object in object_list %}
-        {% if object.part_type.name == 'Lube filter' or object.part_type.name == 'Fuel filter' or object.part_type.name == 'Fuel/water separator' %}
           <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
             <td>
               {% for part in object.part.all %}
@@ -27,7 +26,6 @@
             <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>      
             <td>${{ object.cheapest|default_if_none:"0" }}</a></td>      
           </tr>
-        {% endif %}
       {% endfor %}
     </tbody>
   </table>
