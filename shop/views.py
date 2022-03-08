@@ -339,7 +339,7 @@ class PurchaseView(WriteCheckMixin, ObjectView):
             if formset.is_valid():
                 for f in formset:
                     inst = f.save(commit=False)
-                    inst.purchase = self.object                    
+                    inst.purchase = self.object
                     if not inst.id and inst.part_id:
                         inst.save()
                         inst.part.stock += inst.amount
@@ -550,3 +550,62 @@ def assign_to_all(request, pk, unit):
 class ShelfListView(ReadCheckMixin, ListView):
     model = Shelf
     template_name = 'shop/shelf_list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        qs = self.get_queryset()
+        oil_filters_id = []
+        brakes_id = []
+        seals_id = []
+        camshafts_id = []
+        bearings_id = []
+        abas_id = []
+        chambers_id = []
+        wss_id = []
+        belts_id = []
+        kingpins_id = []
+        tires_id = []
+        air_filters_id = []
+        misc_id = []
+        for q in qs:
+            part_type = q.part_type.name
+            if part_type in ('Lube filter', 'Fuel filter', 'Fuel/water separator',):
+                oil_filters_id.append(q.id)
+            elif part_type in ('Brake shoes', 'Brake drum', 'Brake pads',):
+                brakes_id.append(q.id)
+            elif part_type in ('Wheel seal',):
+                seals_id.append(q.id)
+            elif part_type in ('S-cam', 'S-cam kit',):
+                camshafts_id.append(q.id)
+            elif part_type in ('Wheel bearing',):
+                bearings_id.append(q.id)
+            elif part_type in ('Brake adjuster', 'Clevis kit',):
+                abas_id.append(q.id)
+            elif part_type in ('Brake chamber',):
+                chambers_id.append(q.id)
+            elif part_type in ('Wheel speed sensor',):
+                wss_id.append(q.id)
+            elif part_type in ('Belt',):
+                belts_id.append(q.id)
+            elif part_type in ('King pin',):
+                kingpins_id.append(q.id)
+            elif part_type in ('Tire',):
+                tires_id.append(q.id)
+            elif part_type in ('Air filter',):
+                air_filters_id.append(q.id)
+            elif part_type in ('Misc', 'Differential seal', 'Center bearing', 'Inverter', 'Battery', '3-in-1',):
+                misc_id.append(q.id)
+        context['oil_filters'] = qs.filter(id__in=oil_filters_id)
+        context['brakes'] = qs.filter(id__in=brakes_id)
+        context['seals'] = qs.filter(id__in=seals_id)
+        context['camshafts'] = qs.filter(id__in=camshafts_id)
+        context['bearings'] = qs.filter(id__in=bearings_id)
+        context['slack_adjusters'] = qs.filter(id__in=abas_id)
+        context['chambers'] = qs.filter(id__in=chambers_id)
+        context['speed_sensors'] = qs.filter(id__in=wss_id)
+        context['belts'] = qs.filter(id__in=belts_id)
+        context['kingpins'] = qs.filter(id__in=kingpins_id)
+        context['tires'] = qs.filter(id__in=tires_id)
+        context['air_filters'] = qs.filter(id__in=air_filters_id)
+        context['misc'] = qs.filter(id__in=misc_id)
+        return context
