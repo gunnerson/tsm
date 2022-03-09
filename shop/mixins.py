@@ -103,9 +103,10 @@ class FormSetView():
             context['formset'] = self.get_modelformset()
         if self.search_bar:
             context['search_bar'] = self.search_bar
-            context['query'] = self.request.GET.get('query', None)
+            context['query'] = self.request.GET.get('query', None)            
         if self.filter_bar:
             context['filter_bar'] = self.filter_bar
+            context['selected_part_type'] = self.request.GET.get('part_type', None)
         return context
 
     def render_to_response(self, context):

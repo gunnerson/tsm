@@ -8,7 +8,7 @@
       <select name="part_type" id="part_type">
         <option value="">-----</option>
         {% for pt in part_types %}
-          <option value="{{ pt }}">{{ pt }}</option>
+          <option value="{{ pt }}" {% if pt == selected_part_type %} selected {% endif %}>{{ pt }}</option>
         {% endfor %}
       </select>      
     </div>
