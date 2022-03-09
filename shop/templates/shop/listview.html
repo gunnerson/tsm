@@ -14,6 +14,16 @@
     <input type="radio" name="show" value="show_all" id="show_all" class="filter-button" {% if show == "show_all" %}checked{% endif %}>
     <label for="show_all" class="filter-button">All time</label>
   </div>
+  {% if part_types %}
+    <div class="filter-item">
+      <label for="part_type" class="filter-button">Part type:</label>
+      <select name="part_type" id="part_type">
+        {% for pt in part_types %}
+          <option value="pt">pt</option>
+        {% endfor %}
+      </select>      
+    </div>
+  {% endif %}
 {% endblock filter_bar %}
 
 {% block content %}

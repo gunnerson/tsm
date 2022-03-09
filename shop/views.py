@@ -295,6 +295,15 @@ class PartFormSetView(WriteCheckMixin, FormSetView):
     field_names = ('Part number', 'Type', 'Description',
                    'In Stock', 'Re-sale price', )
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        part_types = []
+        pts = PartType.objects.all()
+        for p in pts:
+            part_types.append(p.name)
+        context['part_types'] = part_types
+        return context
+
 
 class PartDetailView(ReadCheckMixin, DetailView):
     model = Part
