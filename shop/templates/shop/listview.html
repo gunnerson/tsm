@@ -5,7 +5,7 @@
   {% if part_types %}
     <div class="filter-item">
       <label for="part_type" class="filter-button">Part type:</label>
-      <select name="part_type" id="part_type">
+      <select name="part_type" id="part_type" class="filter-button">
         <option value="">-----</option>
         {% for pt in part_types %}
           <option value="{{ pt }}" {% if pt == selected_part_type %} selected {% endif %}>{{ pt }}</option>
