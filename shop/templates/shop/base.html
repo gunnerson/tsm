@@ -70,7 +70,7 @@
         filters[i].addEventListener("click", submitForm)
       };
       const part_type = document.getElementById("part_type")
-      part_type.addEventListener("change", submitForm)
+      part_type.addEventListener("change", document.getElementById('filter-form').submit())
     {% endif %}
 
     {% block page_js %}{% endblock page_js %}
