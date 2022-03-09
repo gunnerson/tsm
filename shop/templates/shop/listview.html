@@ -19,7 +19,7 @@
       <label for="part_type" class="filter-button">Part type:</label>
       <select name="part_type" id="part_type">
         {% for pt in part_types %}
-          <option value="pt">pt</option>
+          <option value="{{ pt }}">{{ pt }}</option>
         {% endfor %}
       </select>      
     </div>
