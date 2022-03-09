@@ -59,6 +59,9 @@ class FormSetView():
         qs = self.model.objects.all()
         if self.filter_bar or self.search_bar:
             query = self.request.GET.get('query', None)
+            part_type = self.request.GET.get('part_type', None)
+            if part_type:
+                qs = self.model.objects.filter(part_type__name=part_type)
             if query:
                 qs = self.model.objects.search(
                     query,
