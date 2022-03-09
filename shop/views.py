@@ -605,7 +605,7 @@ class ShelfListView(ReadCheckMixin, ListView):
                 tires_id.append(q.id)
             elif part_type in ('Air filter',):
                 air_filters_id.append(q.id)
-            elif part_type in ('Light',):
+            elif part_type in ('Light', 'Pigtail'):
                 lights_id.append(q.id)
             elif part_type in ('Misc', 'Differential seal', 'Center bearing',
                                'Inverter', 'Battery', '3-in-1',):
