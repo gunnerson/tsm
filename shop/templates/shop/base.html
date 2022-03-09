@@ -57,8 +57,12 @@
       function submitForm() {
         try {
           let query = document.getElementById('search-input').value;
+          let part_selected = document.getElementById('part_type-input').part_type;
           let pattern = /^[^!&|:]+$/
           if(pattern.test(query)) {
+            document.getElementById('filter-form').submit();
+          };
+          if(part_selected) {
             document.getElementById('filter-form').submit();
           };
         } catch (ex) {
