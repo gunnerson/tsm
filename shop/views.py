@@ -577,6 +577,7 @@ class ShelfListView(ReadCheckMixin, ListView):
         tires_id = []
         air_filters_id = []
         threeinone_id = []
+        driveshaft_id = []
         lights_id = []
         misc_id = []
         for q in qs:
@@ -608,9 +609,11 @@ class ShelfListView(ReadCheckMixin, ListView):
                 air_filters_id.append(q.id)
             elif part_type in ('3-in-1',):
                 threeinone_id.append(q.id)
+            elif part_type in ('Driveshaft',):
+                driveshaft_id.append(q.id)
             elif part_type in ('Light', 'Pigtail'):
                 lights_id.append(q.id)
-            elif part_type in ('Misc', 'Differential seal', 'Center bearing',
+            elif part_type in ('Misc', 'Driveshaft', 'Center bearing',
                                'Inverter', 'Battery',):
                 misc_id.append(q.id)
         context['oil_filters'] = qs.filter(id__in=oil_filters_id)
@@ -626,6 +629,7 @@ class ShelfListView(ReadCheckMixin, ListView):
         context['tires'] = qs.filter(id__in=tires_id)
         context['air_filters'] = qs.filter(id__in=air_filters_id)
         context['threeinone'] = qs.filter(id__in=threeinone_id)
+        context['driveshaft'] = qs.filter(id__in=driveshaft_id)
         context['lights'] = qs.filter(id__in=lights_id)
         context['misc'] = qs.filter(id__in=misc_id)
         return context
