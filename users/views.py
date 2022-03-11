@@ -301,5 +301,5 @@ class PunchCardListView(LoginRequiredMixin, ListView):
             else:
                 salary = float(selected_mechanic.salary) * 40 + \
                     float(selected_mechanic.salary) * 1.5 * (week_total - 40)
-            context['salary'] = salary
+            context['salary'] = round(salary, 2)
         return context
