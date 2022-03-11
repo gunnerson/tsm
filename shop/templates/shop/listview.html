@@ -29,10 +29,13 @@
 {% endblock filter_bar %}
 
 {% block content %}
-  {% if to_truck %}
-    <strong>Assign parts to <a href="{% url 'invent:truck' to_truck.id %}">{{ to_truck }}</a></strong><br><br>
-  {% elif to_trailer %}
-    <strong>Assign parts to <a href="{% url 'invent:trailer' to_trailer.id %}">{{ to_trailer }}</a></strong><br><br>
+
+  {% if user.profile.level == 'A' %}
+    {% if to_truck %}
+      <strong>Assign parts to <a href="{% url 'invent:truck' to_truck.id %}">{{ to_truck }}</a></strong><br><br>
+    {% elif to_trailer %}
+      <strong>Assign parts to <a href="{% url 'invent:trailer' to_trailer.id %}">{{ to_trailer }}</a></strong><br><br>
+    {% endif %}
   {% endif %}
 
   <form method='post' id="data_form">

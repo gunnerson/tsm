@@ -34,10 +34,12 @@
     </p>
   {% endif %}
   <br>
-  <a href="{% url 'shop:assign_to_all' object.id 'truck' %}" onclick="return confirm('Assign to all trucks?');" ><strong>Assign to all trucks</strong></a>
-  -----
-  <a href="{% url 'shop:assign_to_all' object.id 'trailer' %}" onclick="return confirm('Assign to all trailers?');" ><strong>Assign to all trailers</strong></a>
-  -----
+  {% if user.profile.level == 'A' %}
+    <a href="{% url 'shop:assign_to_all' object.id 'truck' %}" onclick="return confirm('Assign to all trucks?');" ><strong>Assign to all trucks</strong></a>
+    -----
+    <a href="{% url 'shop:assign_to_all' object.id 'trailer' %}" onclick="return confirm('Assign to all trailers?');" ><strong>Assign to all trailers</strong></a>
+    -----
+  {% endif %}
   <strong>
     {% if user.is_superuser %}
       <a href="{% url 'admin:shop_part_change' object.id %}">Admin</a>
