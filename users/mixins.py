@@ -7,6 +7,7 @@ from django.core.exceptions import FieldError
 
 from users.utils import gen_field_ver_name, read_check, write_check, admin_check
 from users.models import ListColShow
+from shop.models import Mechanic
 
 
 class ReadCheckMixin(UserPassesTestMixin):
@@ -22,6 +23,19 @@ class WriteCheckMixin(UserPassesTestMixin):
 class AdminCheckMixin(UserPassesTestMixin):
     def test_func(self):
         return admin_check(self.request.user)
+
+
+class UserCheckMixin(UserPassesTestMixin):
+    def test_func(self):
+        if self.request.user.profile.level == 'A':
+            return True
+        else:
+            mechanic_id = self.request.GET.get('mechanic', None)
+            if mechanic_id:
+                mechanic = Mechanic.objects.get(id=mechanic_id)
+                if mechanic == self.request.user.profile.mechanic:
+                    return True
+            return False
 
 
 class FormMixin(forms.ModelForm):

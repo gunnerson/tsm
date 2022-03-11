@@ -14,7 +14,7 @@ from shop.models import Order, OrderTime, Mechanic
 from .forms import UserCreationForm, ProfileForm, UserLevelForm, PunchCardForm
 from shop.forms import OrderTimeForm
 from .utils import generate_profile
-from .mixins import FormSetView, AdminCheckMixin
+from .mixins import FormSetView, AdminCheckMixin, UserCheckMixin
 
 
 def register(request):
@@ -246,7 +246,7 @@ def punch(request):
     return render(request, 'users/punch.html', context)
 
 
-class PunchCardListView(LoginRequiredMixin, ListView):
+class PunchCardListView(UserCheckMixin, ListView):
     model = PunchCard
     template_name = 'users/punchcards.html'
 
