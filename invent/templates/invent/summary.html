@@ -22,13 +22,13 @@
     <tbody>
       {% for object in trucks %}
         <tr>
-          <td><a href="{% url 'invent:truck' object.id %}">{{ object.fleet_number }}</a></td>
-          <td>{{ object.owner }}</td>
-          <td>{{ object.vin }}</td>
-          <td>{{ object.year }}</td>
-          <td>{{ object.make }}</td>
-          <td>{{ object.last_pm_date }}</td>
-          <td>{{ object.last_pm_mls }}</td>
+          <td><a href="{% url 'invent:truck' object.id %}">{{ object.fleet_number|default_if_none:"" }}</a></td>
+          <td>{{ object.owner|default_if_none:"" }}</td>
+          <td>{{ object.vin|default_if_none:"" }}</td>
+          <td>{{ object.year|default_if_none:"" }}</td>
+          <td>{{ object.get_make_display|default_if_none:"" }}</td>
+          <td>{{ object.last_pm_date|default_if_none:"" }}</td>
+          <td>{{ object.last_pm_mls|default_if_none:"" }}</td>
         </tr>
       {% endfor %}
     </tbody>
@@ -47,11 +47,11 @@
     <tbody>
       {% for object in trailers %}
         <tr>
-          <td><a href="{% url 'invent:trailer' object.id %}">{{ object.fleet_number }}</a></td>
-          <td>{{ object.owner }}</td>
-          <td>{{ object.vin }}</td>
-          <td>{{ object.year }}</td>
-          <td>{{ object.make }}</td>
+          <td><a href="{% url 'invent:trailer' object.id %}">{{ object.fleet_number|default_if_none:"" }}</a></td>
+          <td>{{ object.owner|default_if_none:"" }}</td>
+          <td>{{ object.vin|default_if_none:"" }}</td>
+          <td>{{ object.year|default_if_none:"" }}</td>
+          <td>{{ object.get_make_display|default_if_none:"" }}</td>
         </tr>
       {% endfor %}
     </tbody>
