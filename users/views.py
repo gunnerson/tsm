@@ -296,7 +296,7 @@ class PunchCardListView(LoginRequiredMixin, ListView):
         week_total = round(week_total, 1)
         context['week_total'] = week_total
         if new_mechanic:
-            selected_mechanic = Mechanic.objects.get(name=new_mechanic)
+            selected_mechanic = Mechanic.objects.get(id=new_mechanic)
             salary = 0
             if week_total <= 40:
                 salary = float(selected_mechanic.salary) * week_total
