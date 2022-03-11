@@ -266,11 +266,11 @@ ul {
   border-right: 1px solid var(--border-color);
 }
 
-.listview-table tr td:nth-child(2) {
+/*.listview-table tr td:nth-child(2) {
   position: sticky;
   left: 0;
   background-color: inherit;
-}
+}*/
 
 .listview-table tr th:first-child {
   position: sticky;
