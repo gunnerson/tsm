@@ -104,6 +104,15 @@ class PartPlaceForm(FormSetMixin):
         model = PartPlace
         fields = '__all__'
 
+    def __init__(self, *args, exclude=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["part"] = forms.ModelChoiceField(
+            queryset=Part.objects.all(),
+            widget=OrderSelect(exclude=exclude),
+        )
+        for f in self.fields:
+            self.fields[f].widget.attrs.update({'class': 'form_field'})
+
 
 class PurchaseForm(FormMixin):
     class Meta:

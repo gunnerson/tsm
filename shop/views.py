@@ -221,6 +221,19 @@ class PartPlaceFormSetView(WriteCheckMixin, FormSetView):
             return self.render_to_response(
                 self.get_context_data(formset=formset))
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if kwargs['unit'] == 'truck':
+            qs = self.get_object.truck.partplace_set.all()
+        else:
+            qs = self.get_object.trailer.partplace_set.all()
+        exclude_ids = []
+        for q in qs:
+            if q.part.id not in exclude_ids:
+                exclude_ids.append(q.part.id)
+        kwargs.update(exclude=exclude_ids)
+        return kwargs
+
 
 class JobPartListView(ReadCheckMixin, ListView):
     model = Part
