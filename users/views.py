@@ -279,7 +279,8 @@ class PunchCardListView(LoginRequiredMixin, ListView):
         if week_of:
             week_of = datetime.strptime(week_of, '%Y-%m-%d')
         try:
-            new_mechanic = mechanic if mechanic else profile.mechanic
+            new_mechanic = Mechanic.objects.get(
+                id=mechanic) if mechanic else profile.mechanic
         except ObjectDoesNotExist:
             new_mechanic = None
         context['form'] = PunchCardForm(
@@ -294,12 +295,11 @@ class PunchCardListView(LoginRequiredMixin, ListView):
         week_total = round(week_total, 1)
         context['week_total'] = week_total
         if new_mechanic:
-            selected_mechanic = Mechanic.objects.get(id=new_mechanic)
             salary = 0
             if week_total <= 40:
-                salary = float(selected_mechanic.salary) * week_total
+                salary = float(new_mechanic.salary) * week_total
             else:
-                salary = float(selected_mechanic.salary) * 40 + \
-                    float(selected_mechanic.salary) * 1.5 * (week_total - 40)
+                salary = float(new_mechanic.salary) * 40 + \
+                    float(new_mechanic.salary) * 1.5 * (week_total - 40)
             context['salary'] = round(salary, 2)
         return context
