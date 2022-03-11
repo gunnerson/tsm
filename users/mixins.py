@@ -35,7 +35,10 @@ class UserCheckMixin(UserPassesTestMixin):
                 mechanic = Mechanic.objects.get(id=mechanic_id)
                 if mechanic == self.request.user.profile.mechanic:
                     return True
-            return False
+                else:
+                    return False
+            else:
+                return True
 
 
 class FormMixin(forms.ModelForm):
