@@ -56,18 +56,21 @@ class TruckFormSetView(WriteCheckMixin, FormSetView):
     model = Truck
     form_class = TruckForm
     detail_url = 'invent:truck'
+    redirect_url = 'invent:summary'
 
 
 class TrailerFormSetView(WriteCheckMixin, FormSetView):
     model = Trailer
     form_class = TrailerForm
     detail_url = 'invent:trailer'
+    redirect_url = 'invent:summary'
 
 
 class CompanyFormSetView(WriteCheckMixin, FormSetView):
     model = Company
     form_class = CompanyForm
     detail_url = 'invent:company'
+    redirect_url = 'invent:summary'
 
 
 class TruckDetailView(ReadCheckMixin, InfoView):

@@ -35,9 +35,12 @@
     } else if (section == "trailers") {
       document.getElementById("nav_trailers").classList.add('active');
       document.title = "LPT - Trailers"
-    }else if (section == "companies") {
+    } else if (section == "companies") {
       document.getElementById("nav_companies").classList.add('active');
       document.title = "LPT - Companies"
+    } else if (section == "summary") {
+      document.getElementById("nav_summary").classList.add('active');
+      document.title = "LPT - Summary"
     };
 
     {% if filter_bar %}
