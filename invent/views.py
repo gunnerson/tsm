@@ -13,37 +13,42 @@ from shop.models import OrderJob
 
 @user_passes_test(read_check, login_url='index')
 def summary(request):
-    pms = OrderJob.objects.filter(job_id=22)
-    for pm in pms:
-        truck = pm.order.truck
-        try:
-            if truck.last_pm_date is None or truck.last_pm_mls is None or pm.order.closed > truck.last_pm_date:
-                truck.last_pm_date = pm.order.closed
-                truck.last_pm_mls = pm.order.mileage
-                truck.save(update_fields=['last_pm_date', 'last_pm_mls'])
-        except TypeError:
-            pass
-    profile = request.user.profile
+    # pms = OrderJob.objects.filter(job_id=22)
+    # for pm in pms:
+    #     truck = pm.order.truck
+    #     try:
+    #         if truck.last_pm_date is None or truck.last_pm_mls is None or pm.order.closed > truck.last_pm_date:
+    #             truck.last_pm_date = pm.order.closed
+    #             truck.last_pm_mls = pm.order.mileage
+    #             truck.save(update_fields=['last_pm_date', 'last_pm_mls'])
+    #     except TypeError:
+    #         pass
+    # profile = request.user.profile
+    # context = {}
+    # ours = request.GET.get('ours', None)
+    # query = request.GET.get('query', None)
+    # our_companies = Company.objects.filter(group__in=('OU', 'LO'))
+    # if ours:
+    #     if query:
+    #         qs = Truck.objects.search(query, 'Truck')
+    #         context['query'] = query
+    #     else:
+    #         qs = Truck.objects.all()
+    #     context['ours'] = True
+    # else:
+    #     if query:
+    #         qs = Truck.objects.search(query, 'Truck', our_companies)
+    #         context['query'] = query
+    #     else:
+    #         qs = Truck.objects.filter(owner__in=our_companies)
+    # get_summary_context(qs, profile, context)
+    # get_font_classes(profile.font_size, context)
+    # context['filter_bar'] = True
+    trucks = Truck.objects.get.all()
+    trailers = Trailer.objects.get.all()
     context = {}
-    ours = request.GET.get('ours', None)
-    query = request.GET.get('query', None)
-    our_companies = Company.objects.filter(group__in=('OU', 'LO'))
-    if ours:
-        if query:
-            qs = Truck.objects.search(query, 'Truck')
-            context['query'] = query
-        else:
-            qs = Truck.objects.all()
-        context['ours'] = True
-    else:
-        if query:
-            qs = Truck.objects.search(query, 'Truck', our_companies)
-            context['query'] = query
-        else:
-            qs = Truck.objects.filter(owner__in=our_companies)
-    get_summary_context(qs, profile, context)
-    get_font_classes(profile.font_size, context)
-    context['filter_bar'] = True
+    context['trucks'] = trucks
+    context['trailers'] = trailers
     return render(request, 'invent/summary.html', context)
 
 

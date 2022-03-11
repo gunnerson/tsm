@@ -2,17 +2,7 @@
 
 <script>
   {% block page_js %}
-    const links = document.getElementsByClassName("summary-link")
-    for (i = 0; i < links.length; i++) {
-      try{
-        let url_addr = links[i].childNodes[1].getAttribute("href")
-        next_td = links[i].nextSibling.nextSibling
-        next_td.addEventListener("click", function () {
-          window.location = url_addr
-        });
-        next_td.classList.add('summary-link-next')
-      } catch (ex) {};
-    };
+
   {% endblock page_js %}
 </script>
 
@@ -20,52 +10,48 @@
   <table class="listview-table {{ font_class }}">
     <thead>
       <tr>
-        {% for field_name in field_names %}
-          {% if field_name == 'Fleet number' or field_name == 'Name' %}
-            <th class="summary-link-head">{{ field_name }}</th>
-          {% else %}
-            <th>{{ field_name }}</th>
-          {% endif %}
-        {% endfor %}
+        <th>Fleet number</th>
+        <th>Company</th>
+        <th>VIN</th>
+        <th>Year</th>
+        <th>Make</th>
+        <th>Last PM date</th>
+        <th>Last PM odometer</th>
       </tr>
     </thead>
     <tbody>
-      {% for object in object_list %}
+      {% for object in trucks %}
         <tr>
-          {% for key,value in object %}
-            {% if 'truck_id' in key %}
-              <td class="summary-link">
-                {% if value %}
-                  <a href="{% url 'invent:truck' value %}">
-                  </a>
-                {% endif %}
-              </td>
-            {% elif 'trailer_id' in key %}
-              <td class="summary-link">
-                {% if value %}
-                  <a href="{% url 'invent:trailer' value %}">
-                  </a>
-                {% endif %}
-              </td>
-            {% elif 'driver_id' in key %}
-              <td class="summary-link">
-                {% if value %}
-                  <a href="{% url 'invent:driver' value %}">
-                  </a>
-                {% endif %}
-              </td>
-            {% else %}
-              <td>
-                {% if value == True %}
-                  +
-                {% elif value == False %}
-                  -
-                {% else %}
-                  {{ value|default_if_none:"" }}
-                {% endif %}
-              </td>
-            {% endif %}
-          {% endfor %}
+          <td>{{ object.fleet_number }}</td>
+          <td>{{ object.owner }}</td>
+          <td>{{ object.vin }}</td>
+          <td>{{ object.year }}</td>
+          <td>{{ object.make }}</td>
+          <td>{{ object.last_pm_date }}</td>
+          <td>{{ object.last_pm_mls }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="listview-table {{ font_class }}">
+    <thead>
+      <tr>
+        <th>Fleet number</th>
+        <th>Company</th>
+        <th>VIN</th>
+        <th>Year</th>
+        <th>Make</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in trailers %}
+        <tr>
+          <td>{{ object.fleet_number }}</td>
+          <td>{{ object.owner }}</td>
+          <td>{{ object.vin }}</td>
+          <td>{{ object.year }}</td>
+          <td>{{ object.make }}</td>
         </tr>
       {% endfor %}
     </tbody>
