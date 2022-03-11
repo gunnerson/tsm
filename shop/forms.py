@@ -110,8 +110,6 @@ class PartPlaceForm(FormSetMixin):
             queryset=Part.objects.all(),
             widget=OrderSelect(exclude=exclude),
         )
-        for f in self.fields:
-            self.fields[f].widget.attrs.update({'class': 'form_field'})
 
 
 class PurchaseForm(FormMixin):

@@ -225,7 +225,6 @@ class PartPlaceFormSetView(WriteCheckMixin, FormSetView):
         kwargs = super().get_form_kwargs()
         if self.kwargs['unit'] == 'truck':
             unit = Truck.objects.get(id=self.kwargs['pk'])
-            
         else:
             unit = Trailer.objects.get(id=self.kwargs['pk'])
         qs = unit.partplace_set.all()
