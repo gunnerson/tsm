@@ -110,6 +110,8 @@ class PartPlaceForm(FormSetMixin):
             queryset=Part.objects.all(),
             widget=OrderSelect(exclude=exclude),
         )
+        for f in self.fields:
+            self.fields[f].widget.attrs.update({'style': 'border:0'})
 
 
 class PurchaseForm(FormMixin):
