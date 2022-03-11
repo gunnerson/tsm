@@ -47,6 +47,7 @@ def summary(request):
     trucks = Truck.objects.all()
     trailers = Trailer.objects.all()
     context = {}
+    get_font_classes(request.user.profile.font_size, context)
     context['trucks'] = trucks
     context['trailers'] = trailers
     return render(request, 'invent/summary.html', context)
