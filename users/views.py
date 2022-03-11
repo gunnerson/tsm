@@ -10,7 +10,7 @@ from math import sqrt
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import ListColShow, Profile, PunchCard
-from shop.models import Order, OrderTime
+from shop.models import Order, OrderTime, Mechanic
 from .forms import UserCreationForm, ProfileForm, UserLevelForm, PunchCardForm
 from shop.forms import OrderTimeForm
 from .utils import generate_profile
@@ -287,6 +287,7 @@ class PunchCardListView(LoginRequiredMixin, ListView):
             level=profile.level,
             week_of=week_of,
         )
+        print(new_mechanic)
         qs = self.get_queryset()
         week_total = 0
         for q in qs:
