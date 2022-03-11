@@ -60,7 +60,11 @@
           {% if btn_key %}
             <a href="{% url key_url key_id %}" title="Back to item"><img src="{% static 'img/bookmark.png' %}"></a>
           {% endif %}
-          <a href="{% url 'invent:list_trucks' %}" title="Records"><img src="{% static 'img/vault.png' %}" id="nav_safety" style="margin-left:30px"></a>
+          {% if user.profile.level == 'W' or user.profile.level == 'A' %}
+            <a href="{% url 'invent:list_trucks' %}" title="Records"><img src="{% static 'img/vault.png' %}" id="nav_safety" style="margin-left:30px"></a>
+          {% else %}
+            <a href="{% url 'invent:summary' %}" title="Records"><img src="{% static 'img/vault.png' %}" id="nav_safety" style="margin-left:30px"></a>
+          {% endif %}
           <a href="{% url 'shop:orders' %}" title="Shop"><img src="{% static 'img/home.png' %}" id="nav_shop" style="margin-right:30px"></a>
           {% block nav_toolbar %}{% endblock nav_toolbar %}
         </div>
