@@ -252,12 +252,12 @@ class PunchCardListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         try:
-            mechanic = self.request.GET.get(
+            mechanic = self.request.POST.get(
                 'mechanic', self.request.user.profile.mechanic)
         except ObjectDoesNotExist:
-            mechanic = self.request.GET.get(
+            mechanic = self.request.POST.get(
                 'mechanic', None)
-        week_of = self.request.GET.get('week_of', None)
+        week_of = self.request.POST.get('week_of', None)
         if week_of:
             dt = datetime.strptime(week_of, '%Y-%m-%d')
         else:
@@ -274,8 +274,8 @@ class PunchCardListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(*args, **kwargs)
         context['btn_save'] = True
         profile = self.request.user.profile
-        mechanic = self.request.GET.get('mechanic', None)
-        week_of = self.request.GET.get('week_of', None)
+        mechanic = self.request.POST.get('mechanic', None)
+        week_of = self.request.POST.get('week_of', None)
         if week_of:
             week_of = datetime.strptime(week_of, '%Y-%m-%d')
         try:
