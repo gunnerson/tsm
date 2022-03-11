@@ -44,8 +44,8 @@ def summary(request):
     # get_summary_context(qs, profile, context)
     # get_font_classes(profile.font_size, context)
     # context['filter_bar'] = True
-    trucks = Truck.objects.get.all()
-    trailers = Trailer.objects.get.all()
+    trucks = Truck.objects.all()
+    trailers = Trailer.objects.all()
     context = {}
     context['trucks'] = trucks
     context['trailers'] = trailers
