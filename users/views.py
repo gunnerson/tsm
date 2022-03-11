@@ -287,8 +287,6 @@ class PunchCardListView(LoginRequiredMixin, ListView):
             level=profile.level,
             week_of=week_of,
         )
-        print('>>>>>>>>>>>>>>>>>>>>>>>>>', new_mechanic)
-        print('>>>>>>>>>>>>>>>>>>>>>>>>>', type(new_mechanic))
         qs = self.get_queryset()
         week_total = 0
         for q in qs:
