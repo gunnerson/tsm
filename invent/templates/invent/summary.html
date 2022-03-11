@@ -22,7 +22,7 @@
     <tbody>
       {% for object in trucks %}
         <tr>
-          <td>{{ object.fleet_number }}</td>
+          <td><a href="{% url 'invent:truck' object.id %}">{{ object.fleet_number }}</a></td>
           <td>{{ object.owner }}</td>
           <td>{{ object.vin }}</td>
           <td>{{ object.year }}</td>
@@ -47,7 +47,7 @@
     <tbody>
       {% for object in trailers %}
         <tr>
-          <td>{{ object.fleet_number }}</td>
+          <td><a href="{% url 'invent:trailer' object.id %}">{{ object.fleet_number }}</a></td>
           <td>{{ object.owner }}</td>
           <td>{{ object.vin }}</td>
           <td>{{ object.year }}</td>
