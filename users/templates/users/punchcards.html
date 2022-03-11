@@ -2,8 +2,7 @@
 {% load users_extras %}
 
 {% block content %}
-  <form method="post" id="data_form">
-    {% csrf_token %}
+  <form method="get" id="data_form">
     {% for field in form %}
         {{ field.label_tag }}{{ field }}{{ field.errors }}
     {% endfor %}
