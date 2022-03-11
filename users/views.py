@@ -291,5 +291,13 @@ class PunchCardListView(LoginRequiredMixin, ListView):
         week_total = 0
         for q in qs:
             week_total += q.get_hours
-        context['week_total'] = round(week_total, 1)
+        week_total = round(week_total, 1)
+        salary = 0
+        if new_mechanic and week_total <= 40:
+            salary = new_mechanic.salary * week_total
+        elif new_mechanic and week_total > 40:
+            salary = new_mechanic.salary * 40 + \
+                new_mechanic.salary * 1.5 * (week_total - 40)
+        context['week_total'] = week_total
+        context['salary'] = salary
         return context

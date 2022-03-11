@@ -382,6 +382,12 @@ class Mechanic(models.Model):
         blank=True,
     )
     name = models.CharField(max_length=14, blank=True)
+    salary = models.DecimalField(
+        max_digits=2,
+        decimal_places=0,
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.name if self.name else self.profile.user.first_name

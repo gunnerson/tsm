@@ -40,6 +40,9 @@
     </table>
     <br/>
     <strong>Total this week: {{ week_total }} hours</strong>
+    {% if user.is_superuser %}
+      <strong>Salary: ${{ salary }}</strong>
+    {% endif %}
 {% endblock content %}
 
 <script>
