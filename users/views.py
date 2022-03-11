@@ -286,19 +286,20 @@ class PunchCardListView(LoginRequiredMixin, ListView):
             mechanic=new_mechanic,
             level=profile.level,
             week_of=week_of,
-        )
-        print('>>>>>>>>>>>>>>>>>>>>>>>>>...', new_mechanic)
+        )        
         qs = self.get_queryset()
         week_total = 0
         for q in qs:
             week_total += q.get_hours
         week_total = round(week_total, 1)
-        salary = 0
-        if new_mechanic and week_total <= 40:
-            salary = new_mechanic.salary * week_total
-        elif new_mechanic and week_total > 40:
-            salary = new_mechanic.salary * 40 + \
-                new_mechanic.salary * 1.5 * (week_total - 40)
         context['week_total'] = week_total
-        context['salary'] = salary
+        if new_mechanic:
+            selected_mechanic = Mechanic.objects.get(name=new_mechanic)
+            salary = 0
+            if week_total <= 40:
+                salary = selected_mechanic.salary * week_total
+            else:
+                salary = selected_mechanic.salary * 40 + \
+                    selected_mechanic.salary * 1.5 * (week_total - 40)        
+            context['salary'] = salary
         return context
