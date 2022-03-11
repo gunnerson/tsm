@@ -23,7 +23,11 @@
             {% endfor %}
           </td>
           <td>{{ object.in_stock }}</td>
-          <td>{% if user.is_superuser %}<a href="{% url 'admin:shop_shelf_change' object.id %}">{% endif %}{{ object.reorder_amount }}</a></td>      
+          {% if user.is_superuser %}
+            <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>      
+          {% else %}
+            <td>{{ object.reorder_amount }}</td>
+          {% endif %}
           <td>${{ object.cheapest|default_if_none:"0" }}</a></td>      
         </tr>
       {% endfor %}
