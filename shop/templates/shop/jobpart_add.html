@@ -1,0 +1,28 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+  <form method="post" id="data_form">
+    {% csrf_token %}
+    {% for object in object_list %}
+      <p>
+        <label for="{{ object.id }}">{{ object }}</label>
+        <input type="checkbox" name="{{ object.id }}" class="colBox form_field checkbox_input" {% if object.id in checked %}checked{% endif %}>
+      </p>
+    {% endfor %}
+  </form>
+{% endblock content %}
+
+{% comment %}
+<script>
+  {% block page_js %}
+
+      const checkboxes = document.getElementsByClassName("checkbox_input")
+      for (i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].addEventListener("click", function (){
+          document.getElementById('data_form').submit();
+        });
+       };
+
+  {% endblock page_js %}
+</script>
+{% endcomment %}

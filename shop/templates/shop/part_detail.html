@@ -1,0 +1,49 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+  <p><strong>{{ object.part_number }}: {{ object.name }}</strong></p><br>
+  <p><strong>In stock:</strong> {{ object.stock }} {{ object.stock_unit }}</p><br>
+  <p><strong>Purchased for:</strong></p>
+  {% for p in purchases %}
+    <p>${{ p.price }} from {{ p.purchase.vendor }} on <a href="{% url 'shop:purchase' p.purchase.id %}">{{ p.purchase.date }}</a></p>
+  {% endfor %}
+  <br>
+  <p><strong>Installed in:</strong></p>
+  {% for o in orders %}
+    <p>
+      {% if o.order.truck %}
+        <a href="{% url 'shop:order' o.order.id %}">{{ o.order.truck }} {{ o.order.truck.year }} {{ o.order.truck.get_make_display }}</a>
+      {% else %}
+        <a href="{% url 'shop:order' o.order.id %}">{{ o.order.trailer }} {{ o.order.trailer.year }} {{ o.order.trailer.get_make_display }}</a>
+      {% endif %}
+    </p>
+  {% endfor %}
+  {% if replaces or replaces2 %}
+    <br>
+    <p>
+      <strong>Replaces:</strong>
+      {% for r in replaces %}
+        <a href="{% url 'shop:part' r.id %}">{{ r.part_number }} (x{{ r.stock }}), </a>
+      {% endfor %}
+      {% for r in replaces2 %}
+        <a href="{% url 'shop:part' r.id %}"><i>{{ r.part_number }}</i> (x{{ r.stock }}), </a>
+      {% endfor %}
+      {% for r in replaces3 %}
+        <a href="{% url 'shop:part' r.id %}">{{ r.part_number }} (x{{ r.stock }}), </a>
+      {% endfor %}
+    </p>
+  {% endif %}
+  <br>
+  {% if user.profile.level == 'A' %}
+    <a href="{% url 'shop:assign_to_all' object.id 'truck' %}" onclick="return confirm('Assign to all trucks?');" ><strong>Assign to all trucks</strong></a>
+    -----
+    <a href="{% url 'shop:assign_to_all' object.id 'trailer' %}" onclick="return confirm('Assign to all trailers?');" ><strong>Assign to all trailers</strong></a>
+    -----
+  {% endif %}
+  <strong>
+    {% if user.is_superuser %}
+      <a href="{% url 'admin:shop_part_change' object.id %}">Admin</a>
+    {% endif %}
+  </strong>
+{% endblock content %}
+

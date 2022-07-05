@@ -1,0 +1,430 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+
+<div class="shelves-row">
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Oil and fuel filters</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in oil_filters %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          {% if user.is_superuser %}
+            <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>      
+          {% else %}
+            <td>{{ object.reorder_amount }}</td>
+          {% endif %}
+          <td>${{ object.cheapest|default_if_none:"" }}</a></td>      
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Brake shoes and drums</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in brakes %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Wheel bearings</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in bearings %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Wheel seals</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in seals %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Brake camshafts</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in camshafts %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>  
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Brake adjusters</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in slack_adjusters %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>  
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Brake chambers</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in chambers %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Driveshaft</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in driveshaft %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Belts</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in belts %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Kingpins</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in kingpins %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>  
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Air filters</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in air_filters %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Tires</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in tires %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>3-in-1</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in threeinone %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Lights</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in lights %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>ABS sensors</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in speed_sensors %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>    
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>Miscellaneous</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in misc %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.name }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>            
+          <td>${{ object.cheapest|default_if_none:"0" }}</a></td>            
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+{% endblock content %}
+

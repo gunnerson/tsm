@@ -1,0 +1,24 @@
+{% extends "users/base.html" %}
+{% load static %}
+
+{% block content %}
+  <form method='post' id="data_form">
+    {% csrf_token %}
+    <h3> Personal information: </h3>
+    <p>{{ form.first_name.label_tag }}{{ form.first_name }}{{ form.first_name.errors }}</p>
+    <p>{{ form.last_name.label_tag }}{{ form.last_name }}{{ form.last_name.errors }}</p>
+    <br>
+    <h3> Display settings: </h3>
+    <p>{{ form.font_size.label_tag }}{{ form.font_size }}{{ form.font_size.errors }}</p>
+    <br>
+    <div {% if user.profile.level != 'A' %}hidden{% endif %}>
+      <h3> Database settings: </h3>
+      <p>{{ form.labor_rate.label_tag }}{{ form.labor_rate }}{{ form.labor_rate.errors }}</p>
+      <p>{{ form.parts_surcharge.label_tag }}{{ form.parts_surcharge }}{{ form.parts_surcharge.errors }}</p>
+      <p>{{ form.tax.label_tag }}{{ form.tax }}{{ form.tax.errors }}</p>
+      <p>{{ form.shop_header.label_tag }}{{ form.shop_header }}{{ form.shop_header.errors }}</p>
+    </div>
+    {{ form.non_field_errors }}
+  </form>
+  <br>
+{% endblock content %}

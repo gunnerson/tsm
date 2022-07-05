@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block header %}
+  <li id="navItem1">
+    <a href="{% url 'invent:summary' %}">Safety</a>
+  </li>
+  <li id="navItem2">
+    <a href="{% url 'shop:orders' %}">Shop</a>
+  </li>
+{% endblock header %}
+
+{% block content %}
+
+  <h2>Welcome to Logistics Business Admin Dashboard</h2>
+    {% if user.is_authenticated == False %}
+      <br>
+      <p> To get access
+      <a href="{% url 'users:register' %}" ><strong>Register</strong></a> or
+      <a href="{% url 'users:login' %}"><strong>Log in</strong></a> to an existing account
+    {% endif %}
+
+{% endblock content %}

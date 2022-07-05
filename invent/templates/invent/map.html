@@ -1,0 +1,46 @@
+{% extends "invent/base.html" %}
+
+{% block content %}
+{{ vehicles|json_script:"vehicles_data" }}
+<script
+      src="https://maps.googleapis.com/maps/api/js?key={{ gmaps_api }}&callback=initMap&v=weekly"
+      defer
+    ></script>
+<script>
+  function initMap() {
+    const shop = {
+      lat: 42.0203018,
+      lng: -88.318316
+    };
+    const map = new google.maps.Map(
+      document.getElementById("map"), {
+        zoom: 10,
+        center: shop,
+    });    
+    const vehicles = JSON.parse(document.getElementById('vehicles_data').textContent);
+    for(i = 0; i < vehicles.length; i++){
+      const pos = new google.maps.LatLng(vehicles[i]['lat'],vehicles[i]['lon']);
+      const marker = new google.maps.Marker({
+        position: pos,
+        map: map,
+        label: vehicles[i]['number'],
+      });     
+      const id = vehicles[i]['truck']
+      const url = "{% url 'invent:truck' 1234 %}".replace(/1234/, id.toString());
+      marker.addListener("click", () => {
+        window.location = url
+      });  
+    };
+    const marker = new google.maps.Marker({
+        position: shop,
+        map: map,
+        label: 'Shop',
+      });      
+  };
+
+  window.initMap = initMap;
+</script>
+  
+<div id="map" style="height: 500px; width: 1280px;"></div>
+{% endblock content %}
+

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content_bar %}
+  <form method="GET" id="filter-form">
+    {% if search_bar %}
+      <button type="submit" class="search-button filter-button" id="search-button">
+        <img src="{% static 'img/search.png' %}">
+      </button>
+      <input class="search-input" type="search" placeholder="Search" name="query" id="search-input" value="{{ query|default:'' }}" pattern="/^[^!&:|]+$/" title="Symbols ! & | : are not allowed">
+    {% endif %}
+    {% if filter_bar %}
+      {% block filter_bar %}{% endblock filter_bar %}
+    {% endif %}
+  </form>
+{% endblock content_bar %}
+
+<script>
+  {% block main_js %}
+
+    var section = window.location.toString().replace(/^https?:\/\//, '').split('/')[3];
+    if (section == "images") {
+      document.title = "LPT - Gallery";
+    } else if (section == "documents") {
+      document.title = "LPT - Documents";
+    };
+
+    {% if filter_bar or search_bar %}
+      function submitForm() {
+        try {
+          let query = document.getElementById('search-input').value;
+          let pattern = /^[^!&|:]+$/
+          if(pattern.test(query)) {
+            document.getElementById('filter-form').submit();
+          };
+        } catch (ex) {
+          document.getElementById('filter-form').submit();
+        };
+      };
+      const filters = document.getElementsByClassName("filter-button")
+      for (i = 0; i < filters.length; i++) {
+        filters[i].addEventListener("click", submitForm)
+       };
+    {% endif %}
+
+    {% block page_js %}{% endblock page_js %}
+
+  {% endblock main_js %}
+</script>
+

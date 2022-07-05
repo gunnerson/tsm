@@ -1,0 +1,27 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+<form method='post' id="data_form">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <p>Parts total: ${{ parts_total }}</p>
+    {% if formset %}
+      {{ formset.management_form }}
+      <table>
+        <tbody>
+          {% for form in formset %}
+            <tr>
+              <td> {{ form.part }}{{ form.part.errors }} </td>
+              <td> x {{ form.amount }}{{ form.amount.errors }}</td>
+              <td> x {{ form.price }}{{ form.price.errors }}</td>
+            </tr>
+            {{ form.id }}
+            {{ form.non_field_errors }}
+          {% endfor %}
+        </tbody>
+      </table>
+      {{ formset.non_form_errors }}
+    {% endif %}
+  </form>
+{% endblock content %}
+

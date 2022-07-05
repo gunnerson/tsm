@@ -1,0 +1,77 @@
+{% extends "invent/base.html" %}
+
+{% block content %}
+  <p> <strong>Fleet number:</strong> {{ object.owner }} # {{ object.fleet_number }} </p>
+  <p> <strong>VIN:</strong> {{ object.vin }} </p>
+  <p> <strong>Make:</strong> {{ object.year }} {{ object.get_make_display }}</p>
+  {% if object.odometer %}
+    <p> <strong>Odometer:</strong> {{ object.odometer }}</p>
+  {% endif %}
+  {% if object.last_pm_mls %}
+    <p> <strong>Last PM:</strong> {{ object.last_pm_mls }} on {{ object.last_pm_date|default_if_none:"..." }}</p>
+    {% if object.odometer %}
+      <p> <strong>Miles since last PM:</strong> {{ object.get_mls_to_pm }}</p>
+    {% endif %}
+  {% endif %}
+  {% if dist_from_shop %}
+    <p><strong>Miles from the shop: </strong>{{ dist_from_shop }} ({% if gmaps_url %}<a href="{{ gmaps_url }}" target="_blank">{{ desc }} going {{ bearing }}</a>{% else %}{{ desc }} going {{ bearing }}{% endif %})</p>    
+  {% endif %}
+  {% if driver %}
+    <p><strong>Driver: </strong>{{ driver }}</p>    
+  {% endif %}
+  <br>
+  {% if order_list %}
+    <p>
+      <strong>Orders:</strong>
+      {% for order in order_list %}
+        <a href="{% url 'shop:order' order.id %}">{{ order.opened }}, </a>
+      {% endfor %}
+    </p>
+  {% endif %}
+  {% if faults %}
+    <br>
+    <p><strong>Active fault codes:</strong></p>
+    <table class="listview-table {{ font_class }}">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Description</th>
+          <th>Source</th>
+          <th>First observed</th>
+          <th>Last observed</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for object in faults %}
+          <tr>
+            <td style="text-align:start;">{{ object.code_label }} FMI {{ object.fmi }}</td>
+            <td style="text-align:start;">{{ object.code_description }}</td>
+            <td style="text-align:start;">{{ object.source }}</td>
+            <td>{{ object.first_observed_at }}</td>
+            <td>{{ object.last_observed_at }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}  
+  {% if assigned_parts_list %}
+    <br>
+    <p>
+      <strong>Assigned parts:</strong>
+      {% for ap in assigned_parts_list %}
+        <p>{{ ap.part_type }}: <a href="{% url 'shop:part' ap.part.id %}">{{ ap.part.part_number }}</a></p>
+      {% endfor %}
+    </p>
+  {% endif %}
+  {% if part_list %}
+    <br>
+    <p>
+      <strong>Parts:</strong>
+      {% for part in part_list %}
+        <a href="{% url 'shop:part' part.id %}">{{ part }}, </a>
+      {% endfor %}
+    </p>
+  {% endif %}
+  <br>
+{% endblock content %}
+

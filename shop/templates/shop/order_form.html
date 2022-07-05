@@ -1,0 +1,64 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block content %}
+<form method='post' id="data_form">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <br>
+    <p>
+      {% if clocked_in %}
+        <strong>Clocked in: </strong>
+        {% for object in clocked_in %}
+          <a href="{% url 'shop:order_stop' object.id %}" onclick="return confirm('Stop this order clock?');">{{ object.mechanic }},</a>
+        {% endfor %}
+        &nbsp;&nbsp;&nbsp;
+      {% endif %}
+      {% if total_clocked %}<strong>Clocked: </strong>{{ total_clocked }} h{% endif %}
+      {% if total_billed %}<strong>&nbsp;&nbsp;&nbsp;Billed: </strong>{{ total_billed }} h{% endif %}
+      {% if total_parts %}<strong>&nbsp;&nbsp;&nbsp;Parts: </strong>${{ total_parts }}{% endif %}
+      <span>&nbsp; &nbsp; &nbsp; </span>
+      {% if is_truck %}<a href="{% url 'invent:truck' image_id %}"><img width="32" height="32" src="{% static 'img/truck.png' %}"></a>{% endif %}
+      {% if is_trailer %}<a href="{% url 'invent:trailer' image_id %}"><img width="32" height="32" src="{% static 'img/trailer.png' %}"></a>{% endif %}
+    </p>
+    <br>
+    <br>
+    <hr>
+    <br>
+    {% if job_formset %}
+      {{ job_formset.management_form }}
+      <p> Jobs: </p>
+      <table>
+        <tbody>
+          {% for form in job_formset %}
+            <tr>
+              <td> {{ form.job }}{{ form.job.errors }} </td>
+              <td> x {{ form.amount }}{{ form.amount.errors }}</td>
+            </tr>
+            {{ form.id }}
+            {{ form.non_field_errors }}
+          {% endfor %}
+        </tbody>
+      </table>
+      {{ job_formset.non_form_errors }}
+    {% endif %}
+    {% if part_formset %}
+      {{ part_formset.management_form }}
+      <p> Parts: </p>
+      <table>
+        <tbody>
+          {% for form in part_formset %}
+            <tr>
+              <td> {{ form.part }}{{ form.part.errors }} </td>
+              <td> x {{ form.amount }}{{ form.amount.errors }}</td>
+            </tr>
+            {{ form.id }}
+            {{ form.non_field_errors }}
+          {% endfor %}
+        </tbody>
+      </table>
+      {{ part_formset.non_form_errors }}
+    {% endif %}
+  </form>
+{% endblock content %}
+

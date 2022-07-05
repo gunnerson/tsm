@@ -1,0 +1,10 @@
+*.log
+*.pot
+*.pyc
+*.bak
+LPT.lnk
+__pycache__
+db.sqlite3
+media
+ve
+/static/

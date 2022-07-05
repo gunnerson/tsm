@@ -1,0 +1,68 @@
+{% extends "invent/base.html" %}
+
+<script>
+  {% block page_js %}
+
+  {% endblock page_js %}
+</script>
+
+{% block content %}
+  <table class="listview-table {{ font_class }}">
+    <thead>
+      <tr>
+        <th>Fleet number</th>
+        <th>Company</th>
+        <th>VIN</th>
+        <th>Year</th>
+        <th>Make</th>
+        <th>Odometer</th>
+        <th>Last PM odometer</th>
+        <th>Last PM date</th>             
+        <th>Last inspection</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in trucks %}
+        <tr>
+          <td><a href="{% url 'invent:truck' object.id %}">{{ object.fleet_number|default_if_none:"" }}</a></td>
+          <td>{{ object.owner|default_if_none:"" }}</td>
+          <td>{{ object.vin|default_if_none:"" }}</td>
+          <td>{{ object.year|default_if_none:"" }}</td>
+          <td>{{ object.get_make_display|default_if_none:"" }}</td>
+          <td>{{ object.odometer|default_if_none:"" }}</td>
+          <td {% if object.pm_due == 'due' %} style="background:pink" {% elif object.pm_due == 'soon'%} style="background:yellow" {% endif %}>{{ object.last_pm_mls|default_if_none:"" }}</td>   
+          <td>{{ object.last_pm_date|default_if_none:"" }}</td> 
+          <td {% if object.dot_due == 'due' %} style="background:pink" {% elif object.dot_due == 'soon'%} style="background:yellow" {% endif %}>{{ object.last_dot_date|default_if_none:"" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <br>
+  
+  <table class="listview-table {{ font_class }}">
+    <thead>
+      <tr>
+        <th>Fleet number</th>
+        <th>Company</th>
+        <th>VIN</th>
+        <th>Year</th>
+        <th>Make</th>
+        <th>Last inspection</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in trailers %}
+        <tr>
+          <td><a href="{% url 'invent:trailer' object.id %}">{{ object.fleet_number|default_if_none:"" }}</a></td>
+          <td>{{ object.owner|default_if_none:"" }}</td>
+          <td>{{ object.vin|default_if_none:"" }}</td>
+          <td>{{ object.year|default_if_none:"" }}</td>
+          <td>{{ object.get_make_display|default_if_none:"" }}</td>
+          <td {% if object.dot_due == 'due' %} style="background:pink" {% elif object.dot_due == 'soon'%} style="background:yellow" {% endif %}>{{ object.last_dot_date|default_if_none:"" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}
+

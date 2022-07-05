@@ -1,0 +1,112 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Logistics Pro Tools</title>
+    <link rel="shortcut icon" type="image/jpg" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+
+  </head>
+
+  <body>
+
+    <div id="wrapper">
+
+      <div id="toolbar">
+        <div id="toolbar_left">
+          <a href="" onClick="window.history.back();return false;" title="Back"><img src="{% static 'img/back.png' %}"></a>
+          <a href="" onClick="window.history.forward();return false;" title="Forward"><img src="{% static 'img/forward.png' %}"style="margin-right:30px"></a>
+          {% comment %}<a href="" onClick="location.reload();return false;" title="Reload"><img src="{% static 'img/reload.png' %}" ></a>{% endcomment %}
+          {% if btn_save %}
+            <button type="submit" form="data_form" title="Save"><img src="{% static 'img/save.png' %}"></button>
+          {% endif %}
+          {% if btn_del %}
+            <button type="submit" form="data_form" title="Delete" onclick="return confirm('Confirm deleting the objects');"><img src="{% static 'img/delete.png' %}"></button>
+          {% endif %}
+          {% if btn_new %}
+            <a href="{% url create_url %}" title="New"><img src="{% static 'img/new.png' %}"></a>
+          {% endif %}
+          {% if btn_print %}
+            <a href="{% url print_url inst_id %}" title="For print"><img src="{% static 'img/print.png' %}"></a>
+          {% endif %}
+          {% if btn_budget %}
+            <a href="{% url budget_url inst_id %}" title="To budget"><img src="{% static 'img/money.png' %}"></a>
+          {% endif %}
+          {% if btn_image %}
+            <a href="{% url image_url image_id %}" title="Upload image"><img src="{% static 'img/photo.png' %}"></a>
+          {% endif %}
+          {% if btn_doc %}
+            <a href="{% url doc_url inst_id %}" title="Upload document"><img src="{% static 'img/doc_import.png' %}"></a>
+          {% endif %}
+          {% if btn_gallery %}
+            <a href="{% url gallery_url inst_id %}" title="Show images"><img src="{% static 'img/image.png' %}"></a>
+          {% endif %}
+          {% if btn_files %}
+            <a href="{% url files_url inst_id %}" title="Show documents"><img src="{% static 'img/folder.png' %}"></a>
+          {% endif %}
+          {% if btn_assign_truck %}
+            <a href="{% url 'shop:assign_part' object.id 'truck' %}"><img src="{% static 'img/arrow.png' %}"></a>
+          {% endif %}
+          {% if btn_assign_trailer %}
+            <a href="{% url 'shop:assign_part' object.id 'trailer' %}"><img src="{% static 'img/arrow.png' %}"></a>
+          {% endif %}
+          {% if btn_key %}
+            <a href="{% url key_url key_id %}" title="Back to item"><img src="{% static 'img/bookmark.png' %}"></a>
+          {% endif %}
+          <a href="{% url 'invent:summary' %}" title="Records"><img src="{% static 'img/vault.png' %}" id="nav_safety" style="margin-left:30px"></a>
+          <a href="{% url 'shop:orders' %}" title="Shop"><img src="{% static 'img/home.png' %}" id="nav_shop" style="margin-right:30px"></a>
+          {% block nav_toolbar %}{% endblock nav_toolbar %}
+        </div>
+        <div id="toolbar_right">
+          <ul>
+            {% if user.is_authenticated %}
+              <li>Hello, <a href="{% url 'users:profile' user.profile.id %}">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user }}{% endif %}. &nbsp</a></li>
+              <li><a href="{% url 'users:logout' %}">Log out</a></li>
+            {% else %}
+              <li><a href="{% url 'users:login' %}">Log in</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+
+      <div id="main-content">
+        <div id="content_bar">
+          {% block content_bar %}{% endblock content_bar %}
+        </div>
+        <div id="content">
+          {% block content %}{% endblock content %}
+        </div>
+      </div>
+
+    </div>
+
+    <script>
+
+      function docReady(fn) {
+          if (document.readyState === "complete" || document.readyState === "interactive") {
+              setTimeout(fn, 1);
+          } else {
+              document.addEventListener("DOMContentLoaded", fn);
+          };
+      };
+
+      docReady(function() {
+
+        {% block main_js %}{% endblock main_js %}
+
+      });
+
+    </script>
+
+    <br>
+
+  </body>
+
+</html>
+

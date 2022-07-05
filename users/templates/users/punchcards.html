@@ -1,0 +1,81 @@
+{% extends "users/base.html" %}
+{% load users_extras %}
+
+{% block content %}
+  <form method="get" id="data_form">
+    {% for field in form %}
+        {{ field.label_tag }}{{ field }}{{ field.errors }}        
+    {% endfor %}
+    {% if user.profile.level == 'A' %}
+      <label for="pay_salary">Pay salary</label>
+      <input type="checkbox" name="pay_salary" id="pay_salary" class="filter_form">
+      <input type="hidden" name="salary_amount" value="{{ salary }}">
+    {% endif %}
+  </form>
+  <br/>
+  <table class="listview-table">
+      <thead>
+        <tr>
+          <th>Punch in</th>
+          <th></th>
+          <th>Lunch in</th>
+          <th></th>
+          <th>Lunch out</th>
+          <th></th>
+          <th>Punch out</th>
+          <th></th>
+          <th>Total</th>
+          {% if user.is_superuser %}
+            <th>OT</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for object in object_list %}
+          <tr>
+            <td>
+              {% if user.is_superuser %}
+                <a href="{% url 'admin:users_punchcard_change' object.id %}">{{ object.punch_in|date:"D G:i"|default_if_none:"" }}</a>
+              {% else %}
+                {{ object.punch_in|date:"D G:i"|default_if_none:"" }}
+              {% endif %}
+            </td>
+            <td>{{ object.punch_in_distance|default_if_zero:"" }}</td>
+            <td>{{ object.lunch_in|date:"G:i"|default_if_none:"" }}</td>
+            <td>{{ object.lunch_in_distance|default_if_zero:"" }}</td>
+            <td>{{ object.lunch_out|date:"G:i"|default_if_none:"" }}</td>
+            <td>{{ object.lunch_out_distance|default_if_zero:"" }}</td>
+            <td>{{ object.punch_out|date:"G:i"|default_if_none:"" }}</td>
+            <td>{{ object.punch_out_distance|default_if_zero:"" }}</td>
+            <td>{{ object.get_hours|default_if_zero:"" }}</td>
+            {% if user.is_superuser %}
+              <td>
+                <input type="checkbox" name="ot" class="filter_form" {% if object.ot %}checked{% endif %}>
+              </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br/>
+    <strong>Total this week: {{ week_total }} hours</strong>
+    {% if salary %}
+      <br>
+      <strong>Salary: ${{ salary|floatformat:2 }}</strong>
+    {% endif %}
+    {% if vacation_days %}
+      <br>
+      <strong>Vacation days: {{ vacation_days }}</strong>
+    {% endif %}
+{% endblock content %}
+
+<script>
+  {% block page_js %}
+      const filters = document.getElementsByClassName("filter_form")
+      for (i = 0; i < filters.length; i++) {
+        filters[i].addEventListener("change", function() {
+          document.getElementById('data_form').submit();
+        });
+       };
+  {% endblock page_js %}
+</script>

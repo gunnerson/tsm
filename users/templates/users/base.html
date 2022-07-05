@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block nav_toolbar %}
+  {% if user.is_authenticated %}
+      <a href="{% url 'users:profile' user.profile.id %}" title="Settings"><img src="{% static 'img/settings.png' %}" id="nav_settings" ></a>
+      <a href="{% url 'users:punch' %}" title="Punch clock"><img src="{% static 'img/timer.png' %}" id="nav_punch" ></a>
+      <a href="{% url 'users:hours' %}" title="Work hours"><img src="{% static 'img/calendar.png' %}" id="nav_hours" ></a>
+
+  {% endif %}
+  {% if user.profile.level == 'A' %}
+      <a href="{% url 'users:update_level' %}" title="Manage users"><img src="{% static 'img/key.png' %}" id="nav_access" ></a>
+  {% endif %}
+  {% if user.is_superuser %}
+    <a href="{% url 'users:generate_su_profile' %}" onclick="return confirm('This will reset your column settings');" title="Generate profile"><img src="{% static 'img/app.png' %}"></a>
+    <a href="{% url 'admin:index' %}" title="Admin page"><img src="{% static 'img/db.png' %}" id="nav_admin" ></a>
+  {% endif %}
+{% endblock nav_toolbar %}
+
+
+<script>
+  {% block main_js %}
+
+    var section = window.location.toString().replace(/^https?:\/\//, '').split('/')[1];
+    if (section == "settings") {
+      document.getElementById("nav_settings").classList.add('active');
+      document.title = 'LPT - User settings'
+    } else if (section == "columns") {
+      document.getElementById("nav_listcolshow").classList.add('active');
+      document.title = 'LPT - Summary settings'
+    } else if (section == "access") {
+      document.getElementById("nav_access").classList.add('active');
+      document.title = 'LPT - Manage users'
+    } else if (section == "hours") {
+      document.getElementById("nav_hours").classList.add('active');
+      document.title = 'LPT - Work hours'
+    };
+
+    {% block page_js %}{% endblock page_js %}
+
+  {% endblock main_js %}
+</script>
+
