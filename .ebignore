@@ -1,0 +1,13 @@
+*.log
+*.pot
+*.pyc
+*.bak
+__pycache__
+db.sqlite3
+ve/
+staticfiles/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
