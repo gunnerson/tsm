@@ -6,7 +6,6 @@ __pycache__
 db.sqlite3
 media
 ve
-/static/
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
