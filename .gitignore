@@ -4,9 +4,9 @@
 *.bak
 __pycache__
 db.sqlite3
-media
-ve
-static
+media/
+ve/
+static/
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
