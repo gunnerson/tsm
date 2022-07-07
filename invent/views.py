@@ -9,7 +9,7 @@ from .models import Truck, Trailer, Company
 from .forms import TruckForm, TrailerForm, CompanyForm
 from .mixins import FormSetView, InfoView
 from .utils import get_font_classes, model_to_dict
-from .gomotive import get_vehicles_locations, get_fault_codes, get_bulk_vehicles_locations
+from .gomotive import get_vehicles_locations, get_fault_codes, get_bulk_vehicles_locations, get_update_odometers
 from users.mixins import ReadCheckMixin
 from users.utils import read_check
 from shop.models import OrderJob
@@ -17,6 +17,7 @@ from shop.models import OrderJob
 
 @user_passes_test(read_check, login_url='index')
 def summary(request):
+    get_update_odometers()
     pms = OrderJob.objects.filter(job_id=22)
     for pm in pms:
         truck = pm.order.truck

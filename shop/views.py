@@ -15,6 +15,7 @@ from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
     link_with_part
 from .mixins import ObjectView, FormSetView
 from users.mixins import ReadCheckMixin, WriteCheckMixin
+from invent.gomotive import get_vehicles_locations
 
 
 class OrderListView(ReadCheckMixin, ListView):
@@ -47,9 +48,10 @@ class OrderView(ReadCheckMixin, ObjectView):
         self.object = form.save()
         try:
             if self.object.mileage is None:
-                self.object.mileage = self.object.truck.odometer
+                data = get_vehicles_locations(self.object.truck.kt_id)
+                self.object.mileage = data['odometer']
                 self.object.save(update_fields=['mileage'])
-        except (AttributeError, ValueError):
+        except (AttributeError, ValueError, KeyError):
             pass
         if not self.is_create:
             job_formset = get_job_forms(self.object, self.request.POST)

@@ -115,7 +115,33 @@ def get_bulk_vehicles_locations():
     return context
 
 
-@csrf_exempt
+def get_update_odometers():
+    ours = Company.objects.filter(id__in=[1, 2])
+    trucks = Truck.objects.filter(owner__in=ours)
+    ids = ''
+    for t in trucks:
+        if t.kt_id:
+            ids += 'vehicle_ids[]={0}&'.format(t.kt_id)
+    url = "https://api.keeptruckin.com/v1/vehicle_locations?{0}&per_page=50&page_no=1".format(
+        ids)
+    headers = {
+        "Accept": "application/json",
+        "X-Api-Key": settings.GOMOTIVE_API_KEY,
+    }
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    for i in range(0, data["pagination"]["total"], 1):
+        try:
+            truck = trucks.get(kt_id=data["vehicles"][i]["vehicle"]["id"])
+            truck.odometer = int(data["vehicles"][i]["vehicle"]
+                                 ["current_location"]["odometer"])
+            truck.save(update_fields=['odometer'])
+        except KeyError:
+            pass
+    return True
+
+
+@ csrf_exempt
 def gomotive_webhook(request):
     payload = request.body
     digester = hmac.new(str.encode(
