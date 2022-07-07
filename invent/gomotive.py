@@ -79,7 +79,7 @@ def get_fault_codes(id):
             fault_code['last_observed_at'] = data['fault_codes'][i]['fault_code']['last_observed_at'].replace(
                 'T', ' ').replace('Z', '')
             context.append(fault_code)
-        except (KeyError):
+        except (KeyError, IndexError):
             pass
     return context
 
