@@ -136,7 +136,7 @@ def get_update_odometers():
             truck.odometer = int(data["vehicles"][i]["vehicle"]
                                  ["current_location"]["odometer"])
             truck.save(update_fields=['odometer'])
-        except KeyError:
+        except (KeyError, TypeError):
             pass
     return True
 
