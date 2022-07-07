@@ -48,7 +48,7 @@ class OrderView(ReadCheckMixin, ObjectView):
         try:
             if self.object.mileage is None:
                 self.object.mileage = self.object.truck.odometer
-                self.object.save(update_fields='mileage')
+                self.object.save(update_fields=['mileage'])
         except (AttributeError, ValueError):
             pass
         if not self.is_create:
