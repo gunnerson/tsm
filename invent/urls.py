@@ -39,5 +39,5 @@ urlpatterns = [
     path('company/<int:pk>/', CompanyDetailView.as_view(
         template_name="invent/detail.html"),
         name='company'),
-    path('webhook/gomotive/', gomotive_webhook, name='gomotive_webhook'),
+    # path('webhook/gomotive/', gomotive_webhook, name='gomotive_webhook'),
 ]
