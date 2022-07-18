@@ -97,10 +97,10 @@ else:
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'tsm',
-            'USER': os.environ.get('POSTGRES_DB_USER'),
-            'PASSWORD': os.environ.get('POSTGRES_DB_PASSWORD'),
-            'HOST': os.environ.get('POSTGRES_DB_HOST'),
-            'PORT': '5432',
+            'USER': os.environ.get('TSM_DB_USER'),
+            'PASSWORD': os.environ.get('TSM_DB_PASSWORD'),
+            'HOST': 'localhost',
+            'PORT': '',
         },
     }
 
