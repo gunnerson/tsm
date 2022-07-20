@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from datetime import datetime
 
@@ -31,6 +32,15 @@ class UserCreationForm(FormMixin):
         if commit:
             user.save()
         return user
+
+    def _post_clean(self):
+        super()._post_clean()
+        password = self.cleaned_data.get("password1")
+        if password:
+            try:
+                password_validation.validate_password(password, self.instance)
+            except ValidationError as error:
+                self.add_error("password1", error)
 
 
 class UserLoginForm(AuthenticationForm):

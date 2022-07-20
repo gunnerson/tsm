@@ -10,6 +10,11 @@ from math import sqrt
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.core.mail import EmailMessage
 
 from .models import ListColShow, Profile, PunchCard
 from shop.models import Order, OrderTime, Mechanic, Balance
@@ -17,6 +22,7 @@ from .forms import UserCreationForm, ProfileForm, UserLevelForm, PunchCardForm
 from shop.forms import OrderTimeForm
 from .utils import generate_profile
 from .mixins import FormSetView, AdminCheckMixin, UserCheckMixin
+from .tokens import account_activation_token
 
 
 def register(request):
@@ -25,15 +31,25 @@ def register(request):
     else:
         form = UserCreationForm(data=request.POST)
         if form.is_valid():
-            new_user = form.save()
+            new_user = form.save(commit=False)
+            new_user.is_active = False
+            new_user.save()
             new_profile = Profile(user=new_user)
             new_profile.save()
             generate_profile(new_profile)
-            authenticated_user = authenticate(
-                email=new_user.email,
-                password=request.POST['password1'],
+            current_site = get_current_site(request)
+            mail_subject = 'Activate your Logistics Pro-Tools account.'
+            message = render_to_string('users/activate.html', {
+                'user': new_user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(new_user.pk)),
+                'token': account_activation_token.make_token(new_user),
+            })
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(
+                mail_subject, message, to=[to_email]
             )
-            login(request, authenticated_user)
+            email.send()
             return redirect('users:profile', new_profile.id)
     context = {'form': form}
     return render(request, 'users/register.html', context)
@@ -204,7 +220,7 @@ def punch(request):
             now = timezone.now()
             if selected == 'punch_in' or (status == 'punched_out'
                                           and submit == 'start'):
-                punch_in_standart = now.replace(hour=12, minute=30, second=0)
+                punch_in_standart = now.replace(hour=12, minute=00, second=0)
                 if now < punch_in_standart and mechanic.id != 1:
                     punch_in_time = punch_in_standart
                 else:
