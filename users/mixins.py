@@ -168,8 +168,10 @@ class FormSetView():
     def post(self, request, *args, **kwargs):
         formset = self.get_modelformset(request.POST)
         if formset.is_valid():
+            print('>>>>>>>>>>>>>>>>>>1111111')
             formset.save()
             return redirect(self.redirect_url)
         else:
+            print('>>>>>>>>>>>>>>>>>>2222222')
             return self.render_to_response(
                 self.get_context_data(formset=formset))
