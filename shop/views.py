@@ -8,7 +8,7 @@ from django.core.exceptions import FieldError
 
 from .models import Order, Part, Job, OrderPart, Purchase, \
     PurchaseItem, Balance, PartPlace, PartType, Shelf, OrderTime
-from invent.models import Truck, Trailer
+from invent.models import Truck, Trailer, Company
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
     PartPlaceForm, PartTypeForm
 from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
@@ -167,8 +167,11 @@ class OrderPrintView(ReadCheckMixin, DetailView):
         user = self.request.user
         order = self.get_object()
         parts_total = order.parts_total(user)
+        tax_rate = float(AccountVar.objects.get(name="SALES_TAX").value)
+        header_id = int(AccountVar.objects.get(name="INVOICE_HEADER").value)
+        context['shop_header'] = Company.objects.get(id=header_id)
         context['parts_total'] = parts_total
-        context['tax'] = parts_total * user.profile.tax
+        context['tax'] = parts_total * tax_rate
         context['labor_total'] = order.labor_total * user.profile.labor_rate
         context['total'] = parts_total + \
             context['tax'] + context['labor_total']
@@ -565,7 +568,8 @@ class BalanceFormSetView(ReadCheckMixin, FormSetView):
         qs2 = Order.objects.all()
         for q in qs2:
             try:
-                labor_rate = self.request.user.profile.labor_rate
+                labor_rate = int(AccountVar.objects.get(name="LABOR_RATE").value)
+                # labor_rate = self.request.user.profile.labor_rate
                 if q.closed.month == this_month:
                     this_month_labor += q.labor_total * labor_rate
                     total_labor += q.labor_total * labor_rate
@@ -596,8 +600,10 @@ def budget_invoice(request, pk):
     order = Order.objects.get(id=pk)
     user = request.user
     parts_total = order.parts_total(user)
-    tax = parts_total * user.profile.tax
-    labor_total = order.labor_total * user.profile.labor_rate
+    tax_rate = float(AccountVar.objects.get(name="SALES_TAX").value)
+    tax = parts_total * tax_rate
+    labor_rate = int(AccountVar.objects.get(name="LABOR_RATE").value)
+    labor_total = order.labor_total * labor_rate
     total = parts_total + tax + labor_total
     check_existing = Balance.objects.filter(
         date=order.closed,

@@ -21,11 +21,11 @@
 
     <div class="row">
       <div class="col">
-        <p>{{ user.profile.shop_header }}</p>
-        <p>{{ user.profile.shop_header.address_line_1 }}</p>
-        <p>{{ user.profile.shop_header.address_line_2 }}</p>
-        <p>{{ user.profile.shop_header.city }}, {{ user.profile.shop_header.state }} {{ user.profile.shop_header.zip_code }}</p>
-        <p>{{ user.profile.shop_header.phone_number }}</p>
+        <p>{{ shop_header }}</p>
+        <p>{{ shop_header.address_line_1 }}</p>
+        <p>{{ shop_header.address_line_2 }}</p>
+        <p>{{ shop_header.city }}, {{ shop_header.state }} {{ shop_header.zip_code }}</p>
+        <p>{{ shop_header.phone_number }}</p>
       </div>
       <div class="col">
         <p><strong>Invoice #</strong> {{ object.id }}</p>
