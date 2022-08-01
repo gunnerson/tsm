@@ -10,7 +10,7 @@
   {% endif %}
   {% if user.profile.level == 'A' %}
       <a href="{% url 'users:update_level' %}" title="Manage users"><img src="{% static 'img/key.png' %}" id="nav_access" ></a>
-      <a href="{% url 'users:update_account' %}" title="Manage account"><img src="{% static 'img/key.png' %}" id="nav_account" ></a>
+      <a href="{% url 'users:update_account' %}" title="Manage account"><img src="{% static 'img/parts.png' %}" id="nav_account" ></a>
 
   {% endif %}
   {% if user.is_superuser %}
