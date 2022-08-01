@@ -226,7 +226,7 @@ def punch(request):
             order = Order.objects.get(id=order_id) if order_id else open_order
             if user_lat and user_lon:
                 shop_lat = float(AccountVar.objects.get(name='SHOP_LAT').value)
-                shop_lon = float(AccountVar.objects.get(name='SHOP_LAT').value)
+                shop_lon = float(AccountVar.objects.get(name='SHOP_LON').value)
                 delta_lat = abs(shop_lat - float(user_lat)) * 111319.9
                 delta_lon = abs(shop_lon - float(user_lon)) * 111319.9
                 distance = round(
