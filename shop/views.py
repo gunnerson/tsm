@@ -405,10 +405,11 @@ class PurchaseView(ReadCheckMixin, ObjectView):
                 try:
                     truck = self.object.truck
                 except AttributeError:
+                    truck = None
                     try:
                         trailer = self.object.trailer
                     except AttributeError:
-                        pass
+                        trailer = None
                 for f in formset:
                     inst = f.save(commit=False)
                     inst.purchase = self.object
@@ -437,19 +438,16 @@ class PurchaseView(ReadCheckMixin, ObjectView):
                                 pass
                         else:
                             inst.save()
-                    try:
+                    if truck:
                         truck_place, created = PartPlace.objects.get_or_create(
                             part=inst.part,
                             truck=truck,
                         )
-                    except AttributeError:
-                        try:
-                            trailer_place, created = PartPlace.objects.get_or_create(
-                                part=inst.part,
-                                trailer=trailer,
-                            )
-                        except AttributeError:
-                            pass
+                    elif trailer:
+                        trailer_place, created = PartPlace.objects.get_or_create(
+                            part=inst.part,
+                            trailer=trailer,
+                        )
             else:
                 return self.render_to_response(
                     self.get_context_data(form=form, formset=formset))
