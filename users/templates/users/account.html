@@ -13,8 +13,8 @@
       </thead>
       <tbody>
         {% for form in formset %}
-          <tr>
-            <td>{{ form.name.value }}</td>
+          <tr>            
+            <td>{{ form.name }}</td>
             <td>{{ form.value }}</td>
           </tr>
           {{ form.non_field_errors }}
