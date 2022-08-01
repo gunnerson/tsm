@@ -207,12 +207,23 @@ LOGGING = {
     }
 }
 
+# SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.environ.get('GMAIL_SMTP_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_SMTP_PASSWORD')
+DEFAULT_FROM_EMAIL = 'donotreply@rumatallc.com'
+
+
+#KeepTrucking
+GOMOTIVE_API_KEY = os.environ.get('GOMOTIVE_API_KEY')
+GOMOTIVE_ENDPOINT_SECRET = os.environ.get('GOMOTIVE_ENDPOINT_SECRET')
 
 # Custom settings
 AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'invent:summary'
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
-GOMOTIVE_API_KEY = os.environ.get('GOMOTIVE_API_KEY')
-GOMOTIVE_ENDPOINT_SECRET = os.environ.get('GOMOTIVE_ENDPOINT_SECRET')
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
