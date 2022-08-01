@@ -15,6 +15,7 @@ from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
     link_with_part
 from .mixins import ObjectView, FormSetView
 from users.mixins import ReadCheckMixin, WriteCheckMixin
+from users.models import AccountVar
 from invent.gomotive import get_vehicles_locations
 
 
@@ -410,6 +411,8 @@ class PurchaseView(ReadCheckMixin, ObjectView):
                         trailer = self.object.trailer
                     except AttributeError:
                         trailer = None
+                parts_surcharge = (int(AccountVar.objects.get(
+                    name='PARTS_SURCHARGE').value) / 100) + 1
                 for f in formset:
                     inst = f.save(commit=False)
                     inst.purchase = self.object
@@ -419,8 +422,8 @@ class PurchaseView(ReadCheckMixin, ObjectView):
                         inst.part.save(update_fields=['stock'])
                         if not inst.part.price:
                             inst.part.price = 0
-                        if (float(inst.price) * 1.15) > inst.part.price:
-                            inst.part.price = float(inst.price) * 1.15
+                        if (float(inst.price) * parts_surcharge) > inst.part.price:
+                            inst.part.price = float(inst.price) * parts_surcharge
                             inst.part.save(update_fields=['price'])
                     elif inst.id and inst.part_id:
                         before_inst = PurchaseItem.objects.get(id=inst.id)
@@ -428,8 +431,8 @@ class PurchaseView(ReadCheckMixin, ObjectView):
                         inst.part.save(update_fields=['stock'])
                         if not inst.part.price:
                             inst.part.price = 0
-                        if (float(inst.price) * 1.15) > inst.part.price:
-                            inst.part.price = float(inst.price) * 1.15
+                        if (float(inst.price) * parts_surcharge) > inst.part.price:
+                            inst.part.price = float(inst.price) * parts_surcharge
                             inst.part.save(update_fields=['price'])
                         if inst.amount == 0:
                             try:
