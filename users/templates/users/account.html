@@ -1,11 +1,27 @@
 {% extends "users/base.html" %}
-
 {% block content %}
   <form method='post' id="data_form">
     {% csrf_token %}
+    {{ formset.management_form }}
     <table class="formset-table {{ font_class }}">
-      {{ formset }}
+      <thead>
+        <tr>
+          {% for field in fields %}
+            <th> {{ field }} </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for form in formset %}
+          <tr>
+            <td>{{ form.name }}</td>
+            <td>{{ form.value }}</td>
+          </tr>
+          {{ form.non_field_errors }}
+        {% endfor %}
+      </tbody>
     </table>
+    {{ formset.non_form_errors }}
   </form>
 {% endblock content %}
 
