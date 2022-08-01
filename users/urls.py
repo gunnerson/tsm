@@ -32,7 +32,7 @@ urlpatterns = [
     path('password_reset_complete/', auth_views.PasswordResetCompleteView.as_view(
         template_name="users/password_reset_complete.html"),
         name="password_reset_complete"),
-    path('generate_profile/', views.generate_su_profile,
+    path('generate_profile/', generate_su_profile,
          name="generate_su_profile"),
     path('settings/<int:pk>/', views.ProfileUpdateView.as_view(
         template_name='users/preferences.html'),
