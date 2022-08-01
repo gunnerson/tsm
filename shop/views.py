@@ -437,16 +437,19 @@ class PurchaseView(ReadCheckMixin, ObjectView):
                                 pass
                         else:
                             inst.save()
-                    if truck:
+                    try:
                         truck_place, created = PartPlace.objects.get_or_create(
                             part=inst.part,
                             truck=truck,
                         )
-                    elif trailer:
-                        trailer_place, created = PartPlace.objects.get_or_create(
-                            part=inst.part,
-                            trailer=trailer,
-                        )
+                    except AttributeError:
+                        try:
+                            trailer_place, created = PartPlace.objects.get_or_create(
+                                part=inst.part,
+                                trailer=trailer,
+                            )
+                        except AttributeError:
+                            pass
             else:
                 return self.render_to_response(
                     self.get_context_data(form=form, formset=formset))
