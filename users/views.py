@@ -15,8 +15,9 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import EmailMessage
+from django.http import HttpResponse
 
-from .models import ListColShow, Profile, PunchCard
+from .models import User, ListColShow, Profile, PunchCard
 from shop.models import Order, OrderTime, Mechanic, Balance
 from .forms import UserCreationForm, ProfileForm, UserLevelForm, PunchCardForm
 from shop.forms import OrderTimeForm
@@ -53,6 +54,21 @@ def register(request):
             return redirect('users:profile', new_profile.id)
     context = {'form': form}
     return render(request, 'users/register.html', context)
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return render(request, 'users/registration_complete.html')
+    else:
+        return HttpResponse('Activation link is invalid!')
 
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
