@@ -167,7 +167,7 @@ class OrderPrintView(ReadCheckMixin, DetailView):
         user = self.request.user
         order = self.get_object()
         parts_total = order.parts_total(user)
-        tax_rate = float(AccountVar.objects.get(name="SALES_TAX").value)
+        tax_rate = float(AccountVar.objects.get(name="SALES_TAX").value) / 100
         header_id = int(AccountVar.objects.get(name="INVOICE_HEADER").value)
         labor_rate = int(AccountVar.objects.get(name="LABOR_RATE").value)
         context['shop_header'] = Company.objects.get(id=header_id)
@@ -600,7 +600,7 @@ def budget_invoice(request, pk):
     order = Order.objects.get(id=pk)
     user = request.user
     parts_total = order.parts_total(user)
-    tax_rate = float(AccountVar.objects.get(name="SALES_TAX").value)
+    tax_rate = float(AccountVar.objects.get(name="SALES_TAX").value) / 100
     tax = parts_total * tax_rate
     labor_rate = int(AccountVar.objects.get(name="LABOR_RATE").value)
     labor_total = order.labor_total * labor_rate
