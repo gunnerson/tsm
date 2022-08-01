@@ -169,10 +169,11 @@ class OrderPrintView(ReadCheckMixin, DetailView):
         parts_total = order.parts_total(user)
         tax_rate = float(AccountVar.objects.get(name="SALES_TAX").value)
         header_id = int(AccountVar.objects.get(name="INVOICE_HEADER").value)
+        labor_rate = int(AccountVar.objects.get(name="LABOR_RATE").value)
         context['shop_header'] = Company.objects.get(id=header_id)
         context['parts_total'] = parts_total
-        context['tax'] = parts_total * tax_rate
-        context['labor_total'] = order.labor_total * user.profile.labor_rate
+        context['tax'] = float(parts_total) * tax_rate
+        context['labor_total'] = order.labor_total * labor_rate
         context['total'] = parts_total + \
             context['tax'] + context['labor_total']
         return context
@@ -569,7 +570,6 @@ class BalanceFormSetView(ReadCheckMixin, FormSetView):
         for q in qs2:
             try:
                 labor_rate = int(AccountVar.objects.get(name="LABOR_RATE").value)
-                # labor_rate = self.request.user.profile.labor_rate
                 if q.closed.month == this_month:
                     this_month_labor += q.labor_total * labor_rate
                     total_labor += q.labor_total * labor_rate
