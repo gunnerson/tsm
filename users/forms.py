@@ -107,6 +107,6 @@ class AccountVarForm(FormMixin):
         model = AccountVar
         fields = ('name', 'value')
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['name'].disabled = True
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].disabled = True
