@@ -377,3 +377,10 @@ class AccountVarFormSetView(AdminCheckMixin, FormSetView):
     extra = 0
     template_name = 'users/account.html'
     page_title = "Update account settings"
+
+    def get_fields(self):
+        context = {
+            'field_names': ['name', 'value',],
+            'verbose_field_names': ['Parameter', 'Value', ],
+        }
+        return context
