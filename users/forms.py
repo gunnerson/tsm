@@ -105,7 +105,7 @@ class PunchCardForm(forms.Form):
 class AccountVarForm(FormMixin):
     class Meta:
         model = AccountVar
-        fields = '__all__'
+        fields = ('name', 'value')
 
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
