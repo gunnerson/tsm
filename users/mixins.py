@@ -66,6 +66,7 @@ class FormSetView():
     template_name = 'users/listview.html'
     redirect_url = '.'
     extra = 1
+    nav_link = ''
 
     @classmethod
     def as_view(cls):
