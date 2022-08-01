@@ -42,7 +42,7 @@ urlpatterns = [
         name="listcolshow"),
     path('access/', views.UsersLevelFormSetView.as_view(),
          name="update_level"),
-    path('account/', views.AccountvarFormSetView.as_view(),
+    path('account/', views.AccountVarFormSetView.as_view(),
          name="update_account"),
     path('punch/', views.punch, name="punch"),
     path('hours/', views.PunchCardListView.as_view(), name="hours"),
