@@ -19,7 +19,7 @@ from django.http import HttpResponse
 
 from .models import User, ListColShow, Profile, PunchCard, AccountVar
 from shop.models import Order, OrderTime, Mechanic, Balance
-from .forms import UserCreationForm, ProfileForm, UserLevelForm, PunchCardForm
+from .forms import UserCreationForm, ProfileForm, UserLevelForm, PunchCardForm, AccountVarForm
 from shop.forms import OrderTimeForm
 from .utils import generate_profile
 from .mixins import FormSetView, AdminCheckMixin, UserCheckMixin
@@ -162,8 +162,8 @@ class UsersLevelFormSetView(AdminCheckMixin, FormSetView):
 
     def get_fields(self):
         context = {
-            'field_names': ['user', 'level', 'home_latitude', 'home_longitude'],
-            'verbose_field_names': ['User', 'Access level', 'Latitude', 'Longitude'],
+            'field_names': ['user', 'level',],
+            'verbose_field_names': ['User', 'Access level', ],
         }
         return context
 
@@ -369,3 +369,10 @@ class PunchCardListView(UserCheckMixin, ListView):
             context['vacation_days'] = int(
                 days_employed.days / 183) * 5 - selected_mechanic.vacation_used
         return context
+
+
+class AccountVarFormSetView(AdminCheckMixin, FormSetView):
+    model = AccountVar
+    form_class = AccountVarForm
+    extra = 0
+    template_name = 'users/account.html'

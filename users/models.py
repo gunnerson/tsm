@@ -40,26 +40,26 @@ class Profile(models.Model):
         choices=size_choices(),
         default='M',
     )
-    labor_rate = models.PositiveSmallIntegerField(default=100)
-    parts_surcharge = models.DecimalField(
-        max_digits=3,
-        decimal_places=2,
-        default=1.1,
-    )
-    tax = models.DecimalField(
-        max_digits=3,
-        decimal_places=2,
-        default=0.1,
-    )
-    shop_header = models.ForeignKey(
-        Company,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        limit_choices_to={'group': 'OU'},
-    )
-    home_latitude = models.FloatField(default=42.0203018)
-    home_longitude = models.FloatField(default=-88.318316)
+    # labor_rate = models.PositiveSmallIntegerField(default=100)
+    # parts_surcharge = models.DecimalField(
+    #     max_digits=3,
+    #     decimal_places=2,
+    #     default=1.1,
+    # )
+    # tax = models.DecimalField(
+    #     max_digits=3,
+    #     decimal_places=2,
+    #     default=0.1,
+    # )
+    # shop_header = models.ForeignKey(
+    #     Company,
+    #     on_delete=models.SET_NULL,
+    #     null=True,
+    #     blank=True,
+    #     limit_choices_to={'group': 'OU'},
+    # )
+    # home_latitude = models.FloatField(default=42.0203018)
+    # home_longitude = models.FloatField(default=-88.318316)
 
     def __str__(self):
         return str(self.user)

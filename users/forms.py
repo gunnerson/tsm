@@ -5,7 +5,7 @@ from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from datetime import datetime
 
-from .models import User, Profile
+from .models import User, Profile, AccountVar
 from shop.models import Mechanic
 from .mixins import FormMixin
 
@@ -65,7 +65,7 @@ class ProfileForm(FormMixin):
 
     class Meta:
         model = Profile
-        exclude = ('user', 'level', 'home_latitude', 'home_longitude')
+        exclude = ('user', 'level', )
 
 
 class UserLevelForm(forms.ModelForm):
@@ -100,3 +100,9 @@ class PunchCardForm(forms.Form):
             self.fields['week_of'].initial = week_of
         if level != 'A':
             self.fields['mechanic'].disabled = True
+
+
+class AccountVarForm(FormMixin):
+    class Meta:
+        model = AccountVar
+        fields = '__all__'
