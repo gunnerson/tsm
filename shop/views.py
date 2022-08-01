@@ -174,7 +174,7 @@ class OrderPrintView(ReadCheckMixin, DetailView):
         context['parts_total'] = parts_total
         context['tax'] = float(parts_total) * tax_rate
         context['labor_total'] = order.labor_total * labor_rate
-        context['total'] = parts_total + \
+        context['total'] = float(parts_total) + \
             context['tax'] + context['labor_total']
         return context
 
