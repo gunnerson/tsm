@@ -604,7 +604,7 @@ def budget_invoice(request, pk):
     tax = float(parts_total) * tax_rate
     labor_rate = int(AccountVar.objects.get(name="LABOR_RATE").value)
     labor_total = order.labor_total * labor_rate
-    total = float(parts_total) + tax + labor_total
+    total = float(parts_total) + tax + float(labor_total)
     check_existing = Balance.objects.filter(
         date=order.closed,
         category='I',
