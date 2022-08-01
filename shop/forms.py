@@ -3,6 +3,7 @@ from django import forms
 from .models import Order, Job, Part, OrderJob, OrderPart, Purchase, \
     PurchaseItem, Balance, PartPlace, PartType, Mechanic
 from .mixins import OrderSelect
+from invent.models import Truck, Trailer
 from invent.mixins import FormMixin, FormSetMixin
 
 
@@ -122,6 +123,9 @@ class PartPlaceForm(FormSetMixin):
 
 
 class PurchaseForm(FormMixin):
+    truck = forms.ModelChoiceField(queryset=Truck.objects.all())
+    trailer = forms.ModelChoiceField(queryset=Trailer.objects.all())
+
     class Meta:
         model = Purchase
         fields = '__all__'
