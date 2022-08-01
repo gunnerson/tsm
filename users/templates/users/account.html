@@ -1,0 +1,11 @@
+{% extends "users/base.html" %}
+
+{% block content %}
+  <form method='post' id="data_form">
+    {% csrf_token %}
+    <table class="formset-table {{ font_class }}">
+      {{ formset }}
+    </table>
+  </form>
+{% endblock content %}
+
