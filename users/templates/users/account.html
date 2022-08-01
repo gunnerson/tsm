@@ -3,7 +3,7 @@
   <form method='post' id="data_form">
     {% csrf_token %}
     {{ formset.management_form }}
-    <table class="formset-table {{ font_class }}">
+    <table>
       <thead>
         <tr>
           {% for field in fields %}
@@ -14,7 +14,7 @@
       <tbody>
         {% for form in formset %}
           <tr>
-            <td>{{ form.name }}</td>
+            <td>{{ form.name.value }}</td>
             <td>{{ form.value }}</td>
           </tr>
           {{ form.non_field_errors }}
