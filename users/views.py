@@ -376,3 +376,4 @@ class AccountVarFormSetView(AdminCheckMixin, FormSetView):
     form_class = AccountVarForm
     extra = 0
     template_name = 'users/account.html'
+    page_title = "Update account settings"
