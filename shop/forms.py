@@ -125,11 +125,11 @@ class PartPlaceForm(FormSetMixin):
 class PurchaseForm(FormMixin):
     truck = forms.ModelChoiceField(
         queryset=Truck.objects.all(),
-        blank=True,
+        required=False,
     )
     trailer = forms.ModelChoiceField(
         queryset=Trailer.objects.all(),
-        blank=True,
+        required=False,
     )
 
     class Meta:
