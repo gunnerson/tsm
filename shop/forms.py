@@ -78,11 +78,11 @@ class OrderPartForm(forms.ModelForm):
             queryset=parts,
             widget=OrderSelect(exclude=exclude),
         )
+        print(self.fields["part"], '>>>>', self.fields["part"].initial)
         if self.fields["part"].initial is not None:
             self.fields["part"].disabled = True
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})
-            print(self.fields[f].initial)
 
 
 class PartTypeForm(FormSetMixin):
