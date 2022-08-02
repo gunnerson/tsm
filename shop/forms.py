@@ -78,6 +78,8 @@ class OrderPartForm(forms.ModelForm):
             queryset=parts,
             widget=OrderSelect(exclude=exclude),
         )
+        if self.fields["part"]:
+            self.fields["part"].disabled = True
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})
 
