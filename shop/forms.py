@@ -82,6 +82,7 @@ class OrderPartForm(forms.ModelForm):
             self.fields["part"].disabled = True
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})
+            print(self.fields[f].initial)
 
 
 class PartTypeForm(FormSetMixin):
