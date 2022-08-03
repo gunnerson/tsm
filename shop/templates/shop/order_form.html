@@ -4,14 +4,13 @@
 {% comment %}
 <script>
   {% block page_js %}
-    function submitForm() {
-      document.getElementById('data_form').submit();
-    };
-    const filters = document.getElementsByClassName("filter-button");
-    var form = document.getElementById('data_form');
-    for (i = 0; i < filters.length; i++) {
-      filters[i].addEventListener("click", submitForm)
-    };  
+      const filters = document.getElementsByClassName("filter-button");
+      const form = document.getElementById('data_form');
+      for (i = 0; i < filters.length; i++) {
+        filters[i].addEventListener("click", function () {
+          form.submit();
+        });
+      };  
   {% endblock page_js %}
 </script>
 {% endcomment %}
