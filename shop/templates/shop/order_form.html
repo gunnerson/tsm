@@ -1,6 +1,15 @@
 {% extends "shop/base.html" %}
 {% load static %}
 
+<script>
+  {% block page_js %}
+      const filters = document.getElementsByClassName("filter-button");
+      for (i = 0; i < filters.length; i++) {
+        filters[i].addEventListener("click", document.getElementById('data_form').submit())
+      };
+  {% endblock page_js %}
+</script>
+
 {% block content %}
 <form method='post' id="data_form">
     {% csrf_token %}

@@ -53,10 +53,9 @@ class OrderView(ReadCheckMixin, ObjectView):
                 self.object.mileage = data['odometer']
                 self.object.save(update_fields=['mileage'])
         except (AttributeError, ValueError, KeyError):
-            pass
-        if not self.is_create:
-            assigned_only = self.request.POST.get('assigned_only', True)
-            print('>>>>>>>>>>>>>>', assigned_only, '>>>', self.request.POST)
+            pass        
+        if not self.is_create:    
+            assigned_only = self.request.POST.get('assigned_only', True)        
             job_formset = get_job_forms(self.object, self.request.POST)
             part_formset = get_part_forms(
                 self.object, self.request.POST, assigned_only)
@@ -106,8 +105,6 @@ class OrderView(ReadCheckMixin, ObjectView):
                 return self.render_to_response(
                     self.get_context_data(form=form, job_formset=job_formset,
                                           part_formset=part_formset))
-        # else:
-        #     OrderTime(order=self.object).save()
         return redirect(self.object.get_absolute_url())
 
     def get_context_data(
@@ -141,7 +138,6 @@ class OrderView(ReadCheckMixin, ObjectView):
                 context['image_url'] = 'docs:trailer_image'
                 context['image_id'] = order.trailer.id
                 context['is_trailer'] = True
-            context['filter_bar'] = True
             context['assigned_only'] = self.request.POST.get(
                 'assigned_only', True)
         return context
