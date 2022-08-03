@@ -53,9 +53,11 @@ class OrderView(ReadCheckMixin, ObjectView):
                 self.object.mileage = data['odometer']
                 self.object.save(update_fields=['mileage'])
         except (AttributeError, ValueError, KeyError):
-            pass        
-        if not self.is_create:    
-            assigned_only = self.request.POST.get('assigned_only', True)        
+            pass
+        if not self.is_create:
+            assigned_only = self.request.POST.get('assigned_only', True)
+            assigned_only = False if not assigned_only else True
+            print('>>>>>>>>>>>>>>', assigned_only)
             job_formset = get_job_forms(self.object, self.request.POST)
             part_formset = get_part_forms(
                 self.object, self.request.POST, assigned_only)
