@@ -1,7 +1,6 @@
 {% extends "shop/base.html" %}
 {% load static %}
 
-{% comment %}
 <script>
   {% block page_js %}
       const filters = document.getElementsByClassName("filter-button");
@@ -12,12 +11,8 @@
           form.submit();
         });
       };
-      document.getElementById('assigned_only').addEventListener("click", function () {
-        form.submit();
-      });
   {% endblock page_js %}
 </script>
-{% endcomment %}
 
 {% block content %}
 <form method='post' id="data_form">
