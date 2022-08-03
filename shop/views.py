@@ -87,17 +87,18 @@ class OrderView(ReadCheckMixin, ObjectView):
                                 ))
                     elif inst.id and inst.part_id:
                         before_inst = OrderPart.objects.get(id=inst.id)
-                        inst.part.stock -= inst.amount - before_inst.amount
-                        inst.part.save(update_fields=['stock'])
-                        if inst.amount == 0:
-                            try:
-                                link_with_part(inst, True)
-                                inst.delete()
-                            except AssertionError:
-                                pass
-                        else:
-                            inst.save()
-                            link_with_part(inst)
+                        if before_inst.part.id == inst.part_id:
+                            inst.part.stock -= inst.amount - before_inst.amount
+                            inst.part.save(update_fields=['stock'])
+                            if inst.amount == 0:
+                                try:
+                                    link_with_part(inst, True)
+                                    inst.delete()
+                                except AssertionError:
+                                    pass
+                            else:
+                                inst.save()
+                                link_with_part(inst)
             else:
                 return self.render_to_response(
                     self.get_context_data(form=form, job_formset=job_formset,
