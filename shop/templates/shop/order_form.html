@@ -1,6 +1,7 @@
 {% extends "shop/base.html" %}
 {% load static %}
 
+{% comment %}
 <script>
   {% block page_js %}
       const filters = document.getElementsByClassName("filter-button");
@@ -9,6 +10,7 @@
       };
   {% endblock page_js %}
 </script>
+{% endcomment %}
 
 {% block content %}
 <form method='post' id="data_form">
