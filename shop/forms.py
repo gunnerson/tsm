@@ -38,6 +38,7 @@ class OrderForm(FormMixin):
 
     def clean(self):
         cleaned_data = super().clean()
+        print('>>>>>>>>!!', cleaned_data)
         truck = cleaned_data.get("truck")
         trailer = cleaned_data.get("trailer")
         if (truck and trailer) or (not truck and not trailer):
