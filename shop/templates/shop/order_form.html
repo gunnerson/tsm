@@ -11,7 +11,10 @@
         filters[i].addEventListener("click", function () {
           form.submit();
         });
-      };  
+      };
+      document.getElementById('assigned_only').addEventListener("click", function () {
+        form.submit();
+      });
   {% endblock page_js %}
 </script>
 {% endcomment %}
