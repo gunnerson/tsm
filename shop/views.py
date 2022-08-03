@@ -55,7 +55,7 @@ class OrderView(ReadCheckMixin, ObjectView):
         except (AttributeError, ValueError, KeyError):
             pass
         if not self.is_create:
-            assigned_only = self.request.GET.get('assigned_only', True)
+            assigned_only = self.request.POST.get('assigned_only', True)
             job_formset = get_job_forms(self.object, self.request.POST)
             part_formset = get_part_forms(
                 self.object, self.request.POST, assigned_only)
@@ -141,7 +141,7 @@ class OrderView(ReadCheckMixin, ObjectView):
                 context['image_id'] = order.trailer.id
                 context['is_trailer'] = True
             context['filter_bar'] = True
-            context['assigned_only'] = self.request.GET.get(
+            context['assigned_only'] = self.request.POST.get(
                 'assigned_only', True)
         return context
 
