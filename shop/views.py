@@ -56,8 +56,7 @@ class OrderView(ReadCheckMixin, ObjectView):
             pass
         if not self.is_create:
             assigned_only = self.request.POST.get('assigned_only', True)
-            print('>>>>>>>>>>>>>>1', assigned_only, '>>>', self.request.POST.get('assigned_only', None))
-            print('>>>>>>>>>>>>>>2', self.request.POST)
+            print('>>>>>>>>>>>>>>1', self.request.POST)
             assigned_only = False if not assigned_only else True
             job_formset = get_job_forms(self.object, self.request.POST)
             part_formset = get_part_forms(
@@ -113,7 +112,7 @@ class OrderView(ReadCheckMixin, ObjectView):
     def get_context_data(
             self, *args, job_formset=None, part_formset=None, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        print('>>>>>>>>>>>>>>3', self.request.POST)
+        print('>>>>>>>>>>>>>>2', kwargs)
         context['btn_save'] = True
         if not self.is_create:
             order = self.get_object()
@@ -148,7 +147,6 @@ class OrderView(ReadCheckMixin, ObjectView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        print('>>>>>>>>>>>>>>4', self.request.POST)
         kwargs.update(is_create=self.is_create)
         truck_ids = []
         trailer_ids = []
