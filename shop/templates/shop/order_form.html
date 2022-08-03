@@ -6,6 +6,7 @@
   {% block page_js %}
       const filters = document.getElementsByClassName("filter-button");
       const form = document.getElementById('data_form');
+      console.log(filters, form)
       for (i = 0; i < filters.length; i++) {
         filters[i].addEventListener("click", function () {
           form.submit();
