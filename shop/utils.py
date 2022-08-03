@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import OrderJob, OrderPart, Part, PurchaseItem, PartPlace
-from invent.models import Truck
+from invent.models import Truck, Trailer
 from .forms import OrderJobForm, OrderPartForm, PurchaseItemForm
 
 
@@ -23,7 +23,7 @@ def get_job_forms(order, data=None):
                         form_kwargs={'exclude': job_ids})
 
 
-def get_part_forms(order, data=None):
+def get_part_forms(order, data=None, exclude=True):
     ModelFormset = modelformset_factory(
         OrderPart,
         form=OrderPartForm,
@@ -33,7 +33,7 @@ def get_part_forms(order, data=None):
     assigned_parts_ids = []
     exclude_ids = []
     part_ids = []
-    if order.truck:
+    if exclude and order.truck:
         part_places = order.truck.partplace_set.all()
         for p in part_places:
             assigned_parts_ids.append(p.part.id)
@@ -46,7 +46,7 @@ def get_part_forms(order, data=None):
                     assigned_parts_ids.append(rp.id)
             except AttributeError:
                 pass
-    elif order.trailer:
+    elif exclude and order.trailer:
         part_places = order.trailer.partplace_set.all()
         for p in part_places:
             assigned_parts_ids.append(p.part.id)
@@ -65,13 +65,14 @@ def get_part_forms(order, data=None):
             exclude_ids.append(q.part.id)
         part_ids.append(q.part.id)
     for j in order.orderjob_set.all():
-        # for p in j.job.parts.all():
-        #     if p.id not in part_ids:
-        #         part_ids.append(p.id)
         for pt in j.job.part_types.all():
             for p in pt.part_set.all():
-                if p.id in assigned_parts_ids and p.id not in part_ids:
-                    part_ids.append(p.id)
+                if exclude:
+                    if p.id in assigned_parts_ids and p.id not in part_ids:
+                        part_ids.append(p.id)
+                else:
+                    if p.id not in part_ids:
+                        part_ids.append(p.id)
                 if p.stock == 0:
                     exclude_ids.append(p.id)
     parts = Part.objects.filter(id__in=part_ids)
@@ -117,3 +118,11 @@ def assign_to_101():
         except ObjectDoesNotExist:
             PartPlace(part=p, truck=t).save()
     return HttpResponse('Operation successful...')
+
+
+def assign_to_unit(part, unit_id, truck=True):
+    if truck:
+        t = Truck.objects.get(id=unit_id)
+    else:
+        t = Trailer.objects.get(id=unit_id)
+    partplace, created = PartPlace.objects.get_or_create(part=part, truck=t)

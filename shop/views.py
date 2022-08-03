@@ -12,7 +12,7 @@ from invent.models import Truck, Trailer, Company
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
     PartPlaceForm, PartTypeForm
 from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
-    link_with_part
+    link_with_part, assign_to_unit
 from .mixins import ObjectView, FormSetView
 from users.mixins import ReadCheckMixin, WriteCheckMixin
 from users.models import AccountVar
@@ -55,8 +55,10 @@ class OrderView(ReadCheckMixin, ObjectView):
         except (AttributeError, ValueError, KeyError):
             pass
         if not self.is_create:
+            assigned_only = self.request.GET.get('assigned_only', True)
             job_formset = get_job_forms(self.object, self.request.POST)
-            part_formset = get_part_forms(self.object, self.request.POST)
+            part_formset = get_part_forms(
+                self.object, self.request.POST, assigned_only)
             if job_formset.is_valid() and part_formset.is_valid():
                 for f in job_formset:
                     inst = f.save(commit=False)
@@ -138,6 +140,8 @@ class OrderView(ReadCheckMixin, ObjectView):
                 context['image_url'] = 'docs:trailer_image'
                 context['image_id'] = order.trailer.id
                 context['is_trailer'] = True
+            context['assigned_only'] = self.request.GET.get(
+                'assigned_only', True)
         return context
 
     def get_form_kwargs(self):
@@ -428,7 +432,8 @@ class PurchaseView(ReadCheckMixin, ObjectView):
                         if not inst.part.price:
                             inst.part.price = 0
                         if (float(inst.price) * parts_surcharge) > inst.part.price:
-                            inst.part.price = float(inst.price) * parts_surcharge
+                            inst.part.price = float(
+                                inst.price) * parts_surcharge
                             inst.part.save(update_fields=['price'])
                     elif inst.id and inst.part_id:
                         before_inst = PurchaseItem.objects.get(id=inst.id)
@@ -437,7 +442,8 @@ class PurchaseView(ReadCheckMixin, ObjectView):
                         if not inst.part.price:
                             inst.part.price = 0
                         if (float(inst.price) * parts_surcharge) > inst.part.price:
-                            inst.part.price = float(inst.price) * parts_surcharge
+                            inst.part.price = float(
+                                inst.price) * parts_surcharge
                             inst.part.save(update_fields=['price'])
                         if inst.amount == 0:
                             try:
@@ -570,7 +576,8 @@ class BalanceFormSetView(ReadCheckMixin, FormSetView):
         qs2 = Order.objects.all()
         for q in qs2:
             try:
-                labor_rate = int(AccountVar.objects.get(name="LABOR_RATE").value)
+                labor_rate = int(AccountVar.objects.get(
+                    name="LABOR_RATE").value)
                 if q.closed.month == this_month:
                     this_month_labor += q.labor_total * labor_rate
                     total_labor += q.labor_total * labor_rate
