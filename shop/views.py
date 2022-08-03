@@ -140,6 +140,7 @@ class OrderView(ReadCheckMixin, ObjectView):
                 context['image_url'] = 'docs:trailer_image'
                 context['image_id'] = order.trailer.id
                 context['is_trailer'] = True
+            context['filter_bar'] = True
             context['assigned_only'] = self.request.GET.get(
                 'assigned_only', True)
         return context

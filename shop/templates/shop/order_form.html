@@ -42,13 +42,9 @@
       </table>
       {{ job_formset.non_form_errors }}
     {% endif %}
-    <div>
-      <input type="checkbox" name="assigned_only" id="assigned_only" class="filter-button" {% if assigned_only %}checked{% endif %}>
-      <label for="assigned_only" class="filter-button">Assigned only</label> 
-    <div>
     {% if part_formset %}
       {{ part_formset.management_form }}
-      <p> Parts: </p>
+      <p> Parts (<input type="checkbox" name="assigned_only" id="assigned_only" class="filter-button" {% if assigned_only %}checked{% endif %}><label for="assigned_only" class="filter-button">Assigned only</label>):</p>
       <table>
         <tbody>
           {% for form in part_formset %}
