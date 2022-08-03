@@ -5,9 +5,10 @@
 <script>
   {% block page_js %}
       const filters = document.getElementsByClassName("filter-button");
+      var form = document.getElementById('data_form');
       for (i = 0; i < filters.length; i++) {
         filters[i].addEventListener("click", function () {
-          document.getElementById('data_form').submit();
+          form.submit();
         });
       };  
   {% endblock page_js %}
