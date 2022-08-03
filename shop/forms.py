@@ -78,6 +78,7 @@ class OrderPartForm(forms.ModelForm):
             queryset=parts,
             widget=OrderSelect(exclude=exclude),
         )
+        print(self["part"].value())
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})
 
