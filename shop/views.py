@@ -56,7 +56,7 @@ class OrderView(ReadCheckMixin, ObjectView):
             pass
         if not self.is_create:
             assigned_only = self.request.POST.get('assigned_only', True)
-            print('>>>>>>>>>>>>>>1', self.request.POST)
+            print('>>>>>>>>>>>>>>1', self.request.POST['assigned_only'])
             assigned_only = False if not assigned_only else True
             job_formset = get_job_forms(self.object, self.request.POST)
             part_formset = get_part_forms(
