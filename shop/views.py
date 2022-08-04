@@ -1,4 +1,5 @@
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
@@ -704,11 +705,11 @@ class ShelfGroupListView(ReadCheckMixin, ListView):
 class ShelfCreateView(AdminCheckMixin, CreateView):
     model = Shelf
     form_class = ShelfForm
-    template_name = 'shop/shelf_add.html'
+    template_name = 'shop/edit_form.html'
+    success_url = reverse_lazy('shop:shelves')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         group = ShelfGroup.objects.get(id=self.kwargs['pk'])
         kwargs.update(group=group)
-        # kwargs.update(request=self.request)
         return kwargs
