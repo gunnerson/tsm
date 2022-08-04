@@ -119,6 +119,7 @@ class PartPlaceForm(FormSetMixin):
         self.fields["part"] = forms.ModelChoiceField(
             queryset=Part.objects.all(),
             widget=OrderSelect(exclude=exclude),
+            required=False,
         )
         for f in self.fields:
             self.fields[f].widget.attrs.update({'style': 'border:0'})
