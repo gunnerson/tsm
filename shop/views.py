@@ -8,8 +8,8 @@ from django.core.exceptions import FieldError
 # from django.db import IntegrityError
 
 from .models import Order, Part, Job, OrderPart, Purchase, \
-    PurchaseItem, Balance, PartPlace, PartType, Shelf, OrderTime
-from invent.models import Truck, Trailer, Company, ShelfGroup
+    PurchaseItem, Balance, PartPlace, PartType, Shelf, OrderTime,  ShelfGroup
+from invent.models import Truck, Trailer, Company
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
     PartPlaceForm, PartTypeForm, ShelfForm
 from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
