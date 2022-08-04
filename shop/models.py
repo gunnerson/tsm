@@ -445,3 +445,4 @@ class Balance(models.Model):
 
     def __str__(self):
         return str(self.date) + ' ' + str(self.total)
+
