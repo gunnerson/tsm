@@ -235,10 +235,11 @@ class PartPlaceFormSetView(ReadCheckMixin, FormSetView):
                 for f in formset:
                     if f.has_changed():
                         inst = f.save(commit=False)
-                        if inst.part:
+                        try:
+                            part = inst.part
                             inst.truck = unit
                             inst.save()
-                        else:
+                        except ObjectDoesNotExist:
                             inst.delete()
             else:
                 unit = Trailer.objects.get(id=self.kwargs['pk'])
