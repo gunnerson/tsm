@@ -83,6 +83,7 @@ class OrderView(ReadCheckMixin, ObjectView):
                             inst.part.stock -= inst.amount
                             inst.part.save(update_fields=['stock'])
                             link_with_part(inst)
+                            return redirect(self.object.get_absolute_url())
                         else:
                             f.add_error('amount', 'Not enough in stock')
                             return self.render_to_response(
@@ -98,13 +99,13 @@ class OrderView(ReadCheckMixin, ObjectView):
                             inst.part.save(update_fields=['stock'])
                             if inst.amount == 0:
                                 try:
-                                    link_with_part(inst, True)
                                     inst.delete()
                                 except AssertionError:
                                     pass
                             else:
                                 inst.save()
                                 link_with_part(inst)
+                                return redirect(self.object.get_absolute_url())
                 if not assigned_only:
                     return self.render_to_response(
                         self.get_context_data(
