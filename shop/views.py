@@ -55,7 +55,7 @@ class OrderView(ReadCheckMixin, ObjectView):
         except (AttributeError, ValueError, KeyError):
             pass
         if not self.is_create:
-            print('>>>>>>>>>>>>>1', self.request.POST.get('event_list'))
+            print('>>>>>>>>>>>>>1', self.request.POST.getlist('checks[]'))
             assigned_only = self.request.POST.get('assigned_only', True)
             assigned_only = False if not assigned_only else True
             print('>>>>>>>>>>>>>2', assigned_only)
