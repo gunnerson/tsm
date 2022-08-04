@@ -103,9 +103,11 @@ class OrderView(ReadCheckMixin, ObjectView):
                                 link_with_part(inst)
                 if not assigned_only:
                     return self.render_to_response(
-                        self.get_context_data(form=form, job_formset=job_formset,
+                        self.get_context_data(form=form,
+                                              job_formset=job_formset,
                                               part_formset=get_part_forms(
-                                                  self.object, self.request.POST, exclude=False)))
+                                                  self.object, self.request.POST, exclude=False),
+                                              assigned_only=False))
             else:
                 return self.render_to_response(
                     self.get_context_data(form=form, job_formset=job_formset,
@@ -113,9 +115,8 @@ class OrderView(ReadCheckMixin, ObjectView):
         return redirect(self.object.get_absolute_url())
 
     def get_context_data(
-            self, *args, job_formset=None, part_formset=None, **kwargs):
+            self, *args, job_formset=None, part_formset=None, assigned_only=True, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        print('>>>>>>>>>>>>>3', self.request.POST.getlist('checks[]'))
         context['btn_save'] = True
         if not self.is_create:
             order = self.get_object()
@@ -129,6 +130,8 @@ class OrderView(ReadCheckMixin, ObjectView):
             context['inst_id'] = order.id
             context['job_formset'] = (
                 job_formset if job_formset else get_job_forms(order))
+            if assigned_only:
+                context['assigned_only'] = True
             context['part_formset'] = (
                 part_formset if part_formset else get_part_forms(order))
             context['btn_budget'] = True
@@ -144,8 +147,6 @@ class OrderView(ReadCheckMixin, ObjectView):
                 context['image_url'] = 'docs:trailer_image'
                 context['image_id'] = order.trailer.id
                 context['is_trailer'] = True
-            context['assigned_only'] = self.request.POST.get(
-                'assigned_only', True)
         return context
 
     def get_form_kwargs(self):
