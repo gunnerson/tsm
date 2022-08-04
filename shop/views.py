@@ -55,9 +55,10 @@ class OrderView(ReadCheckMixin, ObjectView):
         except (AttributeError, ValueError, KeyError):
             pass
         if not self.is_create:
+            print('>>>>>>>>>>>>>1', self.request.POST)
             assigned_only = self.request.POST.get('assigned_only', True)
             assigned_only = False if not assigned_only or assigned_only == 'False' else True
-            print('>>>>>>>>>>>>>', assigned_only)
+            print('>>>>>>>>>>>>>2', assigned_only)
             job_formset = get_job_forms(self.object, self.request.POST)
             part_formset = get_part_forms(
                 self.object, self.request.POST, assigned_only)
@@ -112,7 +113,7 @@ class OrderView(ReadCheckMixin, ObjectView):
     def get_context_data(
             self, *args, job_formset=None, part_formset=None, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        print('>>>>>>>>>>>>>2', self.request.POST)
+        print('>>>>>>>>>>>>>3', self.request.POST)
         context['btn_save'] = True
         if not self.is_create:
             order = self.get_object()
