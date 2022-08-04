@@ -17,9 +17,9 @@ class ObjectView(UpdateView):
         except AttributeError:
             return None
 
-    def post(self, request, **kwargs):
-        print('>>>>>>>>>>555', request.POST)
-        return super().post(request, **kwargs)
+    # def post(self, request, **kwargs):
+    #     print('>>>>>>>>>>', request.POST)
+    #     return super().post(request, **kwargs)
 
 class FormSetView():
     model = None

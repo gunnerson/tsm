@@ -112,7 +112,6 @@ class OrderView(ReadCheckMixin, ObjectView):
     def get_context_data(
             self, *args, job_formset=None, part_formset=None, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        print('>>>>>>>>>>>>>>2', kwargs)
         context['btn_save'] = True
         if not self.is_create:
             order = self.get_object()
@@ -421,6 +420,7 @@ class PurchaseView(ReadCheckMixin, ObjectView):
                         trailer = self.object.trailer
                     except AttributeError:
                         trailer = None
+                print('##############', truck, trailer)
                 parts_surcharge = (int(AccountVar.objects.get(
                     name='PARTS_SURCHARGE').value) / 100) + 1
                 for f in formset:
