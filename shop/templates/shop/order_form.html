@@ -57,7 +57,7 @@
     {% endif %}
     {% if part_formset %}      
       <p> Parts:</p>
-      <input type="checkbox" name="assigned_only" id="assigned_only" class="filter-button" {% if assigned_only %} checked value="True" {% else %} value="False" {% endif %}><label for="assigned_only" class="filter-button">Assigned only</label>
+      <input type="checkbox" name="assigned_only" id="assigned_only" class="filter-button" {% if assigned_only %} checked {% endif %}><label for="assigned_only" class="filter-button">Assigned only</label>
       {{ part_formset.management_form }}
       <table>
         <tbody>
