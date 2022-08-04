@@ -122,6 +122,7 @@ class FormSetView():
         return self.render_to_response(self.get_context_data())
 
     def post(self, request, *args, **kwargs):
+        print('>>>>>>>>>>555', request.POST)
         formset = self.get_modelformset(request.POST)
         if formset.is_valid() and write_check(request.user):
             formset.save()
