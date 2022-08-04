@@ -74,39 +74,40 @@ class OrderView(ReadCheckMixin, ObjectView):
                     elif inst.job_id:
                         inst.order = self.object
                         inst.save()
+                has_changed = False
                 for f in part_formset:
                     inst = f.save(commit=False)
-                    inst.order = self.object
-                    if not inst.id and inst.part_id:
-                        if inst.part.stock >= inst.amount:
-                            inst.save()
-                            inst.part.stock -= inst.amount
-                            inst.part.save(update_fields=['stock'])
-                            link_with_part(inst)
-                            return redirect(self.object.get_absolute_url())
-                        else:
-                            f.add_error('amount', 'Not enough in stock')
-                            return self.render_to_response(
-                                self.get_context_data(
-                                    form=form,
-                                    job_formset=job_formset,
-                                    part_formset=part_formset,
-                                ))
-                    elif inst.id and inst.part_id:
-                        before_inst = OrderPart.objects.get(id=inst.id)
-                        if before_inst.part.id == inst.part_id:
-                            inst.part.stock -= inst.amount - before_inst.amount
-                            inst.part.save(update_fields=['stock'])
-                            if inst.amount == 0:
-                                try:
-                                    inst.delete()
-                                except AssertionError:
-                                    pass
-                            else:
+                    if f.has_changed():
+                        has_changed = True
+                        inst.order = self.object
+                        if not inst.id and inst.part_id:
+                            if inst.part.stock >= inst.amount:
                                 inst.save()
+                                inst.part.stock -= inst.amount
+                                inst.part.save(update_fields=['stock'])
                                 link_with_part(inst)
-                                return redirect(self.object.get_absolute_url())
-                if not assigned_only:
+                            else:
+                                f.add_error('amount', 'Not enough in stock')
+                                return self.render_to_response(
+                                    self.get_context_data(
+                                        form=form,
+                                        job_formset=job_formset,
+                                        part_formset=part_formset,
+                                    ))
+                        elif inst.id and inst.part_id:
+                            before_inst = OrderPart.objects.get(id=inst.id)
+                            if before_inst.part.id == inst.part_id:
+                                inst.part.stock -= inst.amount - before_inst.amount
+                                inst.part.save(update_fields=['stock'])
+                                if inst.amount == 0:
+                                    try:
+                                        inst.delete()
+                                    except AssertionError:
+                                        pass
+                                else:
+                                    inst.save()
+                                    link_with_part(inst)
+                if not assigned_only and not has_changed:
                     return self.render_to_response(
                         self.get_context_data(
                             form=form,
