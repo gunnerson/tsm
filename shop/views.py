@@ -413,7 +413,7 @@ class PurchaseView(ReadCheckMixin, ObjectView):
             formset = get_purchase_forms(self.object, self.request.POST)
             if formset.is_valid():
                 try:
-                    truck = self.object.truck
+                    truck = self.object['truck']
                 except AttributeError:
                     truck = None
                     try:
