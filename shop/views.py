@@ -107,6 +107,7 @@ class OrderView(ReadCheckMixin, ObjectView):
                                 else:
                                     inst.save()
                                     link_with_part(inst)
+                print('>>>>>>>>>>has_changed', has_changed)
                 if not assigned_only and not has_changed:
                     return self.render_to_response(
                         self.get_context_data(
