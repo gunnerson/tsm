@@ -216,5 +216,7 @@ class ShelfForm(FormMixin):
 
     def __init__(self, *args, group=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["group"].initial = group
+        self.fields["group"].disabled = True
         qs = Part.objects.filter(part_type__in=group.part_type.all())
         self.fields["part"].queryset = qs
