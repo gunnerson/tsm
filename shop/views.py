@@ -417,7 +417,6 @@ class PurchaseView(ReadCheckMixin, ObjectView):
             trailer = form.cleaned_data['trailer']
         except KeyError:
             trailer = None
-        print('##############', truck, trailer)
         if not self.is_create:
             formset = get_purchase_forms(self.object, self.request.POST)
             if formset.is_valid():
@@ -454,16 +453,21 @@ class PurchaseView(ReadCheckMixin, ObjectView):
                         else:
                             inst.save()
                     if truck:
-                        truck_place, created = PartPlace.objects.get_or_create(
-                            part=inst.part,
-                            truck=truck,
-                        )
-                        print('$$$$$$$$$$$$$$', truck_place, created)
+                        try:
+                            truck_place, created = PartPlace.objects.get_or_create(
+                                part=inst.part,
+                                truck=truck,
+                            )
+                        except ObjectDoesNotExist:
+                            pass
                     elif trailer:
-                        trailer_place, created = PartPlace.objects.get_or_create(
-                            part=inst.part,
-                            trailer=trailer,
-                        )
+                        try:
+                            trailer_place, created = PartPlace.objects.get_or_create(
+                                part=inst.part,
+                                trailer=trailer,
+                            )
+                        except ObjectDoesNotExist:
+                            pass
             else:
                 return self.render_to_response(
                     self.get_context_data(form=form, formset=formset))
