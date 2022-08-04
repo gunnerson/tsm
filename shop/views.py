@@ -12,7 +12,7 @@ from invent.models import Truck, Trailer, Company
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
     PartPlaceForm, PartTypeForm
 from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
-    link_with_part, assign_to_unit
+    link_with_part
 from .mixins import ObjectView, FormSetView
 from users.mixins import ReadCheckMixin, WriteCheckMixin
 from users.models import AccountVar
@@ -103,11 +103,13 @@ class OrderView(ReadCheckMixin, ObjectView):
                                 link_with_part(inst)
                 if not assigned_only:
                     return self.render_to_response(
-                        self.get_context_data(form=form,
-                                              job_formset=job_formset,
-                                              part_formset=get_part_forms(
-                                                  self.object, self.request.POST, exclude=False),
-                                              assigned_only=False))
+                        self.get_context_data(
+                            form=form,
+                            job_formset=job_formset,
+                            part_formset=get_part_forms(
+                                self.object, self.request.POST, exclude=False),
+                            assigned_only=False)
+                    )
             else:
                 return self.render_to_response(
                     self.get_context_data(form=form, job_formset=job_formset,

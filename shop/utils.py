@@ -105,8 +105,12 @@ def link_with_part(inst, remove=None):
     else:
         if inst.order.truck:
             inst.part.trucks.add(inst.order.truck)
+            partplace, created = PartPlace.objects.get_or_create(
+                part=inst.part, truck=inst.order.truck)
         elif inst.order.trailer:
             inst.part.trailers.add(inst.order.trailer)
+            partplace, created = PartPlace.objects.get_or_create(
+                part=inst.part, trailer=inst.order.trailer)
 
 
 def assign_to_101():
@@ -118,11 +122,3 @@ def assign_to_101():
         except ObjectDoesNotExist:
             PartPlace(part=p, truck=t).save()
     return HttpResponse('Operation successful...')
-
-
-def assign_to_unit(part, unit_id, truck=True):
-    if truck:
-        t = Truck.objects.get(id=unit_id)
-    else:
-        t = Trailer.objects.get(id=unit_id)
-    partplace, created = PartPlace.objects.get_or_create(part=part, truck=t)
