@@ -243,7 +243,7 @@ class ShelfGroup(models.Model):
         name = ''
         for part_type in self.part_type.all():
             name += part_type.__str__() + ', '
-        return name
+        return name[:-1]
 
 
 class Shelf(models.Model):
