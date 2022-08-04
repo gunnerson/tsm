@@ -237,25 +237,23 @@ class PartPlaceFormSetView(ReadCheckMixin, FormSetView):
             if self.kwargs['unit'] == 'truck':
                 unit = Truck.objects.get(id=self.kwargs['pk'])
                 for f in formset:
-                    if f.has_changed():
-                        inst = f.save(commit=False)
-                        try:
-                            part = inst.part
-                            inst.truck = unit
-                            inst.save()
-                        except ObjectDoesNotExist:
-                            inst.delete()
+                    inst = f.save(commit=False)
+                    try:
+                        part = inst.part
+                        inst.truck = unit
+                        inst.save()
+                    except ObjectDoesNotExist:
+                        inst.delete()
             else:
                 unit = Trailer.objects.get(id=self.kwargs['pk'])
                 for f in formset:
-                    if f.has_changed():
-                        inst = f.save(commit=False)
-                        try:
-                            part = inst.part
-                            inst.trailer = unit
-                            inst.save()
-                        except ObjectDoesNotExist:
-                            inst.delete()
+                    inst = f.save(commit=False)
+                    try:
+                        part = inst.part
+                        inst.trailer = unit
+                        inst.save()
+                    except ObjectDoesNotExist:
+                        inst.delete()
             return redirect(self.redirect_url)
         else:
             return self.render_to_response(
