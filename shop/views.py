@@ -414,12 +414,12 @@ class PurchaseView(ReadCheckMixin, ObjectView):
             if formset.is_valid():
                 try:
                     truck = form['truck']
-                except AttributeError:
+                except KeyError:
                     truck = None
-                    try:
-                        trailer = self.object.trailer
-                    except AttributeError:
-                        trailer = None
+                try:
+                    trailer = self.object.trailer
+                except KeyError:
+                    trailer = None
                 print('##############', truck, trailer)
                 parts_surcharge = (int(AccountVar.objects.get(
                     name='PARTS_SURCHARGE').value) / 100) + 1
@@ -458,6 +458,7 @@ class PurchaseView(ReadCheckMixin, ObjectView):
                             part=inst.part,
                             truck=truck,
                         )
+                        print('$$$$$$$$$$$$$$', truck_place, created)
                     elif trailer:
                         trailer_place, created = PartPlace.objects.get_or_create(
                             part=inst.part,
