@@ -55,9 +55,8 @@ class OrderView(ReadCheckMixin, ObjectView):
         except (AttributeError, ValueError, KeyError):
             pass
         if not self.is_create:
-            print('>>>>>>>>>>>>>1', self.request.POST.getlist('checks[]'))
-            assigned_only = self.request.POST.get('assigned_only', True)
-            assigned_only = False if not assigned_only else True
+            checks = self.request.POST.getlist('checks[]')
+            assigned_only = True if 'assigned_only' in checks else False
             print('>>>>>>>>>>>>>2', assigned_only)
             job_formset = get_job_forms(self.object, self.request.POST)
             part_formset = get_part_forms(
