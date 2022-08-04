@@ -58,7 +58,11 @@ class OrderView(ReadCheckMixin, ObjectView):
             checks = self.request.POST.getlist('checks[]')
             assigned_only = True if 'assigned_only' in checks else False
             job_formset = get_job_forms(self.object, self.request.POST)
-            part_formset = get_part_forms(self.object, self.request.POST)
+            if assigned_only:
+                part_formset = get_part_forms(self.object, self.request.POST)
+            else:
+                part_formset = get_part_forms(
+                    self.object, self.request.POST, exclude=False)
             if job_formset.is_valid() and part_formset.is_valid():
                 for f in job_formset:
                     inst = f.save(commit=False)
@@ -246,8 +250,12 @@ class PartPlaceFormSetView(ReadCheckMixin, FormSetView):
                 for f in formset:
                     if f.has_changed():
                         inst = f.save(commit=False)
-                        inst.trailer = unit
-                        inst.save()
+                        try:
+                            part = inst.part
+                            inst.trailer = unit
+                            inst.save()
+                        except ObjectDoesNotExist:
+                            inst.delete()
             return redirect(self.redirect_url)
         else:
             return self.render_to_response(
