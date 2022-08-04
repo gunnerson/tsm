@@ -417,7 +417,7 @@ class PurchaseView(ReadCheckMixin, ObjectView):
                 except KeyError:
                     truck = None
                 try:
-                    trailer = self.object.trailer
+                    trailer = form['trailer']
                 except KeyError:
                     trailer = None
                 print('##############', truck, trailer)
