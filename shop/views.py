@@ -57,10 +57,8 @@ class OrderView(ReadCheckMixin, ObjectView):
         if not self.is_create:
             checks = self.request.POST.getlist('checks[]')
             assigned_only = True if 'assigned_only' in checks else False
-            print('>>>>>>>>>>>>>2', assigned_only)
             job_formset = get_job_forms(self.object, self.request.POST)
-            part_formset = get_part_forms(
-                self.object, self.request.POST, assigned_only)
+            part_formset = get_part_forms(self.object, self.request.POST)
             if job_formset.is_valid() and part_formset.is_valid():
                 for f in job_formset:
                     inst = f.save(commit=False)
@@ -103,6 +101,11 @@ class OrderView(ReadCheckMixin, ObjectView):
                             else:
                                 inst.save()
                                 link_with_part(inst)
+                if not assigned_only:
+                    return self.render_to_response(
+                        self.get_context_data(form=form, job_formset=job_formset,
+                                              part_formset=get_part_forms(
+                                                  self.object, self.request.POST, exclude=False)))
             else:
                 return self.render_to_response(
                     self.get_context_data(form=form, job_formset=job_formset,
@@ -112,7 +115,7 @@ class OrderView(ReadCheckMixin, ObjectView):
     def get_context_data(
             self, *args, job_formset=None, part_formset=None, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        print('>>>>>>>>>>>>>3', self.request.POST)
+        print('>>>>>>>>>>>>>3', self.request.POST.getlist('checks[]'))
         context['btn_save'] = True
         if not self.is_create:
             order = self.get_object()
