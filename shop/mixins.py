@@ -17,6 +17,9 @@ class ObjectView(UpdateView):
         except AttributeError:
             return None
 
+    def post(self, request, **kwargs):
+        print('>>>>>>>>>>555', request.POST)
+        return super().post(request, **kwargs)
 
 class FormSetView():
     model = None
@@ -121,8 +124,7 @@ class FormSetView():
     def get(self, request, *args, **kwargs):
         return self.render_to_response(self.get_context_data())
 
-    def post(self, request, *args, **kwargs):
-        print('>>>>>>>>>>555', request.POST)
+    def post(self, request, *args, **kwargs):        
         formset = self.get_modelformset(request.POST)
         if formset.is_valid() and write_check(request.user):
             formset.save()
