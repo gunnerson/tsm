@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Order, Job, Part, OrderJob, OrderPart, Purchase, \
-    PurchaseItem, Balance, PartPlace, PartType, Mechanic
+    PurchaseItem, Balance, PartPlace, PartType, Mechanic, Shelf
 from .mixins import OrderSelect
 from invent.models import Truck, Trailer
 from invent.mixins import FormMixin, FormSetMixin
@@ -207,3 +207,14 @@ class OrderTimeForm(forms.Form):
         if order:
             self.fields['order'].initial = order
             self.fields['order'].disabled = True
+
+
+class ShelfForm(FormMixin):
+    class Meta:
+        model = Shelf
+        fields = '__all__'
+
+    def __init__(self, *args, part_type=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        qs = Part.objects.filter(part_type__in=part_type)
+        self.fields["part"].queryset = qs

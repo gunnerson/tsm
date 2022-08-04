@@ -236,7 +236,23 @@ class PartPlace(models.Model):
             return True
 
 
+class ShelfGroup(models.Model):
+    part_type = models.ManyToManyField(PartType, blank=True)
+
+    def __str__(self):
+        name = ''
+        for part_type in self.part_type.all():
+            name += part_type.__str__() + ', '
+        return name
+
+
 class Shelf(models.Model):
+    group = models.ForeignKey(
+        ShelfGroup,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
     part = models.ManyToManyField(Part, blank=True)
     store = models.PositiveSmallIntegerField(default=1)
     re_order = models.PositiveSmallIntegerField(default=0)
@@ -257,10 +273,10 @@ class Shelf(models.Model):
 
     @property
     def in_stock(self):
-        in_stock = 0        
+        in_stock = 0
         for p in self.part.all():
             rep1 = p.replaces.all()
-            rep2 = p.part_set.all()            
+            rep2 = p.part_set.all()
             in_stock += p.stock
             for r in rep1:
                 in_stock += r.stock
@@ -272,7 +288,7 @@ class Shelf(models.Model):
                 for r in rep3:
                     in_stock += r.stock
             except AttributeError:
-                pass            
+                pass
         return in_stock
 
     @property

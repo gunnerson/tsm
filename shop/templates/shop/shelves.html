@@ -1,0 +1,42 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+
+<div class="shelves-row">
+
+  {% for shelf_group in object_list %}
+
+  <table class="order-table shelves-table" >
+    <thead>
+      <tr><th>{{ shelf_group }}</th></tr>
+      <tr>
+        <th> Items </th>
+        <th> In stock </th>
+        <th> Re-order </th>
+        <th> Cheapest </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for object in shelf_group.shelf_set.all %}
+        <tr class="{% if object.in_stock == 0 %}restock{% elif object.in_stock <= object.re_order %}restock2{% endif %}">
+          <td>
+            {% for part in object.part.all %}
+              <a href="{% url 'shop:part' part.id %}">{{ part.part_number }}, </a>
+            {% endfor %}
+          </td>
+          <td>{{ object.in_stock }}</td>
+          {% if user.is_superuser %}
+            <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>      
+          {% else %}
+            <td>{{ object.reorder_amount }}</td>
+          {% endif %}
+          <td>${{ object.cheapest|default_if_none:"" }}</a></td>      
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+{% endblock content %}
+
