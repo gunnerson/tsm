@@ -8,7 +8,7 @@
 
     <table class="order-table shelves-table" >
       <thead>
-        <tr><th colspan="4">{{ shelf_group }}</th></tr>
+        <tr><th colspan="4">{{ shelf_group }} <a href="{% url 'shop:shelves_add' shelf_group.id %}">+</a></th></tr>
         <tr>
           <th> Items </th>
           <th> In stock </th>

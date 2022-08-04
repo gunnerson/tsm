@@ -701,84 +701,6 @@ class ShelfGroupListView(ReadCheckMixin, ListView):
     template_name = 'shop/shelves.html'
 
 
-class ShelfListView(ReadCheckMixin, ListView):
-    model = Shelf
-    template_name = 'shop/shelf_list.html'
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        qs = self.get_queryset()
-        oil_filters_id = []
-        brakes_id = []
-        seals_id = []
-        camshafts_id = []
-        bearings_id = []
-        abas_id = []
-        chambers_id = []
-        wss_id = []
-        belts_id = []
-        kingpins_id = []
-        tires_id = []
-        air_filters_id = []
-        threeinone_id = []
-        driveshaft_id = []
-        lights_id = []
-        misc_id = []
-        for q in qs:
-            part_type = q.part_type.name
-            if part_type in ('Lube filter', 'Fuel filter',
-                             'Fuel/water separator',):
-                oil_filters_id.append(q.id)
-            elif part_type in ('Brake shoes', 'Brake drum', 'Brake pads',):
-                brakes_id.append(q.id)
-            elif part_type in ('Wheel seal',):
-                seals_id.append(q.id)
-            elif part_type in ('S-cam', 'S-cam kit',):
-                camshafts_id.append(q.id)
-            elif part_type in ('Wheel bearing',):
-                bearings_id.append(q.id)
-            elif part_type in ('Brake adjuster', 'Clevis kit',):
-                abas_id.append(q.id)
-            elif part_type in ('Brake chamber',):
-                chambers_id.append(q.id)
-            elif part_type in ('Wheel speed sensor',):
-                wss_id.append(q.id)
-            elif part_type in ('Belt',):
-                belts_id.append(q.id)
-            elif part_type in ('King pin',):
-                kingpins_id.append(q.id)
-            elif part_type in ('Tire',):
-                tires_id.append(q.id)
-            elif part_type in ('Air filter',):
-                air_filters_id.append(q.id)
-            elif part_type in ('3-in-1',):
-                threeinone_id.append(q.id)
-            elif part_type in ('Driveshaft',):
-                driveshaft_id.append(q.id)
-            elif part_type in ('Light', 'Pigtail'):
-                lights_id.append(q.id)
-            elif part_type in ('Misc', 'Driveshaft', 'Center bearing',
-                               'Inverter', 'Battery',):
-                misc_id.append(q.id)
-        context['oil_filters'] = qs.filter(id__in=oil_filters_id)
-        context['brakes'] = qs.filter(id__in=brakes_id)
-        context['seals'] = qs.filter(id__in=seals_id)
-        context['camshafts'] = qs.filter(id__in=camshafts_id)
-        context['bearings'] = qs.filter(id__in=bearings_id)
-        context['slack_adjusters'] = qs.filter(id__in=abas_id)
-        context['chambers'] = qs.filter(id__in=chambers_id)
-        context['speed_sensors'] = qs.filter(id__in=wss_id)
-        context['belts'] = qs.filter(id__in=belts_id)
-        context['kingpins'] = qs.filter(id__in=kingpins_id)
-        context['tires'] = qs.filter(id__in=tires_id)
-        context['air_filters'] = qs.filter(id__in=air_filters_id)
-        context['threeinone'] = qs.filter(id__in=threeinone_id)
-        context['driveshaft'] = qs.filter(id__in=driveshaft_id)
-        context['lights'] = qs.filter(id__in=lights_id)
-        context['misc'] = qs.filter(id__in=misc_id)
-        return context
-
-
 class ShelfCreateView(AdminCheckMixin, CreateView):
     model = Shelf
     form_class = ShelfForm
@@ -786,40 +708,7 @@ class ShelfCreateView(AdminCheckMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        pk = self.kwargs.get('pk', None)
-        if pk == 1:
-            part_type = ('Lube filter', 'Fuel filter',
-                             'Fuel/water separator',)
-        elif pk == 2:
-            part_type = ('Brake shoes', 'Brake drum', 'Brake pads',)
-        elif pk == 3:
-            part_type = ('Wheel seal',)
-        elif pk == 4:
-            part_type = ('S-cam', 'S-cam kit',)
-        elif pk == 5:
-            part_type = ('Wheel bearing',)
-        elif pk == 6:
-            part_type = ('Brake adjuster', 'Clevis kit',)
-        elif pk == 7:
-            part_type = ('Brake chamber',)
-        elif pk == 8:
-            part_type = ('Wheel speed sensor',)
-        elif pk == 9:
-            part_type = ('Belt',)
-        elif pk == 10:
-            part_type = ('King pin',)
-        elif pk == 11:
-            part_type = ('Tire',)
-        elif pk == 12:
-            part_type = ('Air filter',)
-        elif pk == 13:
-            part_type = ('3-in-1',)
-        elif pk == 14:
-            part_type = ('Driveshaft',)
-        elif pk == 15:
-            part_type = ('Light', 'Pigtail')
-        elif pk == 16:
-            part_type = ('Misc', 'Center bearing', 'Inverter', 'Battery',)
-        kwargs.update(part_type=part_type)
+        group = ShelfGroup.objects.get(id=self.kwargs['pk'])
+        kwargs.update(group=group)
         # kwargs.update(request=self.request)
         return kwargs
