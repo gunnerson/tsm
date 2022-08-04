@@ -409,18 +409,18 @@ class PurchaseView(ReadCheckMixin, ObjectView):
 
     def form_valid(self, form):
         self.object = form.save()
+        try:
+            truck = form.cleaned_data['truck']
+        except KeyError:
+            truck = None
+        try:
+            trailer = form.cleaned_data['trailer']
+        except KeyError:
+            trailer = None
+        print('##############', truck, trailer)
         if not self.is_create:
             formset = get_purchase_forms(self.object, self.request.POST)
             if formset.is_valid():
-                try:
-                    truck = form['truck']
-                except KeyError:
-                    truck = None
-                try:
-                    trailer = form['trailer']
-                except KeyError:
-                    trailer = None
-                print('##############', truck, trailer)
                 parts_surcharge = (int(AccountVar.objects.get(
                     name='PARTS_SURCHARGE').value) / 100) + 1
                 for f in formset:
