@@ -8,7 +8,7 @@
 
     <table class="order-table shelves-table" >
       <thead>
-        <tr><th colspan="4">{{ shelf_group }} {% if user.profile.level == 'A' %}<a href="{{ object.move_up }}"> << </a><a href="{{ object.move_down }}"> >> </a>{% endif %}</th></tr>
+        <tr><th colspan="4">{{ shelf_group }} {% if user.profile.level == 'A' %}<a href="{{ shelf_group.move_up }}"> << </a><a href="{{ shelf_group.move_down }}"> >> </a>{% endif %}</th></tr>
         <tr>
           <th> Items {% if user.profile.level == 'A' %}<a href="{% url 'shop:shelves_add' shelf_group.id %}">+</a>{% endif %}</th>
           <th> In stock </th>
