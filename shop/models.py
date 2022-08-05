@@ -252,9 +252,8 @@ class ShelfGroup(models.Model):
 
     def save(self, *args, **kwargs):
         for i in range(len(ShelfGroup.objects.all())):
-            try:
-                group = ShelfGroup.objects.get(order_number=i)
-            except ObjectDoesNotExist:
+            groups = ShelfGroup.objects.filter(order_number=i)
+            if not groups:
                 self.order_number = i
                 break
         super().save(*args, **kwargs)
