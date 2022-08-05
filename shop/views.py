@@ -694,7 +694,7 @@ def assign_to_all(request, pk, unit):
                 PartPlace.objects.get(part=part, trailer=t)
             except ObjectDoesNotExist:
                 PartPlace(part=part, trailer=t).save()
-    return redirect(part.get_absolute_url())
+    return redirect('users:profile', new_profile.id)
 
 
 def order_stop(request, pk):
@@ -731,3 +731,34 @@ class ShelfUpdateView(AdminCheckMixin, UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs.update(group=self.object.group)
         return kwargs
+
+
+def shelfgroup_up(request, pk):
+    group1 = ShelfGroup.objects.get(id=pk)
+    num1 = group1.order_number
+    num2 = num1 - 1
+    if num2 > 0:
+        try:
+            group2 = ShelfGroup.objects.get(order_number=num2)
+            group2.order_number += 1
+            group2.save(update_fields=['order_number'])
+        except ObjectDoesNotExist:
+            pass
+        group1.order_number -= 1
+        group1.save(update_fields=['order_number'])
+    return redirect('shop:shelves')
+
+
+def shelfgroup_down(request, pk):
+    group1 = ShelfGroup.objects.get(id=pk)
+    num1 = group1.order_number
+    num2 = num1 + 1
+    try:
+        group2 = ShelfGroup.objects.get(order_number=num2)
+        group2.order_number -= 1
+        group2.save(update_fields=['order_number'])
+    except ObjectDoesNotExist:
+        pass
+    group1.order_number += 1
+    group1.save(update_fields=['order_number'])
+    return redirect('shop:shelves')

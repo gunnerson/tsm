@@ -51,4 +51,8 @@ urlpatterns = [
          name='shelves_add'),
     path('shelves/update/<int:pk>', views.ShelfUpdateView.as_view(),
          name='shelves_update'),
+    path('shelves/up/<int:pk>/', views.shelfgroup_up,
+         name='move_group_up'),
+    path('shelves/down/<int:pk>/', views.shelfgroup_down,
+         name='move_group_down'),
 ]

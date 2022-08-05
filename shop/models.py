@@ -238,12 +238,22 @@ class PartPlace(models.Model):
 
 class ShelfGroup(models.Model):
     part_type = models.ManyToManyField(PartType, blank=True)
+    order_number = models.AutoField()
 
     def __str__(self):
         name = ''
         for part_type in self.part_type.all():
             name += part_type.__str__() + ', '
         return name[:-2]
+
+    class Meta:
+        ordering = ['order_number', ]
+
+    def move_up(self):
+        return reverse("shop:move_group_up", kwargs={"pk": self.pk})
+
+    def move_down(self):
+        return reverse("shop:move_group_down", kwargs={"pk": self.pk})
 
 
 class Shelf(models.Model):
