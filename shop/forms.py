@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import Order, Job, Part, OrderJob, OrderPart, Purchase, \
-    PurchaseItem, Balance, PartPlace, PartType, Mechanic, Shelf
+    PurchaseItem, Balance, PartPlace, PartType, Mechanic, Shelf, ShelfGroup
 from .mixins import OrderSelect
 from invent.models import Truck, Trailer
 from invent.mixins import FormMixin, FormSetMixin
@@ -226,3 +226,9 @@ class ShelfForm(FormMixin):
         self.fields["group"].disabled = True
         qs = Part.objects.filter(part_type__in=group.part_type.all())
         self.fields["part"].queryset = qs
+
+
+class ShelfGroupForm(FormMixin):
+    class Meta:
+        model = ShelfGroup
+        fields = ('part_type')

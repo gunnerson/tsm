@@ -47,6 +47,8 @@ urlpatterns = [
          name='order_stop'),
     path('shelves/', views.ShelfGroupListView.as_view(),
          name='shelves'),
+    path('shelves/add_group', views.ShelfGroupCreateView.as_view(),
+         name='shelves_add_group'),
     path('shelves/add/<int:pk>', views.ShelfCreateView.as_view(),
          name='shelves_add'),
     path('shelves/update/<int:pk>', views.ShelfUpdateView.as_view(),

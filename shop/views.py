@@ -12,7 +12,7 @@ from .models import Order, Part, Job, OrderPart, Purchase, \
     PurchaseItem, Balance, PartPlace, PartType, Shelf, OrderTime, ShelfGroup
 from invent.models import Truck, Trailer, Company
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
-    PartPlaceForm, PartTypeForm, ShelfForm, PartUpdateForm
+    PartPlaceForm, PartTypeForm, ShelfForm, PartUpdateForm, ShelfGroupForm
 from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
     link_with_part
 from .mixins import ObjectView, FormSetView
@@ -706,6 +706,11 @@ def order_stop(request, pk):
 class ShelfGroupListView(ReadCheckMixin, ListView):
     model = ShelfGroup
     template_name = 'shop/shelves.html'
+
+
+class ShelfGroupCreateView(AdminCheckMixin, CreateView):
+    model = ShelfGroup
+    template_name = 'shop/edit_form.html'
 
 
 class ShelfCreateView(AdminCheckMixin, CreateView):

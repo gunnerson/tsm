@@ -37,6 +37,8 @@
     </table>
 
   {% endfor %}
+  <br>
+  {% if user.profile.level == 'A' %}<a href="{% url 'shop:shelves_add_group' %}"><strong>Add group</strong></a>{% endif %}
 
 </div>
 
