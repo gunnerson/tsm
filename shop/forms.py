@@ -231,4 +231,4 @@ class ShelfForm(FormMixin):
 class ShelfGroupForm(FormMixin):
     class Meta:
         model = ShelfGroup
-        fields = ('part_type')
+        fields = ('part_type',)
