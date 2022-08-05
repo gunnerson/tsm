@@ -10,7 +10,7 @@
       <thead>
         <tr><th colspan="4">{{ shelf_group }}</th></tr>
         <tr>
-          <th> Items <a href="{% url 'shop:shelves_add' shelf_group.id %}">+</a></th>
+          <th> Items {% if user.profile.level == 'A' %}<a href="{% url 'shop:shelves_add' shelf_group.id %}">+</a>{% endif %}</th>
           <th> In stock </th>
           <th> Re-order </th>
           <th> Cheapest </th>
@@ -25,8 +25,8 @@
               {% endfor %}
             </td>
             <td>{{ object.in_stock }}</td>
-            {% if user.is_superuser %}
-              <td><a href="{% url 'admin:shop_shelf_change' object.id %}">{{ object.reorder_amount }}</a></td>      
+            {% if user.profile.level == 'A' %}
+              <td><a href="{% url 'shop:shelves_update' object.id %}">{{ object.reorder_amount }}</a></td> 
             {% else %}
               <td>{{ object.reorder_amount }}</td>
             {% endif %}
