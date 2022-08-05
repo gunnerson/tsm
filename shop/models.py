@@ -251,7 +251,7 @@ class ShelfGroup(models.Model):
         return name[:-2]
 
     def save(self, *args, **kwargs):
-        for i in len(ShelfGroup.objects.all()):
+        for i in range(len(ShelfGroup.objects.all())):
             try:
                 group = ShelfGroup.objects.get(order_number=i)
             except ObjectDoesNotExist:
