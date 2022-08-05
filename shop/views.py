@@ -713,3 +713,15 @@ class ShelfCreateView(AdminCheckMixin, CreateView):
         group = ShelfGroup.objects.get(id=self.kwargs['pk'])
         kwargs.update(group=group)
         return kwargs
+
+
+class ShelfUpdateView(AdminCheckMixin, UpdateView):
+    model = Shelf
+    form_class = ShelfForm
+    template_name = 'shop/edit_form.html'
+    success_url = reverse_lazy('shop:shelves')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update(group=self.object.group)
+        return kwargs

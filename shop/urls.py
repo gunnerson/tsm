@@ -47,4 +47,6 @@ urlpatterns = [
          name='shelves'),
     path('shelves/add/<int:pk>', views.ShelfCreateView.as_view(),
          name='shelves_add'),
+    path('shelves/update/<int:pk>', views.ShelfUpdateView.as_view(),
+         name='shelves_update'),
 ]
