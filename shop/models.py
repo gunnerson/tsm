@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.timezone import now
 from decimal import Decimal
+from django.core.exceptions import ObjectDoesNotExist
 
 from .managers import DBSearch
 from invent.models import Truck, Trailer, Company
@@ -238,7 +239,10 @@ class PartPlace(models.Model):
 
 class ShelfGroup(models.Model):
     part_type = models.ManyToManyField(PartType, blank=True)
-    order_number = models.AutoField()
+    order_number = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order_number', ]
 
     def __str__(self):
         name = ''
@@ -246,8 +250,14 @@ class ShelfGroup(models.Model):
             name += part_type.__str__() + ', '
         return name[:-2]
 
-    class Meta:
-        ordering = ['order_number', ]
+    def save(self, *args, **kwargs):
+        for i in len(self.model.objects.all()):
+            try:
+                group = self.model.objects.get(order_number=i)
+            except ObjectDoesNotExist:
+                self.order_number = i
+                break
+        super().save(*args, **kwargs)
 
     def move_up(self):
         return reverse("shop:move_group_up", kwargs={"pk": self.pk})
@@ -455,4 +465,3 @@ class Balance(models.Model):
 
     def __str__(self):
         return str(self.date) + ' ' + str(self.total)
-
