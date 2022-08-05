@@ -12,7 +12,7 @@ from .models import Order, Part, Job, OrderPart, Purchase, \
     PurchaseItem, Balance, PartPlace, PartType, Shelf, OrderTime, ShelfGroup
 from invent.models import Truck, Trailer, Company
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
-    PartPlaceForm, PartTypeForm, ShelfForm
+    PartPlaceForm, PartTypeForm, ShelfForm, PartUpdateForm
 from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
     link_with_part
 from .mixins import ObjectView, FormSetView
@@ -408,6 +408,12 @@ class PartDetailView(ReadCheckMixin, DetailView):
         except AttributeError:
             pass
         return context
+
+
+class PartUpdateView(AdminCheckMixin, UpdateView):
+    model = Part
+    form_class = PartUpdateForm
+    template_name = 'shop/edit_form.html'
 
 
 class PurchaseListView(ReadCheckMixin, ListView):

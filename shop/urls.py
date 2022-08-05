@@ -27,6 +27,8 @@ urlpatterns = [
          name='parts'),
     path('parts/<int:pk>/', views.PartDetailView.as_view(),
          name='part'),
+    path('parts/<int:pk>/update', views.PartUpdateView.as_view(),
+         name='part_update'),
     path('purchases/', views.PurchaseListView.as_view(),
          name='purchases'),
     path('purchases/create/', views.PurchaseView.as_view(is_create=True),

@@ -109,6 +109,12 @@ class PartForm(FormSetMixin):
         #         )
 
 
+class PartUpdateForm(FormMixin):
+    class Meta:
+        model = Part
+        fields = '__all__'
+
+
 class PartPlaceForm(FormSetMixin):
     class Meta:
         model = PartPlace
