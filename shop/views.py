@@ -737,7 +737,7 @@ def shelfgroup_up(request, pk):
     group1 = ShelfGroup.objects.get(id=pk)
     num1 = group1.order_number
     num2 = num1 - 1
-    if num2 > 0:
+    if num2 >= 0:
         try:
             group2 = ShelfGroup.objects.get(order_number=num2)
             group2.order_number += 1
