@@ -33,7 +33,7 @@ def get_vehicles_locations(id):
             "description")
         context['driver'] = (data["vehicles"][0]["vehicle"]["current_driver"].get("first_name")
                              + ' ' + data["vehicles"][0]["vehicle"]["current_driver"].get("last_name")).title()
-    except (IndexError, TypeError, AttributeError:):
+    except (IndexError, TypeError, AttributeError):
         pass
     return context
 
