@@ -22,14 +22,17 @@ def get_vehicles_locations(id):
     context = {}
     try:
         context['odometer'] = int(data["vehicles"][0]["vehicle"]
-                                  ["current_location"]["odometer"])
-        context['lon'] = data["vehicles"][0]["vehicle"]["current_location"]["lon"]
-        context['lat'] = data["vehicles"][0]["vehicle"]["current_location"]["lat"]
+                                  ["current_location"].get("odometer"))
+        context['lon'] = data["vehicles"][0]["vehicle"]["current_location"].get(
+            "lon")
+        context['lat'] = data["vehicles"][0]["vehicle"]["current_location"].get(
+            "lat")
         context['bearing'] = get_bearing(
-            data["vehicles"][0]["vehicle"]["current_location"]["bearing"])
-        context['desc'] = data["vehicles"][0]["vehicle"]["current_location"]["description"]
-        context['driver'] = (data["vehicles"][0]["vehicle"]["current_driver"]["first_name"]
-                             + ' ' + data["vehicles"][0]["vehicle"]["current_driver"]["last_name"]).title()
+            data["vehicles"][0]["vehicle"]["current_location"].get("bearing"))
+        context['desc'] = data["vehicles"][0]["vehicle"]["current_location"].get(
+            "description")
+        context['driver'] = (data["vehicles"][0]["vehicle"]["current_driver"].get("first_name")
+                             + ' ' + data["vehicles"][0]["vehicle"]["current_driver"].get("last_name")).title()
     except (IndexError, TypeError):
         pass
     return context
@@ -44,15 +47,12 @@ def get_vehicle(id):
     response = requests.get(url, headers=headers)
     data = response.json()
     context = {}
-    try:
-        context['number'] = data["vehicle"]["number"]
-        context['vin'] = data["vehicle"]["vin"]
-        context['make'] = data["vehicle"]["make"]
-        context['model'] = data["vehicle"]["model"]
-        context['year'] = data["vehicle"]["year"]
-        context['eld_id'] = data["vehicle"]["eld_device"]["id"]
-    except (IndexError, TypeError):
-        pass
+    context['number'] = data["vehicle"].get("number")
+    context['vin'] = data["vehicle"].get("vin")
+    context['make'] = data["vehicle"].get("make")
+    context['model'] = data["vehicle"].get("model")
+    context['year'] = data["vehicle"].get("year")
+    context['eld_id'] = data["vehicle"]["eld_device"].get("id")
     return context
 
 
@@ -69,16 +69,20 @@ def get_fault_codes(id):
     for i in range(0, data["total"], 1):
         try:
             fault_code = {}
-            fault_code['code_label'] = data['fault_codes'][i]['fault_code']['code_label'].replace(
-                '-', ' ')
-            fault_code['fmi'] = data['fault_codes'][i]['fault_code']['fmi']
-            fault_code['code_description'] = data['fault_codes'][i]['fault_code']['code_description']
-            fault_code['source'] = data['fault_codes'][i]['fault_code']['source_address_label']
-            fault_code['first_observed_at'] = data['fault_codes'][i]['fault_code']['first_observed_at'].replace(
-                'T', ' ').replace('Z', '')
-            fault_code['last_observed_at'] = data['fault_codes'][i]['fault_code']['last_observed_at'].replace(
-                'T', ' ').replace('Z', '')
-            context.append(fault_code)
+            fault_code_data = data['fault_codes'][i].get('fault_code')
+            if fault_code_data:
+                fault_code['code_label'] = fault_code_data.get('code_label').replace(
+                    '-', ' ')
+                fault_code['fmi'] = fault_code_data.get('fmi')
+                fault_code['code_description'] = fault_code_data.get(
+                    'code_description')
+                fault_code['source'] = fault_code_data.get(
+                    'source_address_label')
+                fault_code['first_observed_at'] = fault_code_data.get('first_observed_at').replace(
+                    'T', ' ').replace('Z', '')
+                fault_code['last_observed_at'] = fault_code_data.get('last_observed_at').replace(
+                    'T', ' ').replace('Z', '')
+                context.append(fault_code)
         except (KeyError, IndexError):
             pass
     return context
@@ -103,14 +107,18 @@ def get_bulk_vehicles_locations():
     for i in range(0, data["pagination"]["total"], 1):
         try:
             vehicle = {}
-            vehicle['number'] = data["vehicles"][i]["vehicle"]["number"]
-            vehicle['lat'] = data["vehicles"][i]["vehicle"]["current_location"]["lat"]
-            vehicle['lon'] = data["vehicles"][i]["vehicle"]["current_location"]["lon"]
-            vehicle['bearing'] = data["vehicles"][i]["vehicle"]["current_location"]["bearing"]
-            truck = trucks.get(kt_id=data["vehicles"][i]["vehicle"]["id"])
-            vehicle['truck'] = truck.id
+            vehicle_data = data["vehicles"][i].get("vehicle")
+            location_data = vehicle_data.get("current_location")
+            if vehicle_data:
+                vehicle['number'] = vehicle_data.get("number")
+                truck = trucks.get(kt_id=int(vehicle_data.get("id")))
+                vehicle['truck'] = truck.id
+            if location_data:
+                vehicle['lat'] = location_data.get("lat")
+                vehicle['lon'] = location_data.get("lon")
+                vehicle['bearing'] = location_data.get("bearing")
             context.append(vehicle)
-        except KeyError:
+        except (KeyError, IndexError):
             pass
     return context
 
