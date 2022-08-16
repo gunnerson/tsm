@@ -395,6 +395,7 @@ class Purchase(models.Model):
         null=True,
         blank=True,
     )
+    invoice = models.CharField(max_length=20, blank=True)
 
     class Meta:
         ordering = ['-date']
