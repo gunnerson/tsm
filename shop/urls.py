@@ -59,4 +59,6 @@ urlpatterns = [
          name='move_group_down'),
     path('purchases/<int:pk>/cores/', views.CoreFormSetView.as_view(),
          name='cores'),
+    path('purchases/<int:pk>/cores/return', views.CoreReturnFormSetView.as_view(),
+         name='return_cores'),
 ]

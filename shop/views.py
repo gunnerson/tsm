@@ -787,17 +787,13 @@ class CoreFormSetView(ReadCheckMixin, FormSetView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         purchase = Purchase.objects.get(id=self.kwargs['pk'])
-        items = purchase.purchaseitem_set.all()
-        part_ids = []
-        for item in items:
-            part_ids.append(item.part.id)
-        parts = Part.objects.filter(id__in=part_ids)
-        kwargs.update(parts=items)
+        kwargs.update(parts=purchase.purchaseitem_set.all())
         return kwargs
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['purchase'] = Purchase.objects.get(id=self.kwargs['pk'])
+        context['add_cores'] = True
         return context
 
     def post(self, request, *args, **kwargs):
@@ -806,8 +802,11 @@ class CoreFormSetView(ReadCheckMixin, FormSetView):
         if formset.is_valid() and write_check(request.user):
             for f in formset:
                 inst = f.save(commit=False)
-                inst.purchase = purchase
-                inst.save()
+                if inst.amount != 0:
+                    inst.purchase = purchase
+                    inst.save()
+                elif inst.amount == 0 and inst.id:
+                    inst.delete()
             return redirect(self.redirect_url)
         else:
             return self.render_to_response(
@@ -824,15 +823,24 @@ class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         purchase = Purchase.objects.get(id=self.kwargs['pk'])
-        items = purchase.core_set.all()
-        part_ids = []
-        for item in items:
-            part_ids.append(item.part.id)
-        cores = Core.objects.filter(id__in=part_ids)
-        kwargs.update(cores=cores)
+        kwargs.update(cores=purchase.core_set.all())
         return kwargs
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['purchase'] = Purchase.objects.get(id=self.kwargs['pk'])
+        context['purchase'] = Purchase.objects.get(id=self.kwargs['pk'])        
         return context
+
+    def post(self, request, *args, **kwargs):
+        formset = self.get_modelformset(request.POST)
+        if formset.is_valid() and write_check(request.user):
+            for f in formset:
+                inst = f.save(commit=False)
+                if inst.amount == 0 and inst.id:
+                    inst.delete()
+                else:
+                    inst.save()
+            return redirect(self.redirect_url)
+        else:
+            return self.render_to_response(
+                self.get_context_data(formset=formset))
