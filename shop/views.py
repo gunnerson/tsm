@@ -784,6 +784,10 @@ class CoreFormSetView(ReadCheckMixin, FormSetView):
     fields = ('part', 'amount', 'price')
     field_names = ('Part', 'Amount', 'Price')
 
+    def get_queryset(self):
+        purchase = Purchase.objects.get(id=self.kwargs['pk'])
+        return purchase.core_set.all()
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         purchase = Purchase.objects.get(id=self.kwargs['pk'])
@@ -819,6 +823,11 @@ class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
     template_name = 'shop/purchase_cores.html'
     fields = ('core', 'amount', 'date', 'receipt')
     field_names = ('Part', 'Amount', 'Date', 'Receipt')
+
+    def get_queryset(self):
+        purchase = Purchase.objects.get(id=self.kwargs['pk'])
+        cores = purchase.core_set.all()
+        return CoreReturn.objects.filter(core__in=cores)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
