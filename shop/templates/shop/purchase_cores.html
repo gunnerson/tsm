@@ -34,7 +34,7 @@
   </form>
   {% if add_cores %}
     <br>
-    <p><strong><a href="{% url 'shop:return_cores' object.id %}">Return cores</a></strong></p>
+    <p><strong><a href="{% url 'shop:return_cores' purchase.id %}">Return cores</a></strong></p>
   {% endif %}
 {% endblock content %}
 
