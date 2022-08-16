@@ -780,6 +780,7 @@ def shelfgroup_down(request, pk):
 class CoreFormSetView(ReadCheckMixin, FormSetView):
     model = Core
     form_class = CoreForm
+    template_name = 'shop/cores.html'
     fields = ('part', 'amount', 'price')
     field_names = ('Part', 'Amount', 'Price')
 
