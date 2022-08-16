@@ -639,8 +639,8 @@ class BalanceFormSetView(ReadCheckMixin, FormSetView):
         context['total_income'] = total_income
         context['this_month_labor'] = this_month_labor
         context['last_month_labor'] = last_month_labor
-        def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
+        context['total_labor'] = total_labor
+        return context
 
 
 def budget_invoice(request, pk):

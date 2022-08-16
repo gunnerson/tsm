@@ -1,0 +1,35 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+  <p>Add cores for <a href="{% url 'shop:purchase' purchase.id %}">purchase order #{{ purchase.id}}</a></p>
+  <form method='post' id="data_form">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table class="formset-table {{ font_class }}">
+      <thead>
+        <tr>
+          {% for field in fields %}
+            <th> {{ field }} </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for form in formset %}
+          <tr>
+            {% for field in form %}
+              {% if '-id' in field.auto_id %}
+                {{ field }}
+              {% else %}
+                <td> {{ field }}{{ field.errors }}</td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+          {{ form.non_field_errors }}
+        {% endfor %}
+      </tbody>
+    </table>
+    {{ formset.non_form_errors }}
+  </form>
+{% endblock content %}
+
+
