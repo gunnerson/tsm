@@ -14,10 +14,10 @@
     <tbody>
       {% for object in object_list %}
         <tr>
-          <td> {{ object.part }}{{ object.part.errors }} </td>
+          <td style="text-align: left;"> <a href="{% url 'shop:part' object.part.part.id %}">{{ object.part }}</td>
           <td> <a href="{% url 'shop:purchase' object.purchase.id %}">{{ object.purchase }}</a>{{ object.purchase.errors }}</td>
-          <td> {{ object.amount }}{{ object.amount.errors }}</td>
-          <td> {{ object.price }}{{ object.price.errors }}</td>
+          <td> {{ object.get_left }}</td>
+          <td> {{ object.price }}</td>
         </tr>
       {% endfor %}
     </tbody>
