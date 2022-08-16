@@ -274,9 +274,7 @@ class CoreReturnForm(FormMixin):
     def clean(self):
         cleaned_data = super().clean()
         core = cleaned_data.get("core")
-        buy_amount = core.part.amount
-        return_amount = cleaned_data.get("amount")
-        if return_amount > buy_amount:
+        if cleaned_data.get("amount") > core.get_left():
             msg = forms.ValidationError(('Return amount exceeds purchase amount'),
                                         code='invalid')
             self.add_error('amount', msg)

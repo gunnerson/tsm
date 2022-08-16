@@ -836,7 +836,8 @@ class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
         purchase = Purchase.objects.get(id=self.kwargs['pk'])
         exclude_ids = []
         for core in purchase.core_set.all():
-            exclude_ids.append(core.id)
+            if core.get_left() == 0:
+                exclude_ids.append(core.id)
         kwargs.update(exclude=exclude_ids)
         kwargs.update(cores=purchase.core_set.all())
         return kwargs
