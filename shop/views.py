@@ -779,6 +779,8 @@ def shelfgroup_down(request, pk):
 class CoreFormSetView(ReadCheckMixin, FormSetView):
     model = Core
     form_class = CoreForm
+    fields = ('part', 'amount', 'price')
+    field_names = ('Part', 'Amount', 'Price')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
