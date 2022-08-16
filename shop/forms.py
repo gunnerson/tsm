@@ -278,11 +278,3 @@ class CoreReturnForm(FormMixin):
             self.fields["core"].widget.attrs.update({'class': 'form_field'})
         except KeyError:
             pass
-
-    def clean(self):
-        cleaned_data = super().clean()
-        core = cleaned_data.get("core")
-        if cleaned_data.get("amount") > core.get_left():
-            msg = forms.ValidationError(('Return amount exceeds purchase amount'),
-                                        code='invalid')
-            self.add_error('amount', msg)
