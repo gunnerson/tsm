@@ -415,6 +415,11 @@ class PartUpdateView(AdminCheckMixin, UpdateView):
     form_class = PartUpdateForm
     template_name = 'shop/edit_form.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['btn_save'] = True
+        return context
+
 
 class PurchaseListView(ReadCheckMixin, ListView):
     model = Purchase

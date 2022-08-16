@@ -419,10 +419,37 @@ class PurchaseItem(models.Model):
         null=True,
         blank=True,
     )
-    amount = models.PositiveSmallIntegerField()
+    amount = models.PositiveSmallIntegerField(default=1)
 
     def __str__(self):
         return self.purchase + ' ' + self.part
+
+
+class Core(models.Model):
+    purchase = models.ForeignKey(
+        Purchase,
+        on_delete=models.CASCADE,
+        blank=True,
+    )
+    part = models.OneToOneField(Part, on_delete=models.CASCADE)
+    amount = models.PositiveSmallIntegerField()
+    price = models.DecimalField(
+        max_digits=7,
+        decimal_places=2,
+        null=True,
+        blank=True,
+    )
+
+
+class CoreReturn(models.Model):
+    core = models.ForeignKey(
+        Core,
+        on_delete=models.CASCADE,
+        blank=True,
+    )
+    amount = models.PositiveSmallIntegerField(default=1)
+    date = models.DateField()
+    receipt = models.CharField(max_length=20, blank=True)
 
 
 class Mechanic(models.Model):
