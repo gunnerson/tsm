@@ -422,7 +422,7 @@ class PurchaseItem(models.Model):
     amount = models.PositiveSmallIntegerField(default=1)
 
     def __str__(self):
-        return self.part
+        return self.part.__str__()
 
 
 class Core(models.Model):
