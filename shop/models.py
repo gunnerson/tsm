@@ -422,7 +422,7 @@ class PurchaseItem(models.Model):
     amount = models.PositiveSmallIntegerField(default=1)
 
     def __str__(self):
-        return self.purchase + ' ' + self.part
+        return self.part
 
 
 class Core(models.Model):
@@ -431,7 +431,7 @@ class Core(models.Model):
         on_delete=models.CASCADE,
         blank=True,
     )
-    part = models.OneToOneField(Part, on_delete=models.CASCADE)
+    part = models.OneToOneField(PurchaseItem, on_delete=models.CASCADE)
     amount = models.PositiveSmallIntegerField()
     price = models.DecimalField(
         max_digits=7,

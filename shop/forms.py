@@ -247,3 +247,17 @@ class CoreForm(FormMixin):
             self.fields['part'].queryset = parts
         except KeyError:
             pass
+
+
+class CoreReturnForm(FormMixin):
+
+    class Meta:
+        model = CoreReturn
+        fields = '__all__'
+
+    def __init__(self, *args, cores=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields['core'].queryset = cores
+        except KeyError:
+            pass

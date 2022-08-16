@@ -10,11 +10,11 @@ from django.core.exceptions import FieldError
 
 from .models import Order, Part, Job, OrderPart, Purchase, \
     PurchaseItem, Balance, PartPlace, PartType, Shelf, OrderTime, ShelfGroup, \
-    Core
+    Core, CoreReturn
 from invent.models import Truck, Trailer, Company
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
     PartPlaceForm, PartTypeForm, ShelfForm, PartUpdateForm, ShelfGroupForm, \
-    CoreForm
+    CoreForm, CoreReturnForm
 from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
     link_with_part
 from .mixins import ObjectView, FormSetView
@@ -792,7 +792,7 @@ class CoreFormSetView(ReadCheckMixin, FormSetView):
         for item in items:
             part_ids.append(item.part.id)
         parts = Part.objects.filter(id__in=part_ids)
-        kwargs.update(parts=parts)
+        kwargs.update(parts=items)
         return kwargs
 
     def get_context_data(self, *args, **kwargs):
@@ -812,3 +812,27 @@ class CoreFormSetView(ReadCheckMixin, FormSetView):
         else:
             return self.render_to_response(
                 self.get_context_data(formset=formset))
+
+
+class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
+    model = CoreReturn
+    form_class = CoreReturnForm
+    template_name = 'shop/purchase_core.html'
+    fields = ('core', 'amount', 'date', 'receipt')
+    field_names = ('Part', 'Amount', 'Date', 'Receipt')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        purchase = Purchase.objects.get(id=self.kwargs['pk'])
+        items = purchase.core_set.all()
+        part_ids = []
+        for item in items:
+            part_ids.append(item.part.id)
+        cores = Core.objects.filter(id__in=part_ids)
+        kwargs.update(cores=cores)
+        return kwargs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['purchase'] = Purchase.objects.get(id=self.kwargs['pk'])
+        return context
