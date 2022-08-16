@@ -254,10 +254,11 @@ class CoreForm(FormMixin):
     def clean(self):
         cleaned_data = super().clean()
         core = cleaned_data.get("core")
-        if cleaned_data.get("amount") > core.part.amount:
-            msg = forms.ValidationError(('Core amount exceeds purchase amount'),
-                                        code='invalid')
-            self.add_error('amount', msg)
+        if core:
+            if cleaned_data.get("amount") > core.part.amount:
+                msg = forms.ValidationError(('Core amount exceeds purchase amount'),
+                                            code='invalid')
+                self.add_error('amount', msg)
 
 
 class CoreReturnForm(FormMixin):
