@@ -239,13 +239,11 @@ class CoreForm(FormMixin):
 
     class Meta:
         model = Core
-        fields = '__all__'
-        widgets = {'purchase': forms.HiddenInput()}
+        fields = ('part', 'amount', 'price')
 
-    def __init__(self, *args, purchase=None, parts=None, **kwargs):
+    def __init__(self, *args, parts=None, **kwargs):
         super().__init__(*args, **kwargs)
         try:
-            self.fields['purchase'].initial = purchase
             self.fields['part'].queryset = parts
         except KeyError:
             pass

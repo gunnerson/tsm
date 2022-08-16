@@ -21,6 +21,7 @@ from .mixins import ObjectView, FormSetView
 from users.mixins import ReadCheckMixin, WriteCheckMixin, AdminCheckMixin
 from users.models import AccountVar
 from invent.gomotive import get_vehicles_locations
+from users.utils import write_check
 
 
 class OrderListView(ReadCheckMixin, ListView):
@@ -790,6 +791,18 @@ class CoreFormSetView(ReadCheckMixin, FormSetView):
         for item in items:
             part_ids.append(item.part.id)
         parts = Part.objects.filter(id__in=part_ids)
-        kwargs.update(purchase=purchase)
         kwargs.update(parts=parts)
         return kwargs
+
+    def post(self, request, *args, **kwargs):
+        formset = self.get_modelformset(request.POST)
+        purchase = Purchase.objects.get(id=self.kwargs['pk'])
+        if formset.is_valid() and write_check(request.user):
+            for f in formset:
+                inst = f.save(commit=False)
+                inst.purchase = purchase
+                inst.save()
+            return redirect(self.redirect_url)
+        else:
+            return self.render_to_response(
+                self.get_context_data(formset=formset))
