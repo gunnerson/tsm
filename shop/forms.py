@@ -244,8 +244,11 @@ class CoreForm(FormMixin):
     def __init__(self, *args, parts=None, exclude=None, **kwargs):
         super().__init__(*args, **kwargs)
         try:
-            self.fields["part"].queryset = parts
-            self.fields["part"].widget = OrderSelect(exclude=exclude)
+            self.fields["part"] = forms.ModelChoiceField(
+                queryset=parts,
+                widget=OrderSelect(exclude=exclude),
+            )
+            self.fields["part"].widget.attrs.update({'class': 'form_field'})
         except KeyError:
             pass
 
@@ -255,7 +258,7 @@ class CoreReturnForm(FormMixin):
     class Meta:
         model = CoreReturn
         fields = '__all__'
-        widgets = {'date': forms.DateInput(attrs={'type': 'date'}), }
+        widgets = {'date': forms.DateInput(attrs={'type': 'date'}),}
 
     def __init__(self, *args, cores=None, **kwargs):
         super().__init__(*args, **kwargs)
