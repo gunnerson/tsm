@@ -5,8 +5,6 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.exceptions import FieldError
-# from django.db import IntegrityError
 
 from .models import Order, Part, Job, OrderPart, Purchase, \
     PurchaseItem, Balance, PartPlace, PartType, Shelf, OrderTime, ShelfGroup, \
@@ -18,7 +16,7 @@ from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
 from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
     link_with_part
 from .mixins import ObjectView, FormSetView
-from users.mixins import ReadCheckMixin, WriteCheckMixin, AdminCheckMixin
+from users.mixins import ReadCheckMixin, AdminCheckMixin
 from users.models import AccountVar
 from invent.gomotive import get_vehicles_locations
 from users.utils import write_check
@@ -791,7 +789,11 @@ class CoreFormSetView(ReadCheckMixin, FormSetView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         purchase = Purchase.objects.get(id=self.kwargs['pk'])
+        exclude_ids = []
+        for core in purchase.core_set.all():
+            exclude_ids.append(core.id)
         kwargs.update(parts=purchase.purchaseitem_set.all())
+        kwargs.update(exclude=exclude_ids)
         return kwargs
 
     def get_context_data(self, *args, **kwargs):

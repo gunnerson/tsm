@@ -241,10 +241,13 @@ class CoreForm(FormMixin):
         model = Core
         fields = ('part', 'amount', 'price')
 
-    def __init__(self, *args, parts=None, **kwargs):
+    def __init__(self, *args, parts=None, exclude=None, **kwargs):
         super().__init__(*args, **kwargs)
         try:
-            self.fields['part'].queryset = parts
+            self.fields["part"] = forms.ModelChoiceField(
+                queryset=parts,
+                widget=OrderSelect(exclude=exclude),
+            )
         except KeyError:
             pass
 
