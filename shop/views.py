@@ -816,7 +816,7 @@ class CoreFormSetView(ReadCheckMixin, FormSetView):
 class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
     model = CoreReturn
     form_class = CoreReturnForm
-    template_name = 'shop/purchase_core.html'
+    template_name = 'shop/purchase_cores.html'
     fields = ('core', 'amount', 'date', 'receipt')
     field_names = ('Part', 'Amount', 'Date', 'Receipt')
 
@@ -838,7 +838,7 @@ class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
                 inst = f.save(commit=False)
                 if inst.amount == 0 and inst.id:
                     inst.delete()
-                elif inst.core:
+                elif inst.core_id:
                     inst.save()
             return redirect(self.redirect_url)
         else:
