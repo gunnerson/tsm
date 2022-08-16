@@ -238,7 +238,7 @@ class ShelfGroupForm(FormMixin):
 class CoreForm(FormMixin):
 
     class Meta:
-        model = Purchase
+        model = Core
         fields = ('part', 'amount', 'price')
 
     def __init__(self, *args, parts=None, **kwargs):
