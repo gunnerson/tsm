@@ -639,8 +639,8 @@ class BalanceFormSetView(ReadCheckMixin, FormSetView):
         context['total_income'] = total_income
         context['this_month_labor'] = this_month_labor
         context['last_month_labor'] = last_month_labor
-        context['total_labor'] = total_labor
-        return context
+        def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
 
 
 def budget_invoice(request, pk):
@@ -793,6 +793,11 @@ class CoreFormSetView(ReadCheckMixin, FormSetView):
         parts = Part.objects.filter(id__in=part_ids)
         kwargs.update(parts=parts)
         return kwargs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['purchase'] = Purchase.objects.get(id=self.kwargs['pk'])
+        return context
 
     def post(self, request, *args, **kwargs):
         formset = self.get_modelformset(request.POST)
