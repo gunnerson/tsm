@@ -439,6 +439,9 @@ class Core(models.Model):
         null=True,
     )
 
+    def __str__(self):
+        return self.part.__str__()
+
 
 class CoreReturn(models.Model):
     core = models.ForeignKey(

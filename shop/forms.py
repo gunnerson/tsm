@@ -254,6 +254,7 @@ class CoreReturnForm(FormMixin):
     class Meta:
         model = CoreReturn
         fields = '__all__'
+        widgets = {'date': forms.DateInput(attrs={'type': 'date'}),}
 
     def __init__(self, *args, cores=None, **kwargs):
         super().__init__(*args, **kwargs)
