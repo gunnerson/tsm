@@ -8,6 +8,7 @@
     <a href="{% url 'shop:parts' %}" title="Parts"><img src="{% static 'img/parts.png' %}" id="nav_parts" ></a>
     <a href="{% url 'shop:shelves' %}" title="Shelves"><img src="{% static 'img/list_bullets.png' %}" id="nav_shelves"></a>
     <a href="{% url 'shop:purchases' %}" title="Purchases"><img src="{% static 'img/shop_cart.png' %}" id="nav_purchases" ></a>
+    <a href="{% url 'shop:cores' %}" title="Cores"><img src="{% static 'img/db.png' %}" id="nav_cores" ></a>
     <a href="{% url 'shop:balance' %}" title="Accounting"><img src="{% static 'img/dollar.png' %}" id="nav_balance" style="margin-right:30px"></a>
 
 {% endblock nav_toolbar %}
@@ -52,6 +53,9 @@
     } else if (section == "purchases") {
       document.getElementById("nav_purchases").classList.add('active');
       document.title = "LPT - Purchases"
+    } else if (section == "cores") {
+      document.getElementById("nav_cores").classList.add('active');
+      document.title = "LPT - Cores"
     } else if (section == "accounting") {
       document.getElementById("nav_balance").classList.add('active');
       document.title = "LPT - Accounting"
