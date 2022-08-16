@@ -153,7 +153,6 @@ class PurchaseForm(FormMixin):
         super().__init__(*args, **kwargs)
         if not is_create:
             self.fields['vendor'].disabled = True
-            self.fields['date'].disabled = True
 
 
 class PurchaseItemForm(forms.ModelForm):
