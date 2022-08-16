@@ -819,6 +819,7 @@ class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
     template_name = 'shop/purchase_cores.html'
     fields = ('core', 'amount', 'date', 'receipt')
     field_names = ('Part', 'Amount', 'Date', 'Receipt')
+    redirect_url = '.'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
