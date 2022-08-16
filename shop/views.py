@@ -790,5 +790,6 @@ class CoreFormSetView(ReadCheckMixin, FormSetView):
         for item in items:
             part_ids.append(item.part.id)
         parts = Part.objects.filter(id__in=part_ids)
+        kwargs.update(purchase=purchase)
         kwargs.update(parts=parts)
         return kwargs
