@@ -854,3 +854,8 @@ class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
         else:
             return self.render_to_response(
                 self.get_context_data(formset=formset))
+
+
+class CoreListView(ReadCheckMixin, ListView):
+    model = Core
+    template_name = 'shop/cores.html'

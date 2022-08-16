@@ -1,0 +1,19 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+
+  <table>
+    <tbody>
+      {% for object in object_list %}
+        <tr>
+          <td> {{ object.part }}{{ object.part.errors }} </td>
+          <td> <a href="{% url 'shop:purchase' object.purchase.id %}">{{ object.purchase }}</a>{{ object.purchase.errors }}</td>
+          <td> {{ object.amount }}{{ object.amount.errors }}</td>
+          <td> {{ object.price }}{{ object.price.errors }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock content %}
+
