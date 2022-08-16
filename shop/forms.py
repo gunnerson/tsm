@@ -243,4 +243,7 @@ class CoreForm(FormMixin):
 
     def __init__(self, *args, parts=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['part'].queryset = parts
+        try:
+            self.fields['part'].queryset = parts
+        except KeyError:
+            pass
