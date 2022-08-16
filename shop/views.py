@@ -802,7 +802,7 @@ class CoreFormSetView(ReadCheckMixin, FormSetView):
         if formset.is_valid() and write_check(request.user):
             for f in formset:
                 inst = f.save(commit=False)
-                if inst.amount != 0:
+                if inst.amount != 0 and inst.part:
                     inst.purchase = purchase
                     inst.save()
                 elif inst.amount == 0 and inst.id:
@@ -838,7 +838,7 @@ class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
                 inst = f.save(commit=False)
                 if inst.amount == 0 and inst.id:
                     inst.delete()
-                else:
+                elif inst.core:
                     inst.save()
             return redirect(self.redirect_url)
         else:
