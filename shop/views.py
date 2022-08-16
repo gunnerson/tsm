@@ -819,7 +819,6 @@ class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
     template_name = 'shop/purchase_cores.html'
     fields = ('core', 'amount', 'date', 'receipt')
     field_names = ('Part', 'Amount', 'Date', 'Receipt')
-    redirect_url = '.'
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -829,7 +828,7 @@ class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['purchase'] = Purchase.objects.get(id=self.kwargs['pk'])        
+        context['purchase'] = Purchase.objects.get(id=self.kwargs['pk'])
         return context
 
     def post(self, request, *args, **kwargs):
@@ -841,7 +840,8 @@ class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
                     inst.delete()
                 elif inst.core_id:
                     inst.save()
-            return redirect(self.redirect_url)
+            return redirect(reverse_lazy(
+                'shop:return_cores', kwargs={'pk': self.kwargs['pk']}))
         else:
             return self.render_to_response(
                 self.get_context_data(formset=formset))
