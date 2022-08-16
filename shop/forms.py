@@ -258,12 +258,16 @@ class CoreReturnForm(FormMixin):
     class Meta:
         model = CoreReturn
         fields = '__all__'
-        widgets = {'date': forms.DateInput(attrs={'type': 'date'}),}
+        widgets = {'date': forms.DateInput(attrs={'type': 'date'}), }
 
-    def __init__(self, *args, cores=None, **kwargs):
+    def __init__(self, *args, cores=None, exclude=None, **kwargs):
         super().__init__(*args, **kwargs)
         try:
-            self.fields['core'].queryset = cores
+            self.fields["core"] = forms.ModelChoiceField(
+                queryset=cores,
+                widget=OrderSelect(exclude=exclude),
+            )
+            self.fields["core"].widget.attrs.update({'class': 'form_field'})
         except KeyError:
             pass
 
