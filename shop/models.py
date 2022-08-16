@@ -442,6 +442,13 @@ class Core(models.Model):
     def __str__(self):
         return self.part.__str__()
 
+    def get_left(self):
+        left = self.amount
+        corereturns = self.corereturn_set.all()
+        for cr in corereturns:
+            left -= cr.amount
+        return left
+
 
 class CoreReturn(models.Model):
     core = models.ForeignKey(

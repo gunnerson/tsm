@@ -2,7 +2,15 @@
 
 {% block content %}
 
-  <table>
+  <table class="listview-table {{ font_class }}">
+    <thead>
+      <tr>
+        <th>Part</th>
+        <th>Order</th>
+        <th>Amount</th>
+        <th>Price</th>
+      </tr>
+    </thead>
     <tbody>
       {% for object in object_list %}
         <tr>

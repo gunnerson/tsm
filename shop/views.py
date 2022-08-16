@@ -859,3 +859,11 @@ class CoreReturnFormSetView(ReadCheckMixin, FormSetView):
 class CoreListView(ReadCheckMixin, ListView):
     model = Core
     template_name = 'shop/cores.html'
+
+    def get_queryset(self):
+        qs = Core.objects.all()
+        ids = []
+        for q in qs:
+            if q.get_left() > 0:
+                ids.append(q.id)
+        return qs.filter(id__in=ids)
