@@ -1,7 +1,8 @@
 from django import forms
 
 from .models import Order, Job, Part, OrderJob, OrderPart, Purchase, \
-    PurchaseItem, Balance, PartPlace, PartType, Mechanic, Shelf, ShelfGroup
+    PurchaseItem, Balance, PartPlace, PartType, Mechanic, Shelf, ShelfGroup, \
+    Core, CoreReturn
 from .mixins import OrderSelect
 from invent.models import Truck, Trailer
 from invent.mixins import FormMixin, FormSetMixin
@@ -232,3 +233,14 @@ class ShelfGroupForm(FormMixin):
     class Meta:
         model = ShelfGroup
         fields = ('part_type',)
+
+
+class CoreForm(FormMixin):
+
+    class Meta:
+        model = Purchase
+        fields = ('part', 'amount', 'price')
+
+    def __init__(self, *args, parts=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['part'].queryset = parts

@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import Order, OrderTime, Part, Job, OrderJob, OrderPart, \
     Purchase, PurchaseItem, Mechanic, Balance, PartType, PartPlace, Shelf, \
-    ShelfGroup
+    ShelfGroup, Core, CoreReturn
 
 admin.site.register(Order)
 admin.site.register(OrderTime)
@@ -18,3 +18,5 @@ admin.site.register(Balance)
 admin.site.register(PartPlace)
 admin.site.register(Shelf)
 admin.site.register(ShelfGroup)
+admin.site.register(Core)
+admin.site.register(CoreReturn)

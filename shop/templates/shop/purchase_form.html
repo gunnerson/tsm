@@ -23,6 +23,8 @@
       {{ formset.non_form_errors }}
     {% endif %}
   </form>
+  <br>
+  <p><a href="{% url 'shop:cores' object.id %}">Add cores</a></p>
 {% endblock content %}
 
 

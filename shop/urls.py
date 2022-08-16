@@ -57,4 +57,6 @@ urlpatterns = [
          name='move_group_up'),
     path('shelves/down/<int:pk>/', views.shelfgroup_down,
          name='move_group_down'),
+    path('purchases/<int:pk>/cores/', views.CoreFormSetView.as_view(),
+         name='cores'),
 ]

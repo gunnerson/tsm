@@ -9,10 +9,12 @@ from django.core.exceptions import FieldError
 # from django.db import IntegrityError
 
 from .models import Order, Part, Job, OrderPart, Purchase, \
-    PurchaseItem, Balance, PartPlace, PartType, Shelf, OrderTime, ShelfGroup
+    PurchaseItem, Balance, PartPlace, PartType, Shelf, OrderTime, ShelfGroup, \
+    Core
 from invent.models import Truck, Trailer, Company
 from .forms import OrderForm, JobForm, PartForm, PurchaseForm, BalanceForm, \
-    PartPlaceForm, PartTypeForm, ShelfForm, PartUpdateForm, ShelfGroupForm
+    PartPlaceForm, PartTypeForm, ShelfForm, PartUpdateForm, ShelfGroupForm, \
+    CoreForm
 from .utils import get_job_forms, get_part_forms, get_purchase_forms, \
     link_with_part
 from .mixins import ObjectView, FormSetView
@@ -772,3 +774,19 @@ def shelfgroup_down(request, pk):
     group1.order_number += 1
     group1.save(update_fields=['order_number'])
     return redirect('shop:shelves')
+
+
+class CoreFormSetView(ReadCheckMixin, FormSetView):
+    model = Core
+    form_class = CoreForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        purchase = Purchase.objects.get(id=self.kwargs['pk'])
+        items = purchase.purchaseitem_set.all()
+        part_ids = []
+        for item in items:
+            part_ids.append(item.part.id)
+        parts = Part.objects.filter(id__in=part_ids)
+        kwargs.update(parts=parts)
+        return kwargs
