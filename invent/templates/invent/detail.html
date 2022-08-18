@@ -34,7 +34,7 @@
         {% for order in order_list %}
           <tr>
             <td style="text-align:start;"><a href="{% url 'shop:order' order.id %}">{% if order.closed %}{{ order.closed }}{% else %}{{ order.opened }}{% endif %}</a></td>
-            <td style="text-align:start;">{{ order.mileage }}</td>
+            <td style="text-align:start;">{{ order.mileage|default_if_none:"" }}</td>
             <td style="text-align:start;">
               {% for job in order.orderjob_set.all %}
                 <p>{{ job.job }} x {{ job.amount }}</p>

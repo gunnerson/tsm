@@ -17,7 +17,7 @@ from shop.models import OrderJob
 
 @user_passes_test(read_check, login_url='index')
 def summary(request):
-    get_update_odometers()
+    # get_update_odometers()
     pms = OrderJob.objects.filter(job_id=22)
     for pm in pms:
         truck = pm.order.truck
