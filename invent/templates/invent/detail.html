@@ -21,12 +21,29 @@
   {% endif %}
   <br>
   {% if order_list %}
-    <p>
-      <strong>Orders:</strong>
-      {% for order in order_list %}
-        <a href="{% url 'shop:order' order.id %}">{{ order.opened }}, </a>
-      {% endfor %}
-    </p>
+    <p><strong>Order history:</strong></p>
+    <table class="listview-table {{ font_class }}">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Odometer</th>
+          <th>Jobs</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in order_list %}
+          <tr>
+            <td style="text-align:start;"><a href="{% url 'shop:order' order.id %}">{% if order.closed %}{{ order.closed }}{% else %}{{ order.opened }}{% endif %}</a></td>
+            <td style="text-align:start;">{{ order.mileage }}</td>
+            <td style="text-align:start;">
+              {% for job in order.orderjob_set.all %}
+                <p>{{ job.job }} x {{ job.amount }}</p>
+              {% endfor %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   {% endif %}
   {% if faults %}
     <br>
@@ -73,28 +90,5 @@
     </p>
   {% endif %}
   <br>
-    <p><strong>History:</strong></p>
-    <table class="listview-table {{ font_class }}">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Odometer</th>
-          <th>Jobs</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for order in order_list %}
-          <tr>
-            <td style="text-align:start;"><a href="{% url 'shop:order' order.id %}">{% if order.closed %}{{ order.closed }}{% else %}{{ order.opened }}{% endif %}</a></td>
-            <td style="text-align:start;">{{ order.mileage }}</td>
-            <td style="text-align:start;">
-              {% for job in order.orderjob_set.all %}
-                <p>{{ job.job }} x {{ job.amount }}</p>
-              {% endfor %}
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
 {% endblock content %}
 
