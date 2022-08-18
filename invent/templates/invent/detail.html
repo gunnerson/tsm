@@ -88,7 +88,7 @@
             <td style="text-align:start;">{% if order.closed %}{{ order.closed }}{% else %}{{ order.opened }}</td>
             <td style="text-align:start;">{{ order.mileage }}</td>
             <td style="text-align:start;">
-              {% for job order.orderjob_set.all %}
+              {% for job in order.orderjob_set.all %}
                 <p>{{ job }}</p>
               {% endfor %}
             </td>
