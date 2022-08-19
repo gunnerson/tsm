@@ -65,7 +65,13 @@
           <td>{{ object.vin|default_if_none:"" }}</td>
           <td>{{ object.year|default_if_none:"" }}</td>
           <td>{{ object.get_make_display|default_if_none:"" }}</td>
-          <td {% if object.dot_due == 'due' %} style="background:pink" {% elif object.dot_due == 'soon'%} style="background:yellow" {% endif %}>{{ object.last_dot_date|default_if_none:"" }}</td>
+          <td {% if object.dot_due == 'due' %} style="background:pink" {% elif object.dot_due == 'soon'%} style="background:yellow" {% endif %}>
+            {% if object.get_last_dot %}
+              <a target="_blank" href="{{ MEDIA_URL }}{{ object.get_last_dot.file.url }}">{{ object.last_dot_date|default_if_none:"" }}</a>
+            {% else %}
+              {{ object.last_dot_date|default_if_none:"" }}
+            {% endif %}
+          </td>
         </tr>
       {% endfor %}
     </tbody>
