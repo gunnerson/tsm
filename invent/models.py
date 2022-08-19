@@ -95,7 +95,7 @@ class Truck(models.Model):
 
     def get_last_dot(self):
         docs = self.truckdocument_set.filter(category='DI')
-        return docs.last()
+        return docs.first()
 
     def save(self, *args, **kwargs):
         if self.vin:
@@ -191,7 +191,7 @@ class Trailer(models.Model):
 
     def get_last_dot(self):
         docs = self.trailerdocument_set.filter(category='DI')
-        return docs.last()
+        return docs.first()
 
     def save(self, *args, **kwargs):
         if self.vin:
