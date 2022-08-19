@@ -93,6 +93,10 @@ class Truck(models.Model):
     def get_absolute_url(self):
         return reverse('invent:truck', args=[str(self.id)])
 
+    def get_last_dot(self):
+        docs = self.truckdocument_set.filter(category='DI')
+        return docs.last()
+
     def save(self, *args, **kwargs):
         if self.vin:
             self.vin = self.vin.upper()
@@ -184,6 +188,10 @@ class Trailer(models.Model):
 
     def get_absolute_url(self):
         return reverse('invent:trailer', args=[str(self.id)])
+
+    def get_last_dot(self):
+        docs = self.trailerdocument_set.filter(category='DI')
+        return docs.last()
 
     def save(self, *args, **kwargs):
         if self.vin:
