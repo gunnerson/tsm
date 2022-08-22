@@ -28,7 +28,9 @@
       const id = vehicles[i]['truck']
       const url = "{% url 'invent:truck' 1234 %}".replace(/1234/, id.toString());
       marker.addListener("click", () => {
-        window.location = url
+        // window.location = url
+        window.open(url, "_blank");
+        }
       });  
     };
     const marker = new google.maps.Marker({
