@@ -124,7 +124,7 @@ class FormSetView():
 
     def post(self, request, *args, **kwargs):
         formset = self.get_modelformset(request.POST)
-        if formset.is_valid() and write_check(request.user):
+        if formset.is_valid()c:
             formset.save()
             return redirect(self.redirect_url)
         else:

@@ -90,7 +90,7 @@ def get_fault_codes(id):
 
 def get_bulk_vehicles_locations():
     ours = Company.objects.filter(id__in=[1, 2])
-    trucks = Truck.objects.filter(owner__in=ours)
+    trucks = Truck.objects.filter(owner__in=ours, show=True)
     ids = ''
     for t in trucks:
         if t.kt_id:

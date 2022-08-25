@@ -171,7 +171,5 @@ class FormSetView():
             formset.save()
             return redirect(self.redirect_url)
         else:
-            print(formset.errors)
-            print(formset.non_form_errors())
             return self.render_to_response(
                 self.get_context_data(formset=formset))
