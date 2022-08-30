@@ -28,6 +28,7 @@
           <th>Date</th>
           <th>Odometer</th>
           <th>Jobs</th>
+          <th>Comments</th>
         </tr>
       </thead>
       <tbody>
@@ -40,6 +41,7 @@
                 <p>{{ job.job }} x {{ job.amount }}</p>
               {% endfor %}
             </td>
+            <td style="text-align:start;"> {{ order.comments|default_if_none:"" }}
           </tr>
         {% endfor %}
       </tbody>
