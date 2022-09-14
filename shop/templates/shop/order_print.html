@@ -63,7 +63,7 @@
         <tbody>
           {% for job in object.orderjob_set.all %}
             <tr>
-              <td>{{ job.job }} ({{ job.comment }})</td>
+              <td>{{ job.job }} {% if job.comment %}({{ job.comment }}){% endif %}</td>
               <td style="width: 20%; text-align: center;">{{ job.job.man_hours }}</td>
               <td style="width: 20%; text-align: center;">{{ job.amount }}</td>
             </tr>

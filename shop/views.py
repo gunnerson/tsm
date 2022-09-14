@@ -700,7 +700,7 @@ def assign_to_all(request, pk, unit):
                 PartPlace.objects.get(part=part, trailer=t)
             except ObjectDoesNotExist:
                 PartPlace(part=part, trailer=t).save()
-    return redirect('users:profile', new_profile.id)
+    return redirect('shop:part', pk)
 
 
 def order_stop(request, pk):
