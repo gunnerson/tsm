@@ -38,7 +38,7 @@
             <td style="text-align:start;">{{ order.mileage|default_if_none:"" }}</td>
             <td style="text-align:start;">
               {% for job in order.orderjob_set.all %}
-                <p>{{ job.job }} x {{ job.amount }}</p>
+                <p>{{ job.job }}</p>
               {% endfor %}
             </td>
             <td style="text-align:start;"> {{ order.comments|default_if_none:"" }}

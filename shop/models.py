@@ -363,6 +363,7 @@ class OrderJob(models.Model):
         related_name='job_items',
     )
     amount = models.PositiveSmallIntegerField(default=1)
+    comment = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return self.order.__str__() + ' ' + self.job.__str__()
