@@ -189,6 +189,7 @@ class OrderPrintView(ReadCheckMixin, DetailView):
         tax_rate = float(AccountVar.objects.get(name="SALES_TAX").value) / 100
         header_id = int(AccountVar.objects.get(name="INVOICE_HEADER").value)
         labor_rate = int(AccountVar.objects.get(name="LABOR_RATE").value)
+        context['jobs'] = order.orderjob_set.all.order_by('id')
         context['shop_header'] = Company.objects.get(id=header_id)
         context['parts_total'] = parts_total
         context['tax'] = float(parts_total) * tax_rate
