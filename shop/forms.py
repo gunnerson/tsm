@@ -84,6 +84,16 @@ class OrderPartForm(forms.ModelForm):
         for f in self.fields:
             self.fields[f].widget.attrs.update({'class': 'form_field'})
 
+    def clean(self):
+        cleaned_data = super().clean()
+        part = cleaned_data.get("part")
+        in_stock = part.stock
+        amount = cleaned_data.get("amount")
+        if amount > in_stock:
+            msg = forms.ValidationError(('Not enough items in stock'),
+                                        code='invalid')
+            self.add_error('amount', msg)
+
 
 class PartTypeForm(FormSetMixin):
     class Meta:
