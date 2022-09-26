@@ -99,8 +99,17 @@ class OrderView(ReadCheckMixin, ObjectView):
                         before_inst = OrderPart.objects.get(id=inst.id)
                         if before_inst.part.id == inst.part_id:
                             inst.part.stock -= inst.amount - before_inst.amount
-                            inst.part.save(update_fields=['stock'])
-                            if inst.amount == 0:
+                            if inst.part.stock > 0:
+                                inst.part.save(update_fields=['stock'])
+                            else:
+                                f.add_error('amount', 'Not enough in stock')
+                                return self.render_to_response(
+                                    self.get_context_data(
+                                        form=form,
+                                        job_formset=job_formset,
+                                        part_formset=part_formset,
+                                    ))
+                            elif inst.amount == 0:
                                 try:
                                     inst.delete()
                                 except AssertionError:
