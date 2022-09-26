@@ -101,7 +101,7 @@ class OrderView(ReadCheckMixin, ObjectView):
                             inst.part.stock -= inst.amount - before_inst.amount
                             if inst.part.stock > 0:
                                 inst.part.save(update_fields=['stock'])
-                            else:
+                            elif inst.part.stock < 0:
                                 f.add_error('amount', 'Not enough in stock')
                                 return self.render_to_response(
                                     self.get_context_data(
