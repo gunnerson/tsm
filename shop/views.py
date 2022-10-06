@@ -100,6 +100,8 @@ class OrderView(ReadCheckMixin, ObjectView):
                         if before_inst.part.id == inst.part_id:                            
                             if inst.amount == 0:
                                 try:
+                                    inst.part.stock += before_inst.amount
+                                    inst.part.save(update_fields=['stock'])
                                     inst.delete()
                                 except AssertionError:
                                     pass
