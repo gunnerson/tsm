@@ -67,7 +67,7 @@ def summary(request):
     # get_summary_context(qs, profile, context)
     # get_font_classes(profile.font_size, context)
     # context['filter_bar'] = True
-    ours = Company.objects.filter(id__in=[1, 2])
+    ours = Company.objects.filter(id__in=[1, 2, 36])
     trucks = Truck.objects.filter(owner__in=ours, show=True)
     trailers = Trailer.objects.filter(owner__in=ours, show=True)
     context = {}

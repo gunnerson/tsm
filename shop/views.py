@@ -97,26 +97,26 @@ class OrderView(ReadCheckMixin, ObjectView):
                                 ))
                     elif inst.id and inst.part_id:
                         before_inst = OrderPart.objects.get(id=inst.id)
-                        if before_inst.part.id == inst.part_id:
-                            inst.part.stock -= inst.amount - before_inst.amount
-                            if inst.part.stock > 0:
-                                inst.part.save(update_fields=['stock'])
-                            elif inst.part.stock < 0:
-                                f.add_error('amount', 'Not enough in stock')
-                                return self.render_to_response(
-                                    self.get_context_data(
-                                        form=form,
-                                        job_formset=job_formset,
-                                        part_formset=part_formset,
-                                    ))
-                            elif inst.amount == 0:
+                        if before_inst.part.id == inst.part_id:                            
+                            if inst.amount == 0:
                                 try:
                                     inst.delete()
                                 except AssertionError:
                                     pass
                             else:
-                                inst.save()
-                                link_with_part(inst)
+                                inst.part.stock -= inst.amount - before_inst.amount
+                                if inst.part.stock > 0:
+                                    inst.part.save(update_fields=['stock'])
+                                    inst.save()
+                                    link_with_part(inst)
+                                elif inst.part.stock < 0:
+                                    f.add_error('amount', 'Not enough in stock')
+                                    return self.render_to_response(
+                                        self.get_context_data(
+                                            form=form,
+                                            job_formset=job_formset,
+                                            part_formset=part_formset,
+                                        ))                                
                 if not assigned_only:
                     return self.render_to_response(
                         self.get_context_data(
