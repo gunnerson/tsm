@@ -367,7 +367,7 @@ class PunchCardListView(UserCheckMixin, ListView):
             today = date.today()
             days_employed = today - selected_mechanic.start_date
             context['vacation_days'] = int(
-                days_employed.days / 183) * 5 - selected_mechanic.vacation_used
+                days_employed.days / 365) * 5 - selected_mechanic.vacation_used
         return context
 
 
