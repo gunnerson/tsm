@@ -236,7 +236,7 @@ def punch(request):
             now = timezone.now()
             if selected == 'punch_in' or (status == 'punched_out'
                                           and submit == 'start'):
-                punch_in_standart = now.replace(hour=12, minute=00, second=0)
+                punch_in_standart = now.replace(hour=12, minute=30, second=0)
                 if now < punch_in_standart and mechanic.id != 1:
                     punch_in_time = punch_in_standart
                 else:
@@ -357,11 +357,11 @@ class PunchCardListView(UserCheckMixin, ListView):
         context['week_total'] = week_total
         if selected_mechanic:
             salary = 0
-            if week_total <= 40:
+            if week_total <= 50:
                 salary = float(selected_mechanic.salary) * week_total
             else:
-                salary = float(selected_mechanic.salary) * 40 + \
-                    float(selected_mechanic.salary) * 1.5 * (week_total - 40)
+                salary = float(selected_mechanic.salary) * 50 + \
+                    float(selected_mechanic.salary) * 1.5 * (week_total - 50)
             context['salary'] = round(salary, 2)
         if selected_mechanic:
             today = date.today()
