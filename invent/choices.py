@@ -33,6 +33,7 @@ def truck_make_choices():
 
 def trailer_make_choices():
     choices = [
+        ('AT', 'Atro'),
         ('HY', 'Hyundai'),
         ('GD', 'Great Dane'),
         ('ST', 'Strickland'),
