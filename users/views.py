@@ -247,19 +247,28 @@ def punch(request):
                     punch_in_distance=distance,
                 ).save()
             elif selected == 'lunch_in':
-                last_card.lunch_in = now
+                if now.date == last_card.punch_in.date:
+                    last_card.lunch_in = now
+                else:
+                    last_card.lunch_in = last_card.punch_in + timedelta(hours=4)
                 last_card.lunch_in_distance = distance
                 last_card.save(update_fields=['lunch_in', 'lunch_in_distance'])
                 if open_ordertime:
                     open_ordertime.get_total()
             elif selected == 'lunch_out' or (status == 'lunched_in'
                                              and submit == 'start'):
-                last_card.lunch_out = now
+                if now.date == last_card.punch_in.date:
+                    last_card.lunch_out = now
+                else:
+                    last_card.lunch_out = last_card.punch_in + timedelta(hours=4)
                 last_card.lunch_out_distance = distance
                 last_card.save(
                     update_fields=['lunch_out', 'lunch_out_distance'])
             elif selected == 'punch_out':
-                last_card.punch_out = now
+                if now.date == last_card.punch_in.date:
+                    last_card.punch_out = now
+                else:
+                    last_card.punch_out = last_card.punch_in + timedelta(hours=10)
                 last_card.punch_out_distance = distance
                 last_card.save(
                     update_fields=['punch_out', 'punch_out_distance'])
