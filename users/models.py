@@ -142,7 +142,7 @@ class PunchCard(models.Model):
             lunch = timedelta(minutes=30)
         if self.punch_out:
             standart_punch_out = self.punch_in.replace(
-                hour=22, minute=30, second=0)
+                hour=23, minute=00, second=0)
             if self.mechanic.id != 1 and (self.punch_out > standart_punch_out and not self.ot):
                 punch_out = standart_punch_out
             else:

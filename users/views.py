@@ -236,7 +236,7 @@ def punch(request):
             now = timezone.now()
             if selected == 'punch_in' or (status == 'punched_out'
                                           and submit == 'start'):
-                punch_in_standart = now.replace(hour=12, minute=30, second=0)
+                punch_in_standart = now.replace(hour=13, minute=00, second=0)
                 if now < punch_in_standart and mechanic.id != 1:
                     punch_in_time = punch_in_standart
                 else:
