@@ -181,7 +181,7 @@ def punch(request):
         profile = request.user.profile
         mechanic = profile.mechanic
         cards = PunchCard.objects.filter(mechanic=mechanic)
-        last_card = cards.first()
+        last_card = cards.first()        
         orders = Order.objects.filter(closed=None)
         open_order = None
         open_ordertime = None
@@ -234,6 +234,7 @@ def punch(request):
             else:
                 distance = 404
             now = timezone.now()
+            print('>>>>>>>', now.date, '>>>>>>>', last_card.punch_in.date)
             if selected == 'punch_in' or (status == 'punched_out'
                                           and submit == 'start'):
                 punch_in_standart = now.replace(hour=13, minute=00, second=0)
