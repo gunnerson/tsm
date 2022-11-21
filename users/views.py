@@ -233,8 +233,7 @@ def punch(request):
                     (sqrt(delta_lat**2 + delta_lon**2) * 0.000621371), 1)
             else:
                 distance = 404
-            now = timezone.now()
-            print('>>>>>>>', now.date(), '>>>>>>>', last_card.punch_in.date())
+            now = timezone.now()            
             if selected == 'punch_in' or (status == 'punched_out'
                                           and submit == 'start'):
                 punch_in_standart = now.replace(hour=13, minute=00, second=0)
@@ -248,7 +247,7 @@ def punch(request):
                     punch_in_distance=distance,
                 ).save()
             elif selected == 'lunch_in':
-                if now.date == last_card.punch_in.date:
+                if now.date() == last_card.punch_in.date():
                     last_card.lunch_in = now
                 else:
                     last_card.lunch_in = last_card.punch_in + timedelta(hours=4)
@@ -258,7 +257,7 @@ def punch(request):
                     open_ordertime.get_total()
             elif selected == 'lunch_out' or (status == 'lunched_in'
                                              and submit == 'start'):
-                if now.date == last_card.punch_in.date:
+                if now.date() == last_card.punch_in.date():
                     last_card.lunch_out = now
                 else:
                     last_card.lunch_out = last_card.punch_in + timedelta(hours=4)
@@ -266,7 +265,7 @@ def punch(request):
                 last_card.save(
                     update_fields=['lunch_out', 'lunch_out_distance'])
             elif selected == 'punch_out':
-                if now.date == last_card.punch_in.date:
+                if now.date() == last_card.punch_in.date():
                     last_card.punch_out = now
                 else:
                     last_card.punch_out = last_card.punch_in + timedelta(hours=10)
